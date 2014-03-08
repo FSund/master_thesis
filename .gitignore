@@ -1,3 +1,9 @@
 .aux
 .out
-.bgl
+.bbl
+.blg
+.fdbl_latexmk
+.toc
+.backup
+.log
+
