@@ -1,0 +1,112 @@
+\documentclass[twoside,english]{uiofysmaster}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+% Draft stuff
+\usepackage{todonotes}
+\usepackage{xcolor}
+
+\usepackage{pdfpages} % To include the frontpage pdf
+\usepackage{soulutf8} % To highlight stuff (when using utf8), using \hl{Text you want to highlight}. Doesn't work that well with equations...
+\usepackage{svg} % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). NEEDS ``pdflatex --shell-escape'' !!!
+% \graphicspath{{images/}} % To include .eps + .eps_tex vector graphics from Inkscape, located in a subfolder of the .tex-files
+\usepackage{lipsum}
+\usepackage[square, super]{natbib}
+\usepackage{subcaption} % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
+                        % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+% \usepackage{minipage}
+\usepackage{commath} % to correctly typeset differentials
+
+\setsvg{
+    inkscape = inkscape -z -D
+}
+
+\newlength{\myfigwidth}
+\newlength{\mycaptionwidth}
+\newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\rvec}{\bvec{r}}
+\newcommand{\vvec}{\bvec{v}}
+\newcommand{\Fvec}{\bvec{F}}
+
+\setlength{\parskip}{11pt}
+\setlength{\parindent}{0mm}
+
+% %% To automatically detect if the .svg-images included in the document (via \includesvg) have been changed. If they are changed, we re-export them to pdf + pdf_tex using inkscape.
+% \newcommand{\executeiffilenewer}[3]{%
+%     \ifnum%
+%         \pdfstrcmp{\pdffilemoddate{#1}}{\pdffilemoddate{#2}}>0
+%         {\immediate\write18{#3}}%
+%     \fi%
+% }
+% % \newcommand{\includesvg}[1]{%
+% %     \executeiffilenewer{#1.svg}{#1.pdf}%
+% %     {inkscape -z -D --file=#1.svg %
+% %     --export-pdf=#1.pdf --export-latex}%
+% %     \input{#1.pdf_tex}%
+% % }
+% \newcommand{\includesvg}[1]{%
+%     \immediate\write18{inkscape -z -D --file=#1.svg --export-pdf=#1.pdf --export-latex}
+% %     \input{#1.pdf_tex}
+% }
+% %%
+
+\bibliographystyle{plain}
+
+% \author{Filip Sund}
+% \title{Master thesis}
+% \date{June 2013}
+
+\begin{document}
+
+% Front page
+\pagenumbering{roman}
+\includepdf{frontpage.pdf}
+\cleardoublepage
+
+\begin{abstract}
+\lipsum
+\end{abstract}
+
+\begin{dedication}
+  To someone
+  \\\vspace{12pt}
+  This is a dedication to my cat.
+\end{dedication}
+
+\begin{acknowledgements}
+  \lipsum
+\end{acknowledgements}
+
+\tableofcontents
+% \pagenumbering{arabic} -- happens automatically
+
+\part{Introduction}
+
+\part{Molecular dynamics}
+\input{chap_simulations.tex}    
+\input{chap_fractures.tex}
+
+\chapter{Measurements}
+    \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks}
+    \section{Mean square displacement}
+    \section{Density}
+    \section{Distance to atom}
+    \section{``Generation matrix''}
+    \section{``Voxel counter''}
+        A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
+    \section{Cage cage correlation}
+    \section{}
+
+\part{Results}
+    \section{Mean square displacement}
+    \section{Distance to atom}
+    \section{Area}
+    \section{Volume?}
+
+\part{Discussion}
+
+\part{Appendices}
+
+\bibliography{JabRef_database,Mendeley_database}
+
+\end{document}

@@ -1,0 +1,16 @@
+power2 = 7; 
+H = 0.68; 
+randomCorners = 1; 
+sigma = 1.0; 
+randomFactor = 1/sqrt(2); 
+addition = 1; 
+PBC = 1; 
+RNG = 2; 
+seed = 352; 
+a = diamondSquare(power2, H, randomCorners, sigma, randomFactor, addition, PBC, RNG, seed);
+
+estimate_Hurst_HDDMA(a, 0.0, 2, floor(min(size(a))/4), 1, 1)
+
+power2 = 6 -> H = 0.8033
+power2 = 7 -> H = 0.7778
+power2 = 8 -> H = 0.7534

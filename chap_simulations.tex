@@ -1,0 +1,246 @@
+\chapter{Simulations}
+\section{Potential}
+\hl{change wording from article supplements}
+The interatomic potential we use for for both silica and water consists of 2-body and 3-body terms. The 2-body terms take into account steric repulsion, charge-charge, charge-dipole, and dipole-dipole interactions. The 3-body terms take into account the bending of covalent bonds.
+\begin{align*}
+    E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij}, \rvec_{ij}).
+\end{align*}
+The two-body term $V_{ij}^{(2)}$ consists of four terms which take into account steric repulsion, Coulomb, charge-dipole, and van der Waals interaction. The two-body term has the following form
+\begin{align*}
+    V_{ij}^{(2)} (r) = 
+    \underbrace{
+        \frac{H_{ij}}{r^{\eta_{ij}}}
+    }_{\text{steric repulsion}}
+    +~ 
+    \underbrace{
+        \frac{Z_iZ_j}{r}e^{-r/r_{1\text{s}}}
+    }_{\text{Coulomb}}
+    ~-~
+    \underbrace{
+        \frac{D_{ij}}{2r^4}e^{-r/r_{4\text{s}}}
+    }_{\text{charge-dipole}}
+    ~- 
+    \underbrace{
+        \frac{w_{ij}}{r^6}
+    }_{\text{van der Waals}}
+    ,
+\end{align*}
+where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ \hl{controls the steric repulsion}, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the van der Waals interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. The three-body term $V_{ijk}^{(3)}$ has the form
+\begin{align*}
+    &V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = B_{ijk} \exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right) \frac{\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}{1 + C_{ijk}\left(\cos\theta_{ijk} - \cos\theta_0\right)^2} &(r_{ij}, r_{ik} \leq r_0),
+\end{align*}
+where $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$.
+
+\section{Integration}
+% \begin{align*}
+%     \rvec(t) = r_n \\
+%     \vvec(t) = v_n \\
+%     \bvec a(t) = a_n.
+% \end{align*}
+% \begin{align*}
+%     \vvec_{n+1/2} = \vvec_n + \frac{1}{2}\bvec a_n \delta t \\
+%     \rvec_{n+1} = \rvec_n + \vvec_{n+\frac{1}{2}}\delta t
+% \end{align*}
+
+% \begin{align*}
+%     \vvec(t + \Delta t/2) &= \vvec(t) + \frac{1}{2}\bvec a(t) \Delta t \\
+%     \rvec(t + \Delta t)   &= \rvec(t) + \vvec(t + \Delta t/2)\Delta t \\
+%     \bvec a(t + \Delta t)   &= \frac{1}{m}\Fvec(\rvec(t + \Delta t)) \\
+%     \vvec(t + \Delta t)   &= \vvec(t + \Delta t) + \frac{1}{2}\bvec a(t + \Delta t) \Delta t
+% \end{align*}
+
+\fcolorbox{black}{orange}{
+\begin{minipage}{\textwidth}
+{\bf TODO:}
+\begin{itemize}
+    \item Truncation error Verlet/velociy Verlet
+    \item Numerical stability?
+    \item Memory?
+    \item Self starting, symplectic, reversible
+\end{itemize}
+\end{minipage}
+}
+
+The equations of motion are integrated using the velocity Verlet algorithm:
+\begin{align*}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
+    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t
+\end{align*}
+
+
+\subsection{Derivation of Verlet algorithm}
+\todo{why do we use velocity Verlet}
+The Verlet algorithm\cite{verlet1967computer} is a simple method for integrating second order differential equations of the form 
+\begin{align*}
+    \dod[2]{\rvec(t)}{t} = \Fvec\big[\rvec(t), t\big] = \Fvec(t).
+\end{align*}
+We first let
+\begin{align*}
+    \dod{\rvec(t)}{t} &= \vvec(t),
+\end{align*}
+and
+\begin{align*}
+    \dod{\vvec(t)}{t} &= \frac{\Fvec(t)}{m}.
+\end{align*}
+
+We then do a Taylor expansion of $\rvec(t \pm \Delta t)$ around time $t$
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} + \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4), \label{eq:verlet_plus}\\
+    \rvec(t - \Delta t) &= \rvec(t) - \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} - \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4).\label{eq:verlet_minus}
+\end{align}
+By summing these two equations we get
+\begin{align*}
+    \rvec(t + \Delta t) + \rvec(t - \Delta t) = 2\rvec(t) + \frac{\Fvec(t)}{m}\Delta t^2 + \mathcal{O}(\Delta t^4),
+\end{align*}
+which by rearranging can be written as
+\begin{align*}
+    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \frac{\Fvec(t)}{m}\Delta t^2,
+\end{align*}
+Which is the equation used to update the positions in the regular Verlet algorithm. We see that the estimate of the new position contains an truncation error for one timestep $\Delta t$ of the order $\mathcal{O}(\Delta t^4)$.
+
+The Verlet algorithm does not use the velocity to compute the new position, but we can find an estimate of the velocity by taking the difference between equations \eqref{eq:verlet_plus} and \eqref{eq:verlet_minus}
+\begin{align*}
+    \rvec(t + \Delta t) - \rvec(t - \Delta t) = 2\vvec(t)\Delta t + \mathcal{O}(\Delta t^3),
+\end{align*}
+which by rearranging can be written as
+\begin{align*}
+    \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t} + \mathcal{O}(\Delta t^2).
+\end{align*}
+We see that this estimate of the velocity has a truncation error of the order $\mathcal{O}(\Delta t^2)$, compared to the error in the position $\mathcal{O}(\Delta t^4)$.
+\todo{Something about lower precision}
+
+A modification of the Verlet algorithm usually called the velocity Verlet algorithm\cite{swope1982computer} \todo{something about why velocity Verlet is good} can be derived in a similar way. We have the same Taylor expansion of $\rvec(t+\Delta t)$ around $t$ as before
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
+\end{align}
+and now we also expand $\vvec(t + \Delta t)$ around $t$
+\begin{align}
+    \vvec(t + \Delta t) 
+%     &= \vvec(t) + \dod{\vvec(t)}{t}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{t} + \mathcal{O}(\Delta t^3) \\
+    &= \vvec(t) + \frac{\Fvec(t)}{m}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3).\label{eq:velocity_taylor}
+\end{align}
+We now need an expression for $\od[2]{\vvec(t)}{t}$, which can be found by a Taylor expansion of $\od{\vvec(t+\Delta t)}{t}$
+\begin{align*}
+    \dod{\vvec(t+\Delta t)}{t} = \dod{\vvec(t)}{t} + \dod[2]{\vvec(t)}{t}\Delta t + \mathcal{O}(\Delta t^2),
+\end{align*}
+which by rearranging and multiplying with $\frac{\Delta t}{2}$ gives
+\begin{align*}
+    \dod[2]{\vvec}{t}\frac{\Delta t^2}{2} 
+    &= \frac{\Delta t}{2}\left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right) + \mathcal{O}(\Delta t^3) \\
+    &= \frac{\Fvec(t + \Delta t) - \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
+\end{align*}
+Inserting this into Eq. \eqref{eq:velocity_taylor} we get
+\begin{align*}
+    \vvec(t + \Delta t) 
+    &= \vvec(t) + \frac{\Fvec(t)}{m}\Delta t + \frac{\Fvec(t + \Delta t) - \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
+    &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
+\end{align*}
+So the total velocity Verlet algorithm with truncation of the higher-order terms is
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
+    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{m} \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
+\end{align}
+with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity. 
+
+The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that
+\begin{align}
+    \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
+\end{align}
+where
+\begin{align}
+    \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
+\end{align}
+\todo[inline]{(not really true??? compared to $\vvec(t+\Delta t/2)$ with equation \eqref{eq:velocity_verlet_velocity})} Which gives us the usual way of implementing the algorithm\cite{allen1989computer}, as follows
+\begin{itemize}
+    \item Calculate the new positions at $t + \Delta t$ using Eq. \eqref{eq:velocity_verlet_position} \hl{(repeated here)}
+    \begin{align*}
+        \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}.
+    \end{align*}
+    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using Eq. \eqref{eq:verlet_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
+    \end{align*}
+    \item Calculate the new forces $\Fvec(t+\Delta t)$.
+    \item Calculate the new velocities at $t+\Delta t$ using Eq. \eqref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
+    \end{align*}
+\end{itemize}
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times. Pseudocode: \todo{do we want/need this?}
+\begin{verbatim}
+    r += v*dt + F*dt*dt/(2*m);
+    v += F*dt/(2*m);
+    F = calculate_forces(r, v);
+    v += F*dt/(2*m);
+\end{verbatim}
+
+
+% The velocity Verlet algorithm can be implemented as follows\cite{allen1989computer}
+% \begin{samepage}
+% \begin{itemize}
+%     \item Calculate the new positions at $t + \Delta t$ using Eq. \eqref{eq:velocity_verlet_position}.
+%     \item Calculate the velocities at $t + \frac{1}{2}\Delta t$ using
+%     \begin{align*}
+%         \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
+%     \end{align*}
+%     \item Calculate the new forces $\Fvec(t + \Delta t)$.
+%     \item Finally, calculate the new velocities at $t + \Delta t$ using
+%     \begin{align*}
+%         \vvec(t + \Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}
+%     \end{align*}
+% \end{itemize}
+% \end{samepage}
+% But 
+% This implementation uses $9N$ units of memory, 
+
+\subsection{Global error in the Verlet algorithm}
+\fcolorbox{black}{orange}{
+\begin{minipage}{\textwidth}
+Sources:
+\begin{itemize}
+    \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
+    \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
+\end{itemize}
+
+    The global error in position can be derived from the local error for one timestep $\Delta t$. We see from Eq. \eqref{eq:position_taylor} that
+    \begin{align*}
+        \text{error}\big(\rvec(t+\Delta t)\big) = \mathcal{O}(\Delta t^3).
+    \end{align*}
+    The error for two timesteps is
+    \begin{align*}
+        \rvec(t+2\Delta t) 
+        &= \rvec(t+\Delta t) + \vvec(t+\Delta t)\Delta t + \frac{\Fvec(t+\Delta t)}{m}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3),
+        &= \rvec()
+    \end{align*}
+    which gives
+    \begin{align*}
+        \text{error}\big(\rvec(t+2\Delta t)\big) = 
+    \end{align*}
+\end{minipage}
+}
+
+\section{Ensemble, observables etc.}
+\section{Initialization}
+\section{Passivation}
+\begin{itemize}
+    \item Tetrahedra
+    \item Neighbor lists -- see base\_code/passivate\_using\_tetrahedra/passivator.cpp near line 700
+    \begin{itemize}
+        \item Create list of atoms in each voxel
+        \item Create neighbor lists for each atom by looping through neighbor voxels for each atoms
+    \end{itemize}
+    \item Count number of neighbors of different types -- find number of missing neighbors, Si - 4 Oxygen, Oxygen 2 Si
+    \item Insert OH on Si with missing O neighbors, insert H on Oxygen with missing Si neighbors
+    \begin{itemize}
+        \item Insert O/H at good angles
+    \end{itemize}
+    \item Improvement: find the atoms near surface using voxels, only passivate those atoms
+\end{itemize}
+
+\section{Injecting water}
+\begin{itemize}
+    \item Voxelize system -- size depends on wanted density
+    \item Mark all voxels within distance from other atoms as occupied
+    \item Fill other voxels with H2O with random O-H orientation, but correct angle
+    \item Improvement: Use one voxel size in the beginning (to avoid one-voxel pores), and then use a smaller voxel size when injecting water
+\end{itemize}
