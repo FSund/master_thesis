@@ -1,11 +1,16 @@
 \chapter{Simulations}
 \section{Potential}
-\hl{change wording from article supplements}
-The interatomic potential we use for for both silica and water consists of 2-body and 3-body terms. The 2-body terms take into account steric repulsion, charge-charge, charge-dipole, and dipole-dipole interactions. The 3-body terms take into account the bending of covalent bonds.
+The interatomic potential\cite{vashishta1990interaction} \todo{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
 \begin{align*}
-    E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij}, \rvec_{ij}).
+    E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
 \end{align*}
-The two-body term $V_{ij}^{(2)}$ consists of four terms which take into account steric repulsion, Coulomb, charge-dipole, and van der Waals interaction. The two-body term has the following form
+for
+\begin{align*}
+    1\leq \{i,j,k\} \leq N.
+\end{align*}
+
+
+$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions, and has the form
 \begin{align*}
     V_{ij}^{(2)} (r) = 
     \underbrace{
@@ -25,11 +30,27 @@ The two-body term $V_{ij}^{(2)}$ consists of four terms which take into account 
     }_{\text{van der Waals}}
     ,
 \end{align*}
-where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ \hl{controls the steric repulsion}, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the van der Waals interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. The three-body term $V_{ijk}^{(3)}$ has the form
+where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ and $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
+
+$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds, and has the form\todo{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
 \begin{align*}
-    &V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = B_{ijk} \exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right) \frac{\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}{1 + C_{ijk}\left(\cos\theta_{ijk} - \cos\theta_0\right)^2} &(r_{ij}, r_{ik} \leq r_0),
+    V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
+    B_{ijk} 
+    \underbrace{
+        \vphantom{\frac{\big)^2}{\big)^2}}\exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right)
+    }_{\text{bond-stretching}}
+    \underbrace{
+        \frac{\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}{1 + C_{ijk}\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}
+    }_{\text{bond-bending}}
+    ,
 \end{align*}
-where $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$.
+for
+\begin{align*}
+    \{r_{ij}, r_{ik}\} \leq r_0,
+\end{align*}
+where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
+\todo[inline]{$\xi$ and $C_{ijk}$ ???}
+\todo[inline]{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
 \section{Integration}
 % \begin{align*}
@@ -133,24 +154,24 @@ Inserting this into Eq. \eqref{eq:velocity_taylor} we get
 \begin{align*}
     \vvec(t + \Delta t) 
     &= \vvec(t) + \frac{\Fvec(t)}{m}\Delta t + \frac{\Fvec(t + \Delta t) - \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
-    &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
+    &= \vvec(t) + \frac{\Fvec(t) + \Fvec(t + \Delta t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
 \end{align*}
 So the total velocity Verlet algorithm with truncation of the higher-order terms is
 \begin{align}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
-    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{m} \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
+    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t) + \Fvec(t + \Delta t)}{m} \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
 \end{align}
 with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity. 
 
-The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that
+The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that the new velocities can be written as
 \begin{align}
-    \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
+    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
 \end{align}
 where
 \begin{align}
-    \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
+    \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
 \end{align}
-\todo[inline]{(not really true??? compared to $\vvec(t+\Delta t/2)$ with equation \eqref{eq:velocity_verlet_velocity})} Which gives us the usual way of implementing the algorithm\cite{allen1989computer}, as follows
+Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
 \begin{itemize}
     \item Calculate the new positions at $t + \Delta t$ using Eq. \eqref{eq:velocity_verlet_position} \hl{(repeated here)}
     \begin{align*}
@@ -166,13 +187,16 @@ where
         \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
     \end{align*}
 \end{itemize}
-This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times. Pseudocode: \todo{do we want/need this?}
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing Eq. \eqref{eq:velocity_verlet_position} and \eqref{eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. 
+
+Pseudocode: \todo{do we want this?}
 \begin{verbatim}
     r += v*dt + F*dt*dt/(2*m);
     v += F*dt/(2*m);
     F = calculate_forces(r, v);
     v += F*dt/(2*m);
 \end{verbatim}
+
 
 
 % The velocity Verlet algorithm can be implemented as follows\cite{allen1989computer}
@@ -194,13 +218,12 @@ This implementation minimizes the memory needs, as we only need to store one cop
 % This implementation uses $9N$ units of memory, 
 
 \subsection{Global error in the Verlet algorithm}
-\fcolorbox{black}{orange}{
-\begin{minipage}{\textwidth}
-Sources:
-\begin{itemize}
-    \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
-    \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
-\end{itemize}
+\orangebox{
+    Sources:
+    \begin{itemize}
+        \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
+        \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
+    \end{itemize}
 
     The global error in position can be derived from the local error for one timestep $\Delta t$. We see from Eq. \eqref{eq:position_taylor} that
     \begin{align*}
@@ -214,9 +237,8 @@ Sources:
     \end{align*}
     which gives
     \begin{align*}
-        \text{error}\big(\rvec(t+2\Delta t)\big) = 
+        \text{error}\big(\rvec(t+2\Delta t)\big) = \text{error}(\rvec(t+\Delta t)) + \text{error}\big(\vvec(t+\Delta t)\big)\Delta t + \left(\frac{\Fvec(t + \Delta t)}{m}\right)\frac{\Delta t^2}{2}
     \end{align*}
-\end{minipage}
 }
 
 \section{Ensemble, observables etc.}
