@@ -101,21 +101,21 @@ We first let
 \end{align*}
 and
 \begin{align*}
-    \dod{\vvec(t)}{t} &= \frac{\Fvec(t)}{m}.
+    \dod{\vvec(t)}{t} &= \avec(t) = \frac{\Fvec(t)}{m}.
 \end{align*}
 
 We then do a Taylor expansion of $\rvec(t \pm \Delta t)$ around time $t$
 \begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} + \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4), \label{eq:verlet_plus}\\
-    \rvec(t - \Delta t) &= \rvec(t) - \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} - \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4).\label{eq:verlet_minus}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4), \label{eq:verlet_plus}\\
+    \rvec(t - \Delta t) &= \rvec(t) - \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} - \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4).\label{eq:verlet_minus}
 \end{align}
 By summing these two equations we get
 \begin{align*}
-    \rvec(t + \Delta t) + \rvec(t - \Delta t) = 2\rvec(t) + \frac{\Fvec(t)}{m}\Delta t^2 + \mathcal{O}(\Delta t^4),
+    \rvec(t + \Delta t) + \rvec(t - \Delta t) = 2\rvec(t) + \avec(t)\Delta t^2 + \mathcal{O}(\Delta t^4),
 \end{align*}
 which by rearranging can be written as
 \begin{align*}
-    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \frac{\Fvec(t)}{m}\Delta t^2,
+    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
 \end{align*}
 Which is the equation used to update the positions in the regular Verlet algorithm. We see that the estimate of the new position contains an truncation error for one timestep $\Delta t$ of the order $\mathcal{O}(\Delta t^4)$.
 
@@ -132,13 +132,13 @@ We see that this estimate of the velocity has a truncation error of the order $\
 
 A modification of the Verlet algorithm usually called the velocity Verlet algorithm\cite{swope1982computer} \todo{something about why velocity Verlet is good} can be derived in a similar way. We have the same Taylor expansion of $\rvec(t+\Delta t)$ around $t$ as before
 \begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
 \end{align}
 and now we also expand $\vvec(t + \Delta t)$ around $t$
 \begin{align}
     \vvec(t + \Delta t) 
 %     &= \vvec(t) + \dod{\vvec(t)}{t}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{t} + \mathcal{O}(\Delta t^3) \\
-    &= \vvec(t) + \frac{\Fvec(t)}{m}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3).\label{eq:velocity_taylor}
+    &= \vvec(t) + \avec(t)\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3).\label{eq:velocity_taylor}
 \end{align}
 We now need an expression for $\od[2]{\vvec(t)}{t}$, which can be found by a Taylor expansion of $\od{\vvec(t+\Delta t)}{t}$
 \begin{align*}
@@ -147,29 +147,29 @@ We now need an expression for $\od[2]{\vvec(t)}{t}$, which can be found by a Tay
 which by rearranging and multiplying with $\frac{\Delta t}{2}$ gives
 \begin{align*}
     \dod[2]{\vvec}{t}\frac{\Delta t^2}{2} 
-    &= \frac{\Delta t}{2}\left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right) + \mathcal{O}(\Delta t^3) \\
-    &= \frac{\Fvec(t + \Delta t) - \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
+    &= \left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right)\frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
+    &= \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
 \end{align*}
 Inserting this into Eq. \eqref{eq:velocity_taylor} we get
-\begin{align*}
+\begin{align}
     \vvec(t + \Delta t) 
-    &= \vvec(t) + \frac{\Fvec(t)}{m}\Delta t + \frac{\Fvec(t + \Delta t) - \Fvec(t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
-    &= \vvec(t) + \frac{\Fvec(t) + \Fvec(t + \Delta t)}{m} \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
-\end{align*}
+    &= \vvec(t) + \avec(t)\Delta t + \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \nonumber\\
+    &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).\label{eq:verlet_velocity_taylor_insertion}
+\end{align}
 So the total velocity Verlet algorithm with truncation of the higher-order terms is
 \begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
-    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t) + \Fvec(t + \Delta t)}{m} \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
+    \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
 \end{align}
 with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity. 
 
 The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that the new velocities can be written as
 \begin{align}
-    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
+    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
 \end{align}
 where
 \begin{align}
-    \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
+    \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \avec(t)\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
 \end{align}
 Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
 \begin{itemize}
@@ -218,28 +218,33 @@ Pseudocode: \todo{do we want this?}
 % This implementation uses $9N$ units of memory, 
 
 \subsection{Global error in the Verlet algorithm}
-\orangebox{
-    Sources:
-    \begin{itemize}
-        \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
-        \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
-    \end{itemize}
+Sources:
+\begin{itemize}
+    \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
+    \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
+\end{itemize}
 
-    The global error in position can be derived from the local error for one timestep $\Delta t$. We see from Eq. \eqref{eq:position_taylor} that
-    \begin{align*}
-        \text{error}\big(\rvec(t+\Delta t)\big) = \mathcal{O}(\Delta t^3).
-    \end{align*}
-    The error for two timesteps is
-    \begin{align*}
-        \rvec(t+2\Delta t) 
-        &= \rvec(t+\Delta t) + \vvec(t+\Delta t)\Delta t + \frac{\Fvec(t+\Delta t)}{m}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3),
-        &= \rvec()
-    \end{align*}
-    which gives
-    \begin{align*}
-        \text{error}\big(\rvec(t+2\Delta t)\big) = \text{error}(\rvec(t+\Delta t)) + \text{error}\big(\vvec(t+\Delta t)\big)\Delta t + \left(\frac{\Fvec(t + \Delta t)}{m}\right)\frac{\Delta t^2}{2}
-    \end{align*}
-}
+\todo{I don't know if the calculations below are correct} 
+The global error in position can be derived from the local error for one timestep $\Delta t$. We see from Eq. \eqref{eq:position_taylor} that
+\begin{align*}
+    \text{error}\big(\rvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3),
+\end{align*}
+and from Eq. \eqref{eq:verlet_velocity_taylor_insertion}
+\begin{align*}
+    \text{error}\big(\vvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3).
+\end{align*}
+The error for two timesteps is
+\begin{align*}
+    \rvec(t_0+2\Delta t) 
+    &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3),
+    &= \rvec()
+\end{align*}
+which gives
+\begin{align*}
+    \text{error}\big(\rvec(t_0+2\Delta t)\big) 
+    &= \text{error}(\rvec(t_0+\Delta t)) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} \\
+    &= \mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2}
+\end{align*}
 
 \section{Ensemble, observables etc.}
 \section{Initialization}
