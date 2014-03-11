@@ -5,6 +5,13 @@
 % Draft stuff
 \usepackage{todonotes}
 \usepackage{xcolor}
+\newcommand{\orangebox}[1]{
+    \fcolorbox{black}{orange}{
+        \begin{minipage}{\textwidth}
+            #1
+        \end{minipage}
+    }
+}
 
 \usepackage{pdfpages} % To include the frontpage pdf
 \usepackage{soulutf8} % To highlight stuff (when using utf8), using \hl{Text you want to highlight}. Doesn't work that well with equations...
@@ -15,7 +22,8 @@
 \usepackage{subcaption} % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                         % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
 % \usepackage{minipage}
-\usepackage{commath} % to correctly typeset differentials
+\usepackage{commath} % to correctly typeset differentials \od, \dod, and \tod
+\usepackage{fancyvrb} % better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
 
 \setsvg{
     inkscape = inkscape -z -D
@@ -26,6 +34,7 @@
 \newcommand{\bvec}[1]{\mathbf{#1}}
 \newcommand{\rvec}{\bvec{r}}
 \newcommand{\vvec}{\bvec{v}}
+\newcommand{\avec}{\bvec{a}}
 \newcommand{\Fvec}{\bvec{F}}
 
 \setlength{\parskip}{11pt}

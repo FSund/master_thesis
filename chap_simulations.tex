@@ -86,8 +86,7 @@ The equations of motion are integrated using the velocity Verlet algorithm:
 \begin{align*}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
     \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t
-\end{align*}
-
+\end{align*} 
 
 \subsection{Derivation of Verlet algorithm}
 \todo{why do we use velocity Verlet}
@@ -236,19 +235,23 @@ and from Eq. \eqref{eq:verlet_velocity_taylor_insertion}
 The error for two timesteps is
 \begin{align*}
     \rvec(t_0+2\Delta t) 
-    &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3),
+    &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \\
     &= \rvec()
 \end{align*}
 which gives
 \begin{align*}
-    \text{error}\big(\rvec(t_0+2\Delta t)\big) 
-    &= \text{error}(\rvec(t_0+\Delta t)) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} \\
-    &= \mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2}
+    &\text{error}\big(\rvec(t_0+2\Delta t)\big)  \\
+    &~= \text{error}(\rvec(t_0+\Delta t)) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} \\
+    &~= 2\mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2} \\
+    &~= 2\mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^4) + \mathcal{O}(\Delta t^5)
 \end{align*}
 
 \section{Ensemble, observables etc.}
 \section{Initialization}
 \section{Passivation}
+Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating them by inserting atoms on the dangling bonds, so they turn into silanol groups\todo{why silanol?}. Silicon atoms with less than four\todo{why four?} oxygen neighbors get one hydroxide (OH$^-$) group attached to them per missing neighbor, and oxygen atoms with less than two silicon atoms get one hydrogen atom attached per missing silicon\hl{(oxygen atoms with two missing neighbors are removed)}.
+
+When adding hydrogen- and oxygen-atoms we assume that the silicon 
 \begin{itemize}
     \item Tetrahedra
     \item Neighbor lists -- see base\_code/passivate\_using\_tetrahedra/passivator.cpp near line 700
