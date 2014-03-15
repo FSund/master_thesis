@@ -13,17 +13,20 @@
     }
 }
 
+\usepackage{graphicx}
 \usepackage{pdfpages} % To include the frontpage pdf
 \usepackage{soulutf8} % To highlight stuff (when using utf8), using \hl{Text you want to highlight}. Doesn't work that well with equations...
 \usepackage{svg} % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). NEEDS ``pdflatex --shell-escape'' !!!
 % \graphicspath{{images/}} % To include .eps + .eps_tex vector graphics from Inkscape, located in a subfolder of the .tex-files
 \usepackage{lipsum}
-\usepackage[square, super]{natbib}
+% \usepackage[square, super]{natbib}
+\usepackage[square,sort,numbers]{natbib}
 \usepackage{subcaption} % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                         % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
 % \usepackage{minipage}
 \usepackage{commath} % to correctly typeset differentials \od, \dod, and \tod
 \usepackage{fancyvrb} % better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
+\usepackage{cleveref} % use \cref{fig:label} instead of \ref{} to get auto ``fig. 1.1a''. \Cref for capitalized.
 
 \setsvg{
     inkscape = inkscape -z -D
@@ -31,14 +34,25 @@
 
 \newlength{\myfigwidth}
 \newlength{\mycaptionwidth}
+
 \newcommand{\bvec}[1]{\mathbf{#1}}
 \newcommand{\rvec}{\bvec{r}}
 \newcommand{\vvec}{\bvec{v}}
 \newcommand{\avec}{\bvec{a}}
 \newcommand{\Fvec}{\bvec{F}}
 
+\newcommand{\Ang}{\AA ngstr\"om}
+
+%% Formatting settings %%
+
+% skip line instead of indent on new paragraph
 \setlength{\parskip}{11pt}
 \setlength{\parindent}{0mm}
+
+% make figure text more narrow than textwidth, use small font, and make ``figure'' bold
+% ! see alternatives in FYS4180 report
+\captionsetup{width=.9\textwidth}
+\captionsetup{font=small,labelfont=bf}
 
 % %% To automatically detect if the .svg-images included in the document (via \includesvg) have been changed. If they are changed, we re-export them to pdf + pdf_tex using inkscape.
 % \newcommand{\executeiffilenewer}[3]{%
@@ -96,7 +110,7 @@
 \input{chap_fractures.tex}
 
 \chapter{Measurements}
-    \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks}
+    \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
     \section{Mean square displacement}
     \section{Density}
     \section{Distance to atom}
