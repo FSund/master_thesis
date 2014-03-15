@@ -1,5 +1,12 @@
 \chapter{Simulations}
 \section{Potential}
+\orangebox{
+\begin{itemize}
+    \item Which of the parameters given below are constants?
+    \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
+\end{itemize}
+}
+
 The interatomic potential\cite{vashishta1990interaction} \todo{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
 \begin{align*}
     E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
@@ -118,7 +125,7 @@ which by rearranging can be written as
 \end{align*}
 Which is the equation used to update the positions in the regular Verlet algorithm. We see that the estimate of the new position contains an truncation error for one timestep $\Delta t$ of the order $\mathcal{O}(\Delta t^4)$.
 
-The Verlet algorithm does not use the velocity to compute the new position, but we can find an estimate of the velocity by taking the difference between equations \eqref{eq:verlet_plus} and \eqref{eq:verlet_minus}
+The Verlet algorithm does not use the velocity to compute the new position, but we can find an estimate of the velocity by taking the difference between \cref{eq:verlet_plus,eq:verlet_minus}
 \begin{align*}
     \rvec(t + \Delta t) - \rvec(t - \Delta t) = 2\vvec(t)\Delta t + \mathcal{O}(\Delta t^3),
 \end{align*}
@@ -149,7 +156,7 @@ which by rearranging and multiplying with $\frac{\Delta t}{2}$ gives
     &= \left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right)\frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
     &= \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
 \end{align*}
-Inserting this into Eq. \eqref{eq:velocity_taylor} we get
+Inserting this into \cref{eq:velocity_taylor} we get
 \begin{align}
     \vvec(t + \Delta t) 
     &= \vvec(t) + \avec(t)\Delta t + \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \nonumber\\
@@ -170,23 +177,23 @@ where
 \begin{align}
     \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \avec(t)\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
 \end{align}
-Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
+We see that \cref{eq:verlet_halfstep} Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
 \begin{itemize}
-    \item Calculate the new positions at $t + \Delta t$ using Eq. \eqref{eq:velocity_verlet_position} \hl{(repeated here)}
+    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_position} \hl{(repeated here)}
     \begin{align*}
         \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}.
     \end{align*}
-    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using Eq. \eqref{eq:verlet_halfstep} \hl{(repeated here)}
+    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} \hl{(repeated here)}
     \begin{align*}
         \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
     \end{align*}
     \item Calculate the new forces $\Fvec(t+\Delta t)$.
-    \item Calculate the new velocities at $t+\Delta t$ using Eq. \eqref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
+    \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
     \begin{align*}
         \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
     \end{align*}
 \end{itemize}
-This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing Eq. \eqref{eq:velocity_verlet_position} and \eqref{eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. 
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. 
 
 Pseudocode: \todo{do we want this?}
 \begin{verbatim}
@@ -201,7 +208,7 @@ Pseudocode: \todo{do we want this?}
 % The velocity Verlet algorithm can be implemented as follows\cite{allen1989computer}
 % \begin{samepage}
 % \begin{itemize}
-%     \item Calculate the new positions at $t + \Delta t$ using Eq. \eqref{eq:velocity_verlet_position}.
+%     \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_position}.
 %     \item Calculate the velocities at $t + \frac{1}{2}\Delta t$ using
 %     \begin{align*}
 %         \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
@@ -224,11 +231,11 @@ Sources:
 \end{itemize}
 
 \todo{I don't know if the calculations below are correct} 
-The global error in position can be derived from the local error for one timestep $\Delta t$. We see from Eq. \eqref{eq:position_taylor} that
+The global error in position can be derived from the local error for one timestep $\Delta t$. We see from \cref{eq:position_taylor} that
 \begin{align*}
     \text{error}\big(\rvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3),
 \end{align*}
-and from Eq. \eqref{eq:verlet_velocity_taylor_insertion}
+and from \cref{eq:verlet_velocity_taylor_insertion}
 \begin{align*}
     \text{error}\big(\vvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3).
 \end{align*}
@@ -249,9 +256,68 @@ which gives
 \section{Ensemble, observables etc.}
 \section{Initialization}
 \section{Passivation}
-Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating them by inserting atoms on the dangling bonds, so they turn into silanol groups\todo{why silanol?}. Silicon atoms with less than four\todo{why four?} oxygen neighbors get one hydroxide (OH$^-$) group attached to them per missing neighbor, and oxygen atoms with less than two silicon atoms get one hydrogen atom attached per missing silicon\hl{(oxygen atoms with two missing neighbors are removed)}.
+Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating the system by inserting atoms on the dangling bonds, turning them into \hl{stable} silanol groups\todo{why silanol?}.
 
-When adding hydrogen- and oxygen-atoms we assume that the silicon 
+In the passivation procedure we do some basic assumptions, based on the chemical nature of silica and water. In the thermodynamically stable form, silica should have the following properties:
+\begin{itemize}
+    \item Silicon atoms should have tetrahedral coordination, with four oxygen atoms surrounding each silicon atom in a tetrahedral \hl{shape}. \todo{something about bonds? bonded to four oxygen atoms?}
+    \item Oxygen atoms should have two silicon \hl{neighbors}.
+    \item The Si-O distance should be in the range 1.5-1.9 pm\todo{source?} (depending on the crystalline form).
+\end{itemize}
+
+\hl{When removing atoms to create pores we don't care about these properties, which leads us to the following cases}
+\begin{itemize}
+    \item Silicon atoms with less than four oxygen neighbors.
+    \item Oxygen atoms with one missing silicon neighbor.
+    \item Silicon and oxygen atoms with no neighbors.
+    \item \hl{Silicon and oxygen atoms with too many neighbors?}
+\end{itemize}
+
+\hl{When inserting oxygen and hydrogen we must make sure to inject neutrally, meaning twice as much hydrogen as oxygen (H$_2$O)}
+
+Silicon atoms with less than four oxygen atoms bound to them get ($4-n_\text{O}$) hydroxide (OH$^-$) groups attached to them, where $n_\text{O}$ is the numer of oxygen atoms bound to the silicon. Oxygen atoms with less than two silicon atoms get ($2-n_\text{Si}$) hydrogen atom attached, where $n_\text{Si}$ is the number of silicon atoms bound to the oxygen. \hl{(oxygen atoms with two missing neighbors are removed)}.
+
+When passivating a silicon atom with missing oxygen neighbors by \hl{simply} filling in the missing atoms to complete the SiO$_4$-tetrahedra. We then put one hydrogen atom on each new oxygen atom, to avoid dangling bonds on the inserted oxygen atoms.
+
+When passivating a oxygen atom with a missing silicon neighbor, we put one hydrogen atom on the opposite side of the oxygen atom compared to the silicon atom.
+
+All silicon and oxygen atoms with no neighbors we remove, since they aren't really part of the silica.
+
+To find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}
+        \caption{}
+%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}
+%         \label{fig:hex_to_tetra}
+    \end{subfigure}
+%     \hspace{5mm}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02.png}
+        \caption{}
+%         \caption{A random fracture made from two periodic heightmaps.}
+%         \label{fig:fracture_model}
+    \end{subfigure}
+%     \hspace{5mm}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03.png}
+        \caption{}
+%         \caption{A random fracture made from two periodic heightmaps.}
+%         \label{fig:fracture_model}
+    \end{subfigure}
+%     \hspace{5mm}
+    \begin{subfigure}[b]{0.24\textwidth}
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04.png}
+        \caption{}
+%         \caption{A random fracture made from two periodic heightmaps.}
+%         \label{fig:fracture_model}\caption{}
+    \end{subfigure}
+    \caption{\hl{Caption}}
+    \label{fig:passivation}
+\end{figure}
+
 \begin{itemize}
     \item Tetrahedra
     \item Neighbor lists -- see base\_code/passivate\_using\_tetrahedra/passivator.cpp near line 700
@@ -268,6 +334,29 @@ When adding hydrogen- and oxygen-atoms we assume that the silicon
 \end{itemize}
 
 \section{Injecting water}
+To fill the pore we have made \hl{(after passivating the system)} we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), and put one water molecule in each unoccupied voxel. This way the density of water can be controlled by the size of the voxels.
+
+If we want to inject water with density $\rho$ [kg/m$^3$], we can find the voxel size we need using the molar mass of water, $M_\text{H$_2$O} = M = 0.0180158 \text{ kg/mol}$. We find the ``volume'' of a water atom in \Ang, the unit used in the \hl{MD integrator/program and output files}, as follows
+\begin{align*}
+    V 
+    &= \frac{ M\text{ [kg/mol]} }{ \rho\text{ [kg/m$^3$]} } \\
+    &= \frac{
+            M\text{ [kg/mol]} \times \dfrac{1}{N_A \text{ [mol$^{-1}$]}}
+        }{
+            \rho\text{ [kg/m$^3$]} \times \left(10^{-10} \text{ [\AA/m]}\right)^3
+        } \\
+    &= \frac{M}{\rho} \times \frac{10^{-30}}{N_A} \text{ [\AA$^3$]},
+%     \times \frac{N_A \text{ [mol$^{-1}$]}}{10^{-10} \text{ [\AA/m]}} 10 \text{ [m$^3$]} \\
+\end{align*}
+from which we find the size we need our voxels to be as
+\begin{align*}
+    L = \left(\frac{M}{\rho} \times \frac{10^{30}}{N_A} \text{ [\AA$^3$]}\right)^{1/3}\text{ [\AA]}.
+\end{align*}
+
+We then divide the system into voxels of length $L$. And put one water molecule with random orientation in the center of each empty voxel. The naive way of finding the empty voxels is to just find which voxel each existing silicon and oxygen atom is in, and mark those as occupied. But the amorph \hl{structure} of solid silica means that we have a lot of very small pores inside the matrix, where we could fit a water molecule if the density was high enough. This again goes back to the definition of a pore.
+
+What we do is to assign a radius to each atom type \todo{which is hard, Si-O, ???}, and mark all voxels with it's center within this radius as occupied.
+
 \begin{itemize}
     \item Voxelize system -- size depends on wanted density
     \item Mark all voxels within distance from other atoms as occupied
