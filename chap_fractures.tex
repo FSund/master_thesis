@@ -1,5 +1,11 @@
 \chapter{Fractures}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{images/fracture/large_fracture05}
+    \caption{Caption}
+\end{figure}
+
 We want to study the behaviour of water trapped in nanoscale (pores and) fractures in silica, so need want a way to generate and characterize such a structure. (Several methods of characterizing a fracture could be imagined (\hl{SOURCES, examples}), and we will use several of them.)        
 
 \hl{terrain == heightmap??, finn bra ord her}
@@ -45,7 +51,7 @@ The standard deviation $S$ of the time series is estimated using
 \begin{align*}
     S^2 = \frac{1}{\tau} \sum_{t=1}^\tau \big( f(t) - \langle f \rangle_\tau \big)^2.
 \end{align*}
-Hurst found that the observed \emph{rescaled range}, $R/S$, for many time series is described by the empirical relation\cite{feder1988fractals}
+Hurst found that the observed \emph{rescaled range}, $R/S$, for many time series is described by the \hl{empirical} relation\cite{feder1988fractals}
 \begin{align*}
     \frac{R}{S} = \left(\frac{\tau}{2}\right)^H \sim \tau^H.
 \end{align*}
@@ -60,7 +66,7 @@ where we find $H$ as the slope of the linear fit.
 \subsubsection{Detrending moving average}
 To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) first described by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. We use this method because ??? \todo[inline]{good results, easy to implement? }
 
-We define a self-affine surface as $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, and with $i,j = 1,\dots,N$. We divide the surface into square \hl{subsurfaces} of size $n \times n$, and find the average $\tilde f_n$ of each subsurface by\footnote{\cref{eq:carbone_average} is how the average $\tilde f_n$ is stated in the article\cite{carbone2007algorithm}, but we rewrite it to \cref{eq:carbone_average_rewritten} so it's easier to understand. The two forms are equivalent.}
+We define a \hl(self-affine) surface as $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, and with $i,j = 1,\dots,N$. We divide the surface into square \hl{subsurfaces} of size $n \times n$, and find the average $\tilde f_n$ of each subsurface by\footnote{\cref{eq:carbone_average} is how the average $\tilde f_n$ is stated in the article\cite{carbone2007algorithm}, but we rewrite it to \cref{eq:carbone_average_rewritten} so it's easier to understand. The two forms are equivalent.}
 \begin{align}
     \tilde f_n(i,j) 
     &= \frac{1}{n^2}\sum_{k=-m}^{n-1-m} ~ \sum_{l=-m}^{n-1-m} f(i-k, j-l) \label{eq:carbone_average}\\
@@ -71,12 +77,22 @@ where
 \begin{align*}
     &m = \left \lfloor n\theta \right \rfloor &\text{for }0 \leq \theta < 1,
 \end{align*}
-which means that $0 \leq m \leq (n-1)$. $\theta$ is a parameter that controls the position of the square relative to the point $(i,j)$. There are three notable cases for $\theta$, which are listed below, and are illustrated in \cref{fig:DMA_theta}.
-\begin{itemize}
-    \item For $\theta = 0$ we have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
-    \item For $\theta = 1/2$ we average over a square centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
-    \item For $\theta = (n-1)/n$ we have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{THESE LIMITS ARE WRONG??}($i \leq k,l \leq (i+n-1)$). See \cref{fig:DMA_theta_c}.
-\end{itemize}
+which means that $0 \leq m \leq (n-1)$. $\theta$ is a parameter that controls the position of the square relative to the point $(i,j)$ in $\tilde f_n(i,j)$. There are three \hl{extreme} cases for $\theta$, which are listed below, and are illustrated in \cref{fig:DMA_theta}.
+% \begin{itemize}
+%     \item For $\theta = 0$ we have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
+%     \item For $\theta = 1/2$ we average over a square centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
+%     \item For $\theta = (n-1)/n$ we have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{THESE LIMITS ARE WRONG??}($i \leq k,l \leq (i+n-1)$). See \cref{fig:DMA_theta_c}.
+% \end{itemize}
+\begin{description}
+    \item[$\bm{\theta = 0}$:] \hfill\\ 
+        We have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
+    \item[$\bm{\theta = 1/2}$:] \hfill\\ 
+        We average over a square centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
+    \item[$\bm{\theta = (n-1)/n}$:] \hfill\\ 
+        {\sloppy 
+        We have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{\st{THESE LIMITS ARE WRONG??} fixed}\\(${i \leq k,l \leq (i+n-1)}$). See \cref{fig:DMA_theta_c}.
+        }
+\end{description}
 
 \begin{figure}
     \centering
@@ -126,7 +142,7 @@ The generalized variance goes as
 \end{align*}
 which we can use to find the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the squares, $n$. We estimate $H$ by a linear fit of $\log \sigma_\text{DMA}^2$ against $\log 2n^2$, where $H$ is the slope.
 
-In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
+In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
 % With $\theta = 0$ we have $m = 0$ and average over all points $(\leq k \leq i,l \leq j)$. 
 
@@ -213,29 +229,33 @@ In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm
 
 To generate our random terrains we use an iterative midpoint displacement method usually called successive random additions \hl{(SRA)}. The method is based on a method proposed by Fourner in 1982\cite{fournier1982computer}, but with some modifications suggested by Voss\cite{voss1985random, voss1988fractals}. The method has further been discussed by Saupe\cite{saupe1988algorithms}, amongst others. We choose this method mainly because it's possible to generate periodic terrains with it, because it generates very good approximations to fBm surfaces\cite{zhou2005comparison}, and because the Hurst exponent of the generated terrains is easy to control. The method is also easy to understand, easy to implement, and generates terrains with high resolution very fast. The method is widely used in scientific applications\hl{cite??} because of these properties, and is also used for generating terrains in computer graphics, since the terrains look very realistic \hl{with only some minor artefacts?? (high, narrow peaks)}.
 
-The method is very similar to the standard midpoint displacement method, which in 1 dimension goes as follows. See \cref{fig:midpoint01} for a visual presentation.
+\subsubsection{Midpoint displacement method in 1 dimension}
+The method we use to generate random terrains is very similar to the standard midpoint displacement method, which in 1 dimension goes as follows. See \cref{fig:midpoint01} for a visual presentation.
 \begin{enumerate}
-    \item Give the values at the endpoints $y_0$ and $y_n$ random values from a Gaussian random variable with mean $\mu = 0$ and variance $\sigma_0^2$. The variance can be chosen freely.
-    \item Generate the value in the center of the interval, $y_{n/2}$, by averaging the two endpoints and adding a Gaussian random number with mean $\mu = 0$ and variance
+    \item Give the values at the endpoints of the interval, $y_0$ and $y_n$, random values from a Gaussian random variable with mean $\mu = 0$ and variance $\sigma_0^2$. This initial standard deviation $\sigma_0$ can be chosen freely.
+    \item Generate the value in the center of the interval, $y_{n/2}$, by averaging over the two endpoints and adding a Gaussian random number with mean $\mu = 0$ and variance
     \begin{align*}
          \sigma_1^2 = \left(1/2\right)^{2H}\sigma_0^2,
     \end{align*}
     where $H$ is the wanted Hurst exponent.
-    \item Continue generating the values in the center of each interval until you reach the desired number of points, while reducing the variance of the random number by a factor $\frac{1}{2}$ each iteration. For iteration $i$ we have
+    \item Continue generating the values in the center of each sub-interval until you reach the desired number of points, while reducing the variance of the random number by a factor $\frac{1}{2}$ each iteration. For iteration $i$ we have
     \begin{align*}
         \sigma_i^2 = \left(1/2\right)^{i2H}\sigma_0^2.
     \end{align*}
 \end{enumerate}
-This method generates a \hl{1-dimensional line}, with a Hurst exponent close to the input $H$. But since we only add random numbers to the new values, the result is non-stationary for $H \neq 0.5$\cite{voss1985random}\hl{, and it is neither self-similar or isotropic, as noted by Mandelbrot}\cite{mandelbrot1982comment}. To mitigate this we implement the addition suggested by Voss\cite{voss1985random}, which consists of adding a random number to all points in each iteration. Voss called this modified method ``successive random additions''.
 
 \begin{figure}
     \centering
     \includesvg[width=0.5\textwidth, svgpath=./images/diamond_square/]{random_midpoint_displacement_regular02}
     \caption{
-        Caption.
+        \hl{Illustration of the midpoint displacement method in 1 dimension.}
         \label{fig:midpoint01}
     }
 \end{figure}
+
+This method generates a \hl{1-dimensional line}, with a Hurst exponent \hl{close} to the input $H$\todo{how close?}. But since we only add random numbers to the new values, the result is non-stationary for $H \neq 0.5$\cite{voss1985random}\hl{, and it is neither self-similar or isotropic, as noted by Mandelbrot}\cite{mandelbrot1982comment}. To mitigate this we implement the addition suggested by Voss\cite{voss1985random}, which consists of adding a random number to \emph{all} new and old points in each iteration. Voss called this modified method \emph{successive random additions}.
+
+\subsubsection{Successive random additions on an infinite grid in 2 dimensions}
 
 % \begin{figure}
 %     \centering
@@ -245,13 +265,13 @@ This method generates a \hl{1-dimensional line}, with a Hurst exponent close to 
 %     }
 % \end{figure}
 
-Voss has geneneralized the the method of SRA to higher dimensions\cite{voss1985random}, which is the algorithm we will be using. We will generate heightmaps, meaning a 2-dimensional grid of points ($x_i$, $y_i$), with a value for the height in each point ($z_i$) which is generated by the algorithm.
+Voss has geneneralized the the method of successive random additions (SRA) to higher dimensions\cite{voss1985random}, which is the algorithm we use to generate fractures. We use it to generate heightmaps, meaning a 2-dimensional grid of points ({$i,j$}), with a value for the height in each point \hl{($z_{i,j} = z(i,j)$)} which is generated by the algorithm.
 
 % \hl{Now, generating fBm in one dimension is all well and good}, but we need to generate a 2/3 dimensional terrain. For simplicity we generate a \emph{heightmap}, meaning a 2-dimensional grid of points ($x_i$, $y_i$), with a value for the height in each point ($z_i$) which is generated by the algorithm. Luckily, Voss has generalized the successive random additions algorithm to higher dimensions, which is what we will be using.
 
-\hl{To explain the algorithm} we start with a simple case of an infinite grid of evenly spaced points, all with known $z$-values. This allows us to first focus on the central part of the algorithm which consists of two steps; often called the ``diamond step'' and the ``square step''. We take on a set of 2x2 points in the grid, as seen in the leftmost square of \cref{fig:initial_square_step}.
+\hl{To explain the algorithm} we start with a simple case of an infinite grid of evenly spaced points, all with known $z$-values. This allows us to first focus on the central part of the algorithm which consists of two steps; often called the \emph{diamond step} and the \emph{square step}. We start with a set of 2x2 points in the grid, as seen in the leftmost square of \cref{fig:initial_square_step}.
 \begin{enumerate}
-    \item \emph{The square step}: We have four points that make up a square. The $z$-value in the center of the square is generated by averaging the $z$-values of the four corners of the square, as indicated by the red dots in \cref{fig:initial_square_step}, and adding a random Gaussian number with mean $\mu = 0$ and variance $\sigma_0^2$ to both the new point and the old points. The variance can be chosen freely.
+    \item \emph{The square step}: We have four points that make up a square. The $z$-value in the center of the square is generated by averaging the $z$-values of the four corners of the square, as indicated by the red dots in \cref{fig:initial_square_step}, and adding a random Gaussian number with mean $\mu = 0$ and variance $\sigma_0^2$ to both the new point and the old points. This initial standard deviation $\sigma_0$ can be chosen freely.
     \label{enum:test}
     
     \item \emph{The diamond step}: The $z$-values in the middle of the four edges of the square is generated by averaging the $z$-values of the points above, below, to the right of, and to the left of the points, as indicated by the red dots in \cref{fig:diamond_step}, and adding a random Gaussian number with mean $\mu = 0$ and a \emph{reduced} variance $\sigma_1^2 = \sigma_0^2r^{2H}$, where $H$ is the wanted Hurst exponent, and $r < 1$ is a parameter that controls the \hl{\emph{lacunarity} of the fractal}, to all new and old points.
@@ -346,17 +366,30 @@ where $\sigma_0^2$ is the initial variance.
 %     \end{subfigure}
 
     \caption{
-        New points are black, old points are grey, and points used in the generation of the new points are red.
+        Illustration of the different steps of the diamond-square algorithm. New points are black, old points are grey, and points used in the generation of the new points are red.
+        {\bf (a)} The initial square-step,
+        {\bf (b)} the diamond-step,
+        {\bf (c)} the square-step.
         \label{fig:diamond_square}
     }
 \end{figure}
 
+\subsubsection{Successive random additions on a finite grid in 2 dimensions}
+We obviously can't generate infinite terrains, instead we generate a terrain on a finite grid of size $n\times n$. This means that we get some special cases that need to be addressed near the boundaries of the grid. We also want the generated terrains to be periodic, meaning that they should behave nicely when repeated in the $x$- and $y$-direction. 
 
-We obviously can't generate infinite terrains, so some special cases need to be addressed near the boundaries of the terrain. We also want the generated terrains to be periodic, meaning that they should behave nicely when repeated in the $x$- and $y$-direction. This leaves us with the following final algorithm
+When generating the points on the edges of the grid using the diamond-step as in \cref{fig:diamond_step} we see that some of the neighbors we need to average over will be outside our finite grid. Since the system is periodic, we solve this by wrapping around the edges to reach the neighbor. For example, when generating the point in the middle of the top edge $z_{0, n/2}$, the neighbor above the point, $z_{0-n/2, n/2}$, will be outside the grid in the \hl{$x$/$i$-direction}. Using periodic boundary conditions we find that the point we want is $z_{n/2, n/2}$.
+
+This leaves us with the following algorithm for generating a periodic terrain which approximates a 2-dimensional fractional Brownian motion with Hurst exponent $H$
 \begin{enumerate}
-    \item Start with a set of four points, located in the corners of a grid. These points all need to have the same $z$-value, since the final terrain must be periodic.
-    \item Generate the $z$-value in the center of the grid using the square step, by averaging over the four neighbors, as shown in \cref{fig:initial_square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma^2 = \sigma_0^2$ to the new point, and to the point in the top left corner. Set the three other corners equal to the top left corner, to keep the terrain periodic.
-    \item Generate the values in the middle of the top and left edge of the grid using the diamond step from before. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_1^2 = \sigma_0^2r^{2H}$, where $H$ is the wanted Hurst exponent. Since the terrain is periodic, we can wrap around the edges to reach the points beyond the edges of our grid (the points outside the grid in \cref{fig:diamond_step}). Set values in the middle of the right and bottom edge equal to the corresponding values in the middle of the left and top edge, to keep the terrain periodic\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but by doing it the way we have we can keep the square step the same as before.}}.
+    \item Start with a grid of size $n \times n$, where $n = 2^p + 1$, and $p$ is a positive integer.
+    
+    \item Assign the four corners of the grid the same random value, drawn from a Gaussian distribution with mean $\mu = 0$ and variance $\sigma_0^2$. This initial standard deviation $\sigma_0$ can be chosen freely.
+    
+    \item Generate the $z$-value in the center of the grid using the square step by averaging over the four corners, as shown in \cref{fig:initial_square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_1^2 = \sigma_0^2r^{2H}$\todo{define r} to the new point, and to the four corners (add the same number to all four corners to keep the system periodic).
+    
+    \item Generate the values in the middle of the top and left edge of the grid using the diamond step, as shown in \cref{fig:diamond_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_2^2 = \sigma_1^2r^{2H}$ to all new and old points. Set the point in the middle of the right and bottom edges equal to 
+    
+    When calculating the averages in the diamond-step  Since the terrain is periodic, we can wrap around the edges to reach the points beyond the edges of our grid (the points outside the grid in \cref{fig:diamond_step}). Set values in the middle of the right and bottom edge equal to the corresponding values in the middle of the left and top edge, to keep the terrain periodic\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but by doing it the way we have we can keep the square step the same as before.}}.
     
 %     \item We now need to generate the $z$-values in the middle of the four edges of the grid, using the diamond step. But since we have a finite and periodic grid, we have to wrap around the edges when taking the average over the four neighbours. We also see that the top and bottom edge, and the left and right edge should be equal after generating the new points\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but doing it the way we have we can keep the square step the same as before.}}, to keep the grid periodic. This can for example be done by generating the point in the middle of the left edge and the point in the middle of the top edge by using the diamond step and wrapping around the edges, and then setting the corresponding points on the right and bottom edge equal to the generated points.
     
@@ -462,6 +495,7 @@ in the $x$-$y$-grid. Each of these hexahedra can then be divided into five tetra
     \hspace{5mm}
     \begin{subfigure}[b]{0.55\textwidth}
         \includegraphics[width=\textwidth]{images/fracture/fracture05_n200.png}
+%         \includegraphics[width=\textwidth]{images/fracture/large_fracture04_300dpi_w20cm}
         \caption{A random fracture made from two periodic heightmaps.}
         \label{fig:fracture_model}
     \end{subfigure}

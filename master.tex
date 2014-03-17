@@ -1,4 +1,4 @@
-\documentclass[twoside,english]{uiofysmaster}
+\documentclass[twoside,english,a4paper]{uiofysmaster}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 
@@ -14,28 +14,31 @@
 }
 
 \usepackage{graphicx}
-\usepackage{pdfpages} % To include the frontpage pdf
-\usepackage{soulutf8} % To highlight stuff (when using utf8), using \hl{Text you want to highlight}. Doesn't work that well with equations...
-\usepackage{svg} % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). NEEDS ``pdflatex --shell-escape'' !!!
+\usepackage{pdfpages}   % To include the frontpage pdf
+\usepackage{soulutf8}   % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
+\usepackage{svg}        % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). NEEDS ``pdflatex --shell-escape'' !!!
 % \graphicspath{{images/}} % To include .eps + .eps_tex vector graphics from Inkscape, located in a subfolder of the .tex-files
 \usepackage{lipsum}
 % \usepackage[square, super]{natbib}
 \usepackage[square,sort,numbers]{natbib}
-\usepackage{subcaption} % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
-                        % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+\usepackage{subcaption}     % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
+                            % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
 % \usepackage{minipage}
-\usepackage{commath} % to correctly typeset differentials \od, \dod, and \tod
-\usepackage{fancyvrb} % better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
-\usepackage{cleveref} % use \cref{fig:label} instead of \ref{} to get auto ``fig. 1.1a''. \Cref for capitalized.
+\usepackage{commath}        % to correctly typeset differentials \od, \dod, and \tod
+\usepackage{fancyvrb}       % better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
+\usepackage{cleveref}       % use \cref{fig:label} instead of \ref{} to get auto ``fig. 1.1a''. \Cref for capitalized.
+\usepackage{upgreek}        % Upper case greek letters
+\usepackage{bm}             % bold symbols in math mode
 
-\setsvg{
+\setsvg{ % conversion options for svg package
     inkscape = inkscape -z -D
 }
 
 \newlength{\myfigwidth}
 \newlength{\mycaptionwidth}
 
-\newcommand{\bvec}[1]{\mathbf{#1}}
+% \newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\bvec}[1]{\bm{#1}}
 \newcommand{\rvec}{\bvec{r}}
 \newcommand{\vvec}{\bvec{v}}
 \newcommand{\avec}{\bvec{a}}

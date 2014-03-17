@@ -92,8 +92,9 @@ where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cu
 The equations of motion are integrated using the velocity Verlet algorithm:
 \begin{align*}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
-    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t
-\end{align*} 
+    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t.
+\end{align*}
+This algorithm has a \hl{glocal/accumulated} error of $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}.
 
 \subsection{Derivation of Verlet algorithm}
 \todo{why do we use velocity Verlet}
@@ -177,15 +178,19 @@ where
 \begin{align}
     \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \avec(t)\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
 \end{align}
-We see that \cref{eq:verlet_halfstep} Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
+We see that \cref{eq:verlet_halfstep} can be used in updating the positions, so we rewrite \cref{eq:velocity_verlet_position} to
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.\label{eq:velocity_verlet_positions_halfstep}
+\end{align}
+Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
 \begin{itemize}
-    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_position} \hl{(repeated here)}
-    \begin{align*}
-        \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{m}\frac{\Delta t^2}{2}.
-    \end{align*}
     \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} \hl{(repeated here)}
     \begin{align*}
-        \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
+        \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
+    \end{align*}
+    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_positions_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.
     \end{align*}
     \item Calculate the new forces $\Fvec(t+\Delta t)$.
     \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
@@ -197,8 +202,8 @@ This implementation minimizes the memory needs, as we only need to store one cop
 
 Pseudocode: \todo{do we want this?}
 \begin{verbatim}
-    r += v*dt + F*dt*dt/(2*m);
     v += F*dt/(2*m);
+    r += v*dt;
     F = calculate_forces(r, v);
     v += F*dt/(2*m);
 \end{verbatim}
@@ -243,22 +248,35 @@ The error for two timesteps is
 \begin{align*}
     \rvec(t_0+2\Delta t) 
     &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \\
-    &= \rvec()
 \end{align*}
-which gives
+which gives \todo{Error in $\avec(t_0 + \Delta t) = \mathcal{O}(\Delta t^3)$ ??}
 \begin{align*}
-    &\text{error}\big(\rvec(t_0+2\Delta t)\big)  \\
-    &~= \text{error}(\rvec(t_0+\Delta t)) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} \\
-    &~= 2\mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2} \\
-    &~= 2\mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^4) + \mathcal{O}(\Delta t^5)
+    &\text{error}\big(\rvec(t_0+2\Delta t)\big) \\
+    &~= \text{error}\big(\rvec(t_0+\Delta t)\big) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
+    &~= \mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
+    &~= 2\mathcal{O}(\Delta t^3).
 \end{align*}
+Similarly we find
+\begin{align*}
+    &\text{error}\big(\rvec(t_0+3\Delta t)\big) = 3\mathcal{O}(\Delta t^3) \\
+    &\text{error}\big(\rvec(t_0+4\Delta t)\big) = 4\mathcal{O}(\Delta t^3) \\
+    &\text{error}\big(\rvec(t_0+5\Delta t)\big) = 5\mathcal{O}(\Delta t^3),
+\end{align*}
+\begin{align*}
+    \text{error}\big(\rvec(t_0 + n\Delta t)\big) = n\mathcal{O}(\Delta t^3) = \mathcal{O}(\Delta t^2)
+\end{align*}
+
+
+
 
 \section{Ensemble, observables etc.}
 \section{Initialization}
+To initialize the system we generate a silica crystal in the crystalline form $\upbeta$-cristobalite.
+
 \section{Passivation}
 Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating the system by inserting atoms on the dangling bonds, turning them into \hl{stable} silanol groups\todo{why silanol?}.
 
-In the passivation procedure we do some basic assumptions, based on the chemical nature of silica and water. In the thermodynamically stable form, silica should have the following properties:
+In the passivation procedure we do some basic assumptions, based on the chemical nature of silica and water. In the thermodynamically stable form, silica should have the following properties\todo{source?}:
 \begin{itemize}
     \item Silicon atoms should have tetrahedral coordination, with four oxygen atoms surrounding each silicon atom in a tetrahedral \hl{shape}. \todo{something about bonds? bonded to four oxygen atoms?}
     \item Oxygen atoms should have two silicon \hl{neighbors}.
@@ -275,7 +293,9 @@ In the passivation procedure we do some basic assumptions, based on the chemical
 
 \hl{When inserting oxygen and hydrogen we must make sure to inject neutrally, meaning twice as much hydrogen as oxygen (H$_2$O)}
 
-Silicon atoms with less than four oxygen atoms bound to them get ($4-n_\text{O}$) hydroxide (OH$^-$) groups attached to them, where $n_\text{O}$ is the numer of oxygen atoms bound to the silicon. Oxygen atoms with less than two silicon atoms get ($2-n_\text{Si}$) hydrogen atom attached, where $n_\text{Si}$ is the number of silicon atoms bound to the oxygen. \hl{(oxygen atoms with two missing neighbors are removed)}.
+Silicon atoms with less than four oxygen atoms bound to them get ($4-n_\text{O}$) hydroxide (OH$^-$) groups attached to them, where $n_\text{O}$ is the numer of oxygen atoms bound to the silicon. Oxygen atoms with a missing silicon neighbor get a hydrogen attached. 
+% \hl{(oxygen atoms with two missing neighbors are removed)}.
+% Oxygen atoms with less than two silicon atoms get ($2-n_\text{Si}$) hydrogen atom attached, where $n_\text{Si}$ is the number of silicon atoms bound to the oxygen. 
 
 When passivating a silicon atom with missing oxygen neighbors by \hl{simply} filling in the missing atoms to complete the SiO$_4$-tetrahedra. We then put one hydrogen atom on each new oxygen atom, to avoid dangling bonds on the inserted oxygen atoms.
 
@@ -334,7 +354,7 @@ To find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxy
 \end{itemize}
 
 \section{Injecting water}
-To fill the pore we have made \hl{(after passivating the system)} we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), and put one water molecule in each unoccupied voxel. This way the density of water can be controlled by the size of the voxels.
+To fill the pore we have made \hl{(after passivating the system)} we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), and put one water molecule in each unoccupied voxel. The water density is then controlled by the size of the voxels.
 
 If we want to inject water with density $\rho$ [kg/m$^3$], we can find the voxel size we need using the molar mass of water, $M_\text{H$_2$O} = M = 0.0180158 \text{ kg/mol}$. We find the ``volume'' of a water atom in \Ang, the unit used in the \hl{MD integrator/program and output files}, as follows
 \begin{align*}
@@ -353,7 +373,7 @@ from which we find the size we need our voxels to be as
     L = \left(\frac{M}{\rho} \times \frac{10^{30}}{N_A} \text{ [\AA$^3$]}\right)^{1/3}\text{ [\AA]}.
 \end{align*}
 
-We then divide the system into voxels of length $L$. And put one water molecule with random orientation in the center of each empty voxel. The naive way of finding the empty voxels is to just find which voxel each existing silicon and oxygen atom is in, and mark those as occupied. But the amorph \hl{structure} of solid silica means that we have a lot of very small pores inside the matrix, where we could fit a water molecule if the density was high enough. This again goes back to the definition of a pore.
+We then divide the system into voxels of length $L$. And put one water molecule with random orientation in the center of each empty voxel. The naive way of finding the empty voxels is to just find which voxel each existing silicon and oxygen atom is in, and mark those as occupied. But the amorph \hl{structure} of solid silica means that we have a lot of very small pores inside the matrix, which ends up as empty voxels. \todo{something about definition of a pore?}
 
 What we do is to assign a radius to each atom type \todo{which is hard, Si-O, ???}, and mark all voxels with it's center within this radius as occupied.
 
