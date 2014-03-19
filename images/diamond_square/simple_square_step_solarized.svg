@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="43.272312"
-     inkscape:cy="995.28181"
+     inkscape:zoom="4"
+     inkscape:cx="62.95365"
+     inkscape:cy="984.67644"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -3025,7 +3025,7 @@
        transform="translate(-5,-7.499999)">
       <path
          sodipodi:type="arc"
-         style="fill:#d33682;fill-opacity:1;stroke:none"
+         style="fill:#2aa198;fill-opacity:1;stroke:none"
          id="path2993-0-2-3-4-4-92-1-3"
          sodipodi:cx="95"
          sodipodi:cy="77.362183"
@@ -3035,7 +3035,7 @@
          transform="matrix(0.75,0,0,0.75,16.25,1.8405457)" />
       <path
          sodipodi:type="arc"
-         style="fill:#d33682;fill-opacity:1;stroke:none"
+         style="fill:#2aa198;fill-opacity:1;stroke:none"
          id="path2993-0-2-3-5-7-8-3-5"
          sodipodi:cx="95"
          sodipodi:cy="77.362183"
@@ -3051,7 +3051,7 @@
          sodipodi:cy="77.362183"
          sodipodi:cx="95"
          id="path2993-0-4-9-5-2-1"
-         style="fill:#d33682;fill-opacity:1;stroke:none"
+         style="fill:#2aa198;fill-opacity:1;stroke:none"
          sodipodi:type="arc" />
       <path
          transform="matrix(0.75,0,0,0.75,56.25,1.8405457)"
@@ -3061,7 +3061,7 @@
          sodipodi:cy="77.362183"
          sodipodi:cx="95"
          id="path2993-0-4-9-5-1-4-3"
-         style="fill:#d33682;fill-opacity:1;stroke:none"
+         style="fill:#2aa198;fill-opacity:1;stroke:none"
          sodipodi:type="arc" />
     </g>
     <g
