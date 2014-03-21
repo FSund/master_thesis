@@ -396,38 +396,59 @@ where $p$ is any positive integer.
 
 We implement generation of both periodic and non-periodic surfaces using using \crefrange{eq:square_step_limits}{eq:diamond_step02}, while skipping points outside the grid for non-periodic surfaces, and wrapping around the edges using periodic boundary conditions when generating periodic surfaces.
 
-To ensure that the periodic surfaces turn out periodic we start with all four corners having the same value. We also let the right and bottom edge be equivalent to the left and top edge, respectively, which effectively means that all four corners are the same. To ensure that the opposite edges stay equal to each other we never generate any points on the right and bottom edge, but just update these edges after generating the new points on the top and left edge by copying the values\todo{make this clearer}.
+To ensure that the periodic surfaces actually turn out periodic we start with all four corners having the same value. We also let the right and bottom edge be equivalent to the left and top edge, respectively, which effectively means that all four corners should always have the same $z$-value. To ensure that the opposite edges stay equal to each other we never generate any points on the right and bottom edge, but just copy the $z$-values from the opposite \hl{corresponding} edge after the diamond-step.
 
 This leaves us with the following algorithm for generating a surface which approximates a 2-dimensional fractional Brownian motion with Hurst exponent $H$
 \begin{enumerate}
-    \item Allocate a grid of size $N\times N$, where $N = 2^p + 1$, and $p$ is any positive integer. This grid will store the $z$-value, or the height of the surface, in each grid point $(x,y)$.
+    % \itemsep1pt \parskip0pt \parsep0pt
+    \renewcommand{\labelitemii}{$\bullet$}
     
+    \item Allocate a grid of size $N\times N$, where $N = 2^p + 1$, and $p$ is any positive integer. This grid will store the $z$-values, or the height of the surface, in each grid point $(x,y)$.
+
     \item Initialize the values in the corners of the grid by drawing random numbers from a Gaussian distribution with mean $\mu = 0$ and variance $\sigma_0$. The initial variance can be chosen freely. \hl{The initial resolution is now $n_0\times n_0$, with $n = 2$}.
+    \begin{itemize}
+        \item If generating a periodic surface, give all four corners the same $z$-value.
+    \end{itemize}
     
-    \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:square_step}\todo{the equation citation should show $i,j$ limits as well}.
+    \item Apply the square-step using \cref{eq:square_step_limits,eq:square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_i = \sigma_{i-1}^2r^{2H}$ to all new and old points.
+    \label{enum:square_step}
+
+    \item Apply the diamond-step using \crefrange{eq:diamond_step01}{eq:diamond_step02}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_{i+1} = \sigma_i^2r^{2H}$ to all new and old points.
+    \label{enum:diamond_step}
     
-    \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:diamond_step01,eq:diamond_step02}\todo{the equation citation should show $i,j$ limits as well}. \cref{fig:simple_diamond_step,fig:simple_square_step}
+    \begin{itemize}
+        \item If generating a periodic surface, skip generating points on the right and bottom edge using the diamond-step, and instead copy the $z$-values from the opposite edges.
+    \end{itemize}
     
-    \item Generate the $z$-value in the center of each square of already defined points by using the square-step, as in \cref{fig:square_step}. Add a random Gaussian value with mean $\mu = 0$ and variance $\sigma_0^2$ to all new and old points. The initial standard deviation $\sigma_0$ can be chosen freely.
+    \item Repeat step \ref{enum:square_step} and \ref{enum:diamond_step} $p$ times until you reach the desired resolution of $N\times N$, where $N = 2^p + 1$. For step $i$ the variance of the random Gaussian numbers is
+    \begin{align*}
+        \sigma_i^2 = \sigma_0^2(r^i)^{2H}.
+    \end{align*}
     
-    \item Generate the $z$-value in the center of each 
+%     Continue generating new points and increasing the resolution of the surface until you reach the desired number of \hl{points/resolution}. We see in \cref{fig:square_step} that the square step doesn't need any changes, since we don't generate any points at the edges of the grid, and we never have any neighbors that are beyond the edges of the grid. For the diamond step we need to make sure we wrap around the edges to find neighbors when calculating points that are close to the edges of the grid, and that we update the left and bottom edges as needed. 
     
-    \item Generate the $z$-value in the center of the grid using the square step by averaging over the four corners, as shown in \cref{fig:initial_square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_1^2 = \sigma_0^2r^{2H}$\todo{define r} to the new point, and to the four corners (add the same number to all four corners to keep the system periodic).
+%     \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:square_step_limits,eq:square_step}.
     
-    \item Generate the values in the middle of the top and left edge of the grid using the diamond step, as shown in \cref{fig:diamond_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_2^2 = \sigma_1^2r^{2H}$ to all new and old points. Set the point in the middle of the right and bottom edges equal to 
+%     \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \crefrange{eq:diamond_step01}{eq:diamond_step02}.
     
-    When calculating the averages in the diamond-step  Since the surface is periodic, we can wrap around the edges to reach the points beyond the edges of our grid (the points outside the grid in \cref{fig:diamond_step}). Set values in the middle of the right and bottom edge equal to the corresponding values in the middle of the left and top edge, to keep the surface periodic\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but by doing it the way we have we can keep the square step the same as before.}}.
+%     \item Generate the $z$-value in the center of each square of already defined points by using the square-step, as in \cref{fig:square_step}. Add a random Gaussian value with mean $\mu = 0$ and variance $\sigma_0^2$ to all new and old points. The initial standard deviation $\sigma_0$ can be chosen freely. 
+    
+%     \item Generate the $z$-value in the center of the grid using the square step by averaging over the four corners, as shown in \cref{fig:initial_square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_1^2 = \sigma_0^2r^{2H}$\todo{define r} to the new point, and to the four corners (add the same number to all four corners to keep the system periodic).
+    
+%     \item Generate the values in the middle of the top and left edge of the grid using the diamond step, as shown in \cref{fig:diamond_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_2^2 = \sigma_1^2r^{2H}$ to all new and old points. Set the point in the middle of the right and bottom edges equal to 
+    
+%     When calculating the averages in the diamond-step  Since the surface is periodic, we can wrap around the edges to reach the points beyond the edges of our grid (the points outside the grid in \cref{fig:diamond_step}). Set values in the middle of the right and bottom edge equal to the corresponding values in the middle of the left and top edge, to keep the surface periodic\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but by doing it the way we have we can keep the square step the same as before.}}.
     
 %     \item We now need to generate the $z$-values in the middle of the four edges of the grid, using the diamond step. But since we have a finite and periodic grid, we have to wrap around the edges when taking the average over the four neighbours. We also see that the top and bottom edge, and the left and right edge should be equal after generating the new points\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but doing it the way we have we can keep the square step the same as before.}}, to keep the grid periodic. This can for example be done by generating the point in the middle of the left edge and the point in the middle of the top edge by using the diamond step and wrapping around the edges, and then setting the corresponding points on the right and bottom edge equal to the generated points.
     
 %     This can for example be done by only generating the points on the top and left edge, and then setting the points on the right edge equal to the left edge, and the points on the .
 
-    \item Continue generating new points and increasing the resolution of the \hl{surface/grid} until you reach the desired number of \hl{points/resolution}. We see in \cref{fig:square_step} that the square step doesn't need any changes, since we don't generate any points at the edges of the grid, and we never have any neighbors that are beyond the edges of the grid. For the diamond step we need to make sure we wrap around the edges to find neighbors when calculating points that are close to the edges of the grid, and that we update the left and bottom edges as needed. 
-    
-    For step $i$ the variance of the random Gaussian number is
-    \begin{align*}
-        \sigma_i^2 = \sigma_0^2(r^i)^{2H}.
-    \end{align*}
+%     \item Continue generating new points and increasing the resolution of the \hl{surface/grid} until you reach the desired number of \hl{points/resolution}. We see in \cref{fig:square_step} that the square step doesn't need any changes, since we don't generate any points at the edges of the grid, and we never have any neighbors that are beyond the edges of the grid. For the diamond step we need to make sure we wrap around the edges to find neighbors when calculating points that are close to the edges of the grid, and that we update the left and bottom edges as needed. 
+%     
+%     For step $i$ the variance of the random Gaussian number is
+%     \begin{align*}
+%         \sigma_i^2 = \sigma_0^2(r^i)^{2H}.
+%     \end{align*}
 \end{enumerate}
 
 See \cref{fig:diamond_square_surface} for a surface generated by the algorithm.
