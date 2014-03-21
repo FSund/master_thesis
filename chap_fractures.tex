@@ -230,6 +230,8 @@ In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm
 To generate our random surfaces we use an iterative midpoint displacement method usually called successive random additions \hl{(SRA)}. The method is based on a method proposed by Fourner in 1982\cite{fournier1982computer}, but with some modifications suggested by Voss\cite{voss1985random, voss1988fractals}. The method has further been discussed by Saupe\cite{saupe1988algorithms}, amongst others. We choose this method mainly because it's possible to generate periodic surfaces with it, because it generates very good approximations to fBm surfaces\cite{zhou2005comparison}, and because the Hurst exponent of the generated surfaces is easy to control. The method is also easy to understand, easy to implement, and generates surfaces with high resolution very fast. The method is widely used in scientific applications\hl{cite??} because of these properties, and is also used for generating surfaces in computer graphics, since the surfaces look very realistic \hl{with only some minor artefacts?? (high, narrow peaks)}.
 
 \subsubsection{Midpoint displacement method in 1 dimension}
+\hl{The most basic method we used is a very basic but widely used method, which has many variations and names. The most common names are ``the diamond-square algorithm''\hl{cite}, ``the midpoint displacement method''\hl{cite}, ``plasma fractal'' and ``cloud fractal''.}
+
 The method we use to generate random surfaces is very similar to the standard midpoint displacement method, which in 1 dimension goes as follows. See \cref{fig:midpoint01} for a visual presentation.
 \begin{enumerate}
     \item Give the values at the endpoints of the interval, $y_0$ and $y_n$, random values from a Gaussian random variable with mean $\mu = 0$ and variance $\sigma_0^2$. This initial standard deviation $\sigma_0$ can be chosen freely.
@@ -424,31 +426,6 @@ This leaves us with the following algorithm for generating a surface which appro
     \begin{align*}
         \sigma_i^2 = \sigma_0^2(r^i)^{2H}.
     \end{align*}
-    
-%     Continue generating new points and increasing the resolution of the surface until you reach the desired number of \hl{points/resolution}. We see in \cref{fig:square_step} that the square step doesn't need any changes, since we don't generate any points at the edges of the grid, and we never have any neighbors that are beyond the edges of the grid. For the diamond step we need to make sure we wrap around the edges to find neighbors when calculating points that are close to the edges of the grid, and that we update the left and bottom edges as needed. 
-    
-%     \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:square_step_limits,eq:square_step}.
-    
-%     \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \crefrange{eq:diamond_step01}{eq:diamond_step02}.
-    
-%     \item Generate the $z$-value in the center of each square of already defined points by using the square-step, as in \cref{fig:square_step}. Add a random Gaussian value with mean $\mu = 0$ and variance $\sigma_0^2$ to all new and old points. The initial standard deviation $\sigma_0$ can be chosen freely. 
-    
-%     \item Generate the $z$-value in the center of the grid using the square step by averaging over the four corners, as shown in \cref{fig:initial_square_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_1^2 = \sigma_0^2r^{2H}$\todo{define r} to the new point, and to the four corners (add the same number to all four corners to keep the system periodic).
-    
-%     \item Generate the values in the middle of the top and left edge of the grid using the diamond step, as shown in \cref{fig:diamond_step}. Add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_2^2 = \sigma_1^2r^{2H}$ to all new and old points. Set the point in the middle of the right and bottom edges equal to 
-    
-%     When calculating the averages in the diamond-step  Since the surface is periodic, we can wrap around the edges to reach the points beyond the edges of our grid (the points outside the grid in \cref{fig:diamond_step}). Set values in the middle of the right and bottom edge equal to the corresponding values in the middle of the left and top edge, to keep the surface periodic\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but by doing it the way we have we can keep the square step the same as before.}}.
-    
-%     \item We now need to generate the $z$-values in the middle of the four edges of the grid, using the diamond step. But since we have a finite and periodic grid, we have to wrap around the edges when taking the average over the four neighbours. We also see that the top and bottom edge, and the left and right edge should be equal after generating the new points\footnote{\hl{We could have done this in a slightly different way, by making the grid one unit smaller, and starting with only one point in one of the corners, but doing it the way we have we can keep the square step the same as before.}}, to keep the grid periodic. This can for example be done by generating the point in the middle of the left edge and the point in the middle of the top edge by using the diamond step and wrapping around the edges, and then setting the corresponding points on the right and bottom edge equal to the generated points.
-    
-%     This can for example be done by only generating the points on the top and left edge, and then setting the points on the right edge equal to the left edge, and the points on the .
-
-%     \item Continue generating new points and increasing the resolution of the \hl{surface/grid} until you reach the desired number of \hl{points/resolution}. We see in \cref{fig:square_step} that the square step doesn't need any changes, since we don't generate any points at the edges of the grid, and we never have any neighbors that are beyond the edges of the grid. For the diamond step we need to make sure we wrap around the edges to find neighbors when calculating points that are close to the edges of the grid, and that we update the left and bottom edges as needed. 
-%     
-%     For step $i$ the variance of the random Gaussian number is
-%     \begin{align*}
-%         \sigma_i^2 = \sigma_0^2(r^i)^{2H}.
-%     \end{align*}
 \end{enumerate}
 
 See \cref{fig:diamond_square_surface} for a surface generated by the algorithm.
@@ -481,27 +458,6 @@ In our implementation of the algorithm we start from a grid with the $z$-value i
     \item Lacunarity
 \end{itemize}
 }
-
-% \begin{figure}
-%     \centering
-%     \def\svgwidth{\textwidth}
-%     \input{images/diamondSquare02.eps_tex}
-% \end{figure}
-
-% \begin{figure}
-%     \centering
-%     \def\svgwidth{\textwidth}
-%     \input{images/diamondSquare03.pdf_tex}
-% \end{figure}
-
-% \subsection{Successive Random Addition}
-% To generate a random heightmap with a known Hurst exponent we used the successive random addition (SRA) algorithm introduced by Voss\cite{voss1985random}. It is a variation of a simpler algorithm called random midpoint displacement (RMD), a subdivision method described by, amongst others, Fournier, Fussell, and Carpenter\cite{fournier1982computer, carpenter1980computer}. To illustrate how the algorithms work, we will start with a simple 1-dimensional example of RMD.
-% 
-% We start with two points $Y(0)$ and $Y(1)$ at the edges of our interval. We find a point $Y(\frac{1}{2})$ in the center of the interval by interpolating the two initial points, and adding a Gaussian random number with zero mean and variance $\sigma^2$
-% 
-% \subsection{Midpoint Displacement Method}
-% The most basic method we used is a very basic but widely used method, which has many variations and names. The most common names are ``the diamond-square algorithm''\hl{cite}, ``the midpoint displacement method''\hl{cite}, ``plasma fractal'' and ``cloud fractal''.
-% 
 
 \subsection{Generating fractures from surfaces}
 To generate a realistic fracture we use the method of successive random additions, as described previously, to generate random heightmaps with a known Hurst exponent. If we generate two of these surfaces we can make a fracture by putting one surface above the other, and letting either the space between or outside the heightmaps be the void. Since we are using periodic systems the two different approaches are equivalent, but we chose to let the space between the heightmaps be the void, for easier visualization.
