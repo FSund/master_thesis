@@ -322,53 +322,91 @@ where $i$ is the number of times we have applied the algorithm. This means that 
 \subsubsection{Successive random additions on a finite grid \hl{in 2 dimensions}}
 Since we are using computers to generate our surfaces, which have limited memory, we can't use infinite grids. This means we get some special cases that needs to be taken care of when generating points near the edges of the grid.\todo{transition to below}
 
-For the square step we generate one new point in the center each square formed by the grid from the previous iteration, and in general we generate the values in the points
-\begin{align*}
-    &\left(x_{i+1/2}, y_{j+1/2}\right) &0\leq i,j < n,
-\end{align*}
-where $(x_i,x_j)$ are the points in the grid after the last iteration. In general the average we calculate for the new points can be written as
-\begin{align*}
+For the square step we generate one new point in the center each square formed by the grid from the previous iteration, and in general we generate the $z$-values in the points
+\begin{align}
+    &\left(x_{i+1/2}, y_{j+1/2}\right) &0\leq i,j < n, \label{eq:square_step_limits}
+\end{align}
+where $(x_i,x_j)$ are the points in the grid after the last iteration. In general the averages we calculate for the new points can be written as\todo{make this equation nicer}
+% \begin{align}
+%     (x_{i+1/2}, y_{j+1/2}) 
+%     &= \frac{1}{4}\big(
+%         (x_i, y_j) + (x_{i+1}, y_j)\nonumber\\
+%         &+ (x_i, y_{j+1}) + (x_{i+1}, y_{j+1})
+%     \big)
+%     &0\leq i,j < n.
+%     \label{eq:square_step}
+% \end{align}
+\begin{align}
     (x_{i+1/2}, y_{j+1/2}) 
-    = \frac{1}{4}\big(
-        (x_i, y_j) + (x_{i+1}, y_j) + (x_i, y_{j+1}) + (x_{i+1}, y_{j+1})
-    \big).
-\end{align*}
-We see that the square-step only uses points inside the grid, which means that we don't have to modify it when going to a finite grid.
+    = \frac{1}{4}\big[
+        (x_i, y_j) + (x_{i+1}, y_j)
+        &+ (x_i, y_{j+1}) + (x_{i+1}, y_{j+1})
+    \big],
+    \label{eq:square_step}
+\end{align}
+using the limits in \cref{eq:square_step_limits}. We see that the square-step only uses points inside the grid, which means that we don't have to modify it when going to a finite grid.
 
 For the diamond-step we generate the values in the points
 
-\begin{align*}
-    &(x_{i+1/2}, y_j) &\text{for } 0\leq i<n \text{ and } 0\leq j \leq n& \\
-    &(x_i, y_{j+1/2}) &\text{for } 0\leq i\leq n \text{ and } 0\leq j < n&.
-\end{align*}
-In general the averages we calculate for the new points can be written as
-\begin{align*}
+\begin{align}
+    &(x_{i+1/2}, y_j) &\text{for } 0\leq i<n \text{ and } 0\leq j \leq n& \label{eq:diamond_step_limits01}\\
+    &(x_i, y_{j+1/2}) &\text{for } 0\leq i\leq n \text{ and } 0\leq j < n&. \label{eq:diamond_step_limits02}
+\end{align}
+In general the averages we calculate for the new points can be written as\todo{make these equations nicer}
+% \begin{align}
+%     (x_{i+1/2}, y_j) 
+%     &= 
+%     \frac{1}{4}\big(
+%         (x_i, y_j) + (x_{i+1}, y_j) + (x_{i+1/2}, y_{j-1/2}) + (x_{i+1/2}, y_{j+1/2})
+%     \big) \label{eq:diamond_step01}\\
+%     (x_i, y_{j+1/2}) 
+%     &= 
+%     \frac{1}{4}\big(
+%         (x_i, y_j) + (x_i, y_{j+1}) + (x_{i-1/2}, y_{j+1/2}) + (x_{i+1/2}, y_{j+1/2})
+%     \big). \label{eq:diamond_step02}
+% \end{align}
+\begin{align}
     (x_{i+1/2}, y_j) 
     &= 
-    \frac{1}{4}\big(
-        (x_i, y_j) + (x_{i+1}, y_j) + (x_{i+1/2}, y_{j-1/2}) + (x_{i+1/2}, y_{j+1/2})
-    \big)\\
+    \frac{1}{4}\big[
+        (x_i, y_j) + (x_{i+1}, y_j) \nonumber\\
+        &+ (x_{i+1/2}, y_{j-1/2}) + (x_{i+1/2}, y_{j+1/2})
+    \big]
+    \label{eq:diamond_step01}\\
     (x_i, y_{j+1/2}) 
     &= 
-    \frac{1}{4}\big(
-        (x_i, y_j) + (x_i, y_{j+1}) + (x_{i-1/2}, y_{j+1/2}) + (x_{i+1/2}, y_{j+1/2})
-    \big).
-\end{align*}
-We now see that when generating points near the edges, when generating the points $(x_{i+1/2}, y_j)$ for $j \in \{0, n\}$ and $(x_i, y_{j+1/2})$ for $i = \{0, n\}$, we need to average over points that lie outside the grid. There are two possible solutions, depending on the surface we are generating. If generating a periodic surface, the solution is to wrap around the edges using periodic boundary conditions, and find the point we need on the opposite side of the grid. For example (using $i = j = 0$)
+    \frac{1}{4}\big[
+        (x_i, y_j) + (x_i, y_{j+1}) \nonumber\\
+        &+ (x_{i-1/2}, y_{j+1/2}) + (x_{i+1/2}, y_{j+1/2})
+    \big],
+    \label{eq:diamond_step02}
+\end{align}
+using the limits in \cref{eq:diamond_step_limits01,eq:diamond_step_limits02}. We now see that when generating points near the edges using the diamond-step, specifically when generating the points $(x_{i+1/2}, y_j)$ for $j \in \{0, n\}$ and $(x_i, y_{j+1/2})$ for $i = \{0, n\}$, we need to average over points that lie outside the grid. There are two possible solutions, depending on the surface we are generating. If generating a periodic surface, the solution is to wrap around the edges using periodic boundary conditions, and find the point we need on the opposite side of the grid. For example (using $i = j = 0$)
 \begin{align*}
     (x_{1/2}, y_{-1/2}) = (x_{1/2}, y_{n-1/2}).
 \end{align*}
 If generating a non-periodic grid we simply ignore the points that lie outside the grid when calculating the averages, and just use the \hl{three/3} other points.
 
 \subsubsection{Implementing successive random additions \hl{on a finite grid in 2 dimensions}}
-In our implementation we generate a surface on a finite grid of size $N\times N$. As shown in \cref{eq:diamond_step_resolution} the algorithm can go from any resolution $n_0$ to $n_p = 2^p(n_0-1) + 1$ by applying the algorithm $p$ times. This is useful to know, since on a computer we prefer allocating a matrix to store the surface before starting the computations.
+In our implementation we generate a surface on a finite grid of size $N\times N$, starting with only the $z$-values in the four corners defined, giving a resolution $n_0 = 2$. As shown in \cref{eq:diamond_step_resolution} the algorithm can go from any resolution $n_0$ to any resolution \hl{of the form} $n_p = 2^p(n_0-1) + 1$ by applying the algorithm $p$ times, which means that our implementation can generate surfaces with resolutions
+\begin{align*}
+    N &= 2^p(2-1) + 1 = 2^p + 1,
+\end{align*}
+where $p$ is any positive integer.
 
-To ensure that the generated surfaces are periodic (when generating a periodic surface) we let the right and bottom edge be equivalent to the left and top edge, respectively (this means that the four corners are equivalent). This effectively means that the resolution of the periodic surfaces we generate is $2^n$ instead of $2^n+1$
+We implement generation of both periodic and non-periodic surfaces using using \crefrange{eq:square_step_limits}{eq:diamond_step02}, while skipping points outside the grid for non-periodic surfaces, and wrapping around the edges using periodic boundary conditions when generating periodic surfaces.
 
+To ensure that the periodic surfaces turn out periodic we start with all four corners having the same value. We also let the right and bottom edge be equivalent to the left and top edge, respectively, which effectively means that all four corners are the same. To ensure that the opposite edges stay equal to each other we never generate any points on the right and bottom edge, but just update these edges after generating the new points on the top and left edge by copying the values\todo{make this clearer}.
 
 This leaves us with the following algorithm for generating a surface which approximates a 2-dimensional fractional Brownian motion with Hurst exponent $H$
 \begin{enumerate}
-    \item Start with a grid of size $n \times n$, where $n = 2^p + 1$, and $p$ is a positive integer. Generate the values in the corners by drawing a random 
+    \item Allocate a grid of size $N\times N$, where $N = 2^p + 1$, and $p$ is any positive integer. This grid will store the $z$-value, or the height of the surface, in each grid point $(x,y)$.
+    
+    \item Initialize the values in the corners of the grid by drawing random numbers from a Gaussian distribution with mean $\mu = 0$ and variance $\sigma_0$. The initial variance can be chosen freely. \hl{The initial resolution is now $n_0\times n_0$, with $n = 2$}.
+    
+    \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:square_step}\todo{the equation citation should show $i,j$ limits as well}.
+    
+    \item Generate the $z$-value in the center of each square \hl{of defined points} of size $n_i = 2^i + 1$ using \cref{eq:diamond_step01,eq:diamond_step02}\todo{the equation citation should show $i,j$ limits as well}. \cref{fig:simple_diamond_step,fig:simple_square_step}
     
     \item Generate the $z$-value in the center of each square of already defined points by using the square-step, as in \cref{fig:square_step}. Add a random Gaussian value with mean $\mu = 0$ and variance $\sigma_0^2$ to all new and old points. The initial standard deviation $\sigma_0$ can be chosen freely.
     
@@ -411,6 +449,7 @@ In our implementation of the algorithm we start from a grid with the $z$-value i
 {\bf Notes:}
 \begin{itemize}
     \item Implementation (in Matlab/C++)?
+    \item periodic and non-periodic
     \item Mention that DS can be used to increase resolution of any surface
     \item Can increase resolution of generated surface, if we know the seed
 \end{itemize}
