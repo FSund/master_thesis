@@ -1,6 +1,13 @@
 \documentclass[twoside,english,a4paper]{uiofysmaster}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% biblatex
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
+\bibliography{JabRef_database,Mendeley_database}
 
 % Draft stuff
 \usepackage{todonotes}
@@ -20,7 +27,7 @@
 % \graphicspath{{images/}} % To include .eps + .eps_tex vector graphics from Inkscape, located in a subfolder of the .tex-files
 \usepackage{lipsum}
 % \usepackage[square, super]{natbib}
-\usepackage[square,sort,numbers]{natbib}
+% \usepackage[square,sort,numbers]{natbib}
 \usepackage{subcaption}     % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                             % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
 % \usepackage{minipage}
@@ -77,7 +84,7 @@
 % }
 % %%
 
-\bibliographystyle{plain}
+% \bibliographystyle{plain}
 
 % \author{Filip Sund}
 % \title{Master thesis}
@@ -134,6 +141,7 @@
 
 \part{Appendices}
 
-\bibliography{JabRef_database,Mendeley_database}
+\printbibliography
+% \bibliography{JabRef_database,Mendeley_database}
 
 \end{document}
