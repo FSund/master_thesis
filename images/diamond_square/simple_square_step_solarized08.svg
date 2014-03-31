@@ -24,8 +24,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="258.80833"
-     inkscape:cy="1022.7771"
+     inkscape:cx="155.60708"
+     inkscape:cy="1007.636"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -3762,12 +3762,12 @@
        id="g56285"
        transform="translate(-1.5,-2.3841858e-7)">
       <rect
-         style="fill:#f0f0f0;fill-opacity:1;stroke:#073642;stroke-width:2.125;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         id="use19483"
-         width="82.875"
-         height="82.875"
-         x="111.0625"
-         y="3.4246829" />
+         style="fill:#f0f0f0;fill-opacity:1;stroke:none;display:inline"
+         id="use19483-5"
+         width="80.75"
+         height="80.75"
+         x="112.125"
+         y="4.4871826" />
       <rect
          y="24.862183"
          x="132.5"
@@ -4023,6 +4023,13 @@
            style="fill:#c3cdcd;fill-opacity:1;stroke:none;display:inline"
            sodipodi:type="arc" />
       </g>
+      <rect
+         style="fill:none;fill-opacity:1;stroke:#073642;stroke-width:2.12500000000000000;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="use19483"
+         width="82.875"
+         height="82.875"
+         x="111.0625"
+         y="3.4246829" />
     </g>
     <g
        id="g56321"
