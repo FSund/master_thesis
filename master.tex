@@ -9,6 +9,27 @@
 \usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
 \bibliography{JabRef_database,Mendeley_database}
 
+% Code syntax highlighting
+\usepackage[scaled=0.75]{beramono}
+% \usepackage[chapter]{minted} % included in uiofysmaster package, to load it before hyperref, to fix \listoflistings
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\newminted[cppcode]{cpp}{ % can use \newminted{cpp}, gives the same result
+    mathescape,
+%     frame=lines,
+%     framesep=2mm,
+    bgcolor = codebg,
+    fontsize = \small,
+%     fontfamily = courier
+} 
+% usage: \begin{cppcode}
+% use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
+% \renewcommand\listingscaption{Program code}
+% \renewcommand\listoflistingscaption{List of program codes}
+% To control how LATEX counts the listing floats, you can pass either the section
+% chapter or chapter option when loading the minted package. For example, the following
+% will cause listings to be counted per-section:
+% \usepackage[section]{minted}
+
 % Draft stuff
 \usepackage{todonotes}
 \usepackage{xcolor}
@@ -21,14 +42,14 @@
 }
 
 \usepackage{graphicx}
-\usepackage{pdfpages}   % To include the frontpage pdf
-\usepackage{soulutf8}   % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
-\usepackage{svg}        % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). NEEDS ``pdflatex --shell-escape'' !!!
-% \graphicspath{{images/}} % To include .eps + .eps_tex vector graphics from Inkscape, located in a subfolder of the .tex-files
+\usepackage{pdfpages}       % To include the frontpage pdf
+\usepackage{soulutf8}       % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
+\usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
+                            % NEEDS ``pdflatex --shell-escape'' !!!
+
 \usepackage{lipsum}
-% \usepackage[square, super]{natbib}
-% \usepackage[square,sort,numbers]{natbib}
-\usepackage{subcaption}     % the subfigure and subfig packages are deprecated and shouldn't be used any more: http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
+\usepackage{subcaption}     % the subfigure and subfig packages are deprecated and shouldn't be used any more: 
+                            % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                             % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
 % \usepackage{minipage}
 \usepackage{commath}        % to correctly typeset differentials \od, \dod, and \tod
@@ -37,6 +58,8 @@
 \usepackage{upgreek}        % Upper case greek letters
 \usepackage{bm}             % bold symbols in math mode
 \usepackage{mathtools}      % mainly for \vdotswithin{=} and \shortvdotswithin{=}
+
+\usepackage{hyperref}       % load hyperref package last
 
 \setsvg{ % conversion options for svg package
     inkscape = inkscape -z -D
@@ -65,31 +88,6 @@
 \captionsetup{width=.9\textwidth}
 \captionsetup{font=small,labelfont=bf}
 
-% %% To automatically detect if the .svg-images included in the document (via \includesvg) have been changed. If they are changed, we re-export them to pdf + pdf_tex using inkscape.
-% \newcommand{\executeiffilenewer}[3]{%
-%     \ifnum%
-%         \pdfstrcmp{\pdffilemoddate{#1}}{\pdffilemoddate{#2}}>0
-%         {\immediate\write18{#3}}%
-%     \fi%
-% }
-% % \newcommand{\includesvg}[1]{%
-% %     \executeiffilenewer{#1.svg}{#1.pdf}%
-% %     {inkscape -z -D --file=#1.svg %
-% %     --export-pdf=#1.pdf --export-latex}%
-% %     \input{#1.pdf_tex}%
-% % }
-% \newcommand{\includesvg}[1]{%
-%     \immediate\write18{inkscape -z -D --file=#1.svg --export-pdf=#1.pdf --export-latex}
-% %     \input{#1.pdf_tex}
-% }
-% %%
-
-% \bibliographystyle{plain}
-
-% \author{Filip Sund}
-% \title{Master thesis}
-% \date{June 2013}
-
 \begin{document}
 
 % Front page
@@ -114,22 +112,17 @@
 \tableofcontents
 % \pagenumbering{arabic} -- happens automatically
 
+\listoffigures
+\listoftables
+\listoflistings
+
+
 \part{Introduction}
 
 \part{Molecular dynamics}
 \input{chap_simulations.tex}    
 \input{chap_fractures.tex}
-
-\chapter{Measurements}
-    \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
-    \section{Mean square displacement}
-    \section{Density}
-    \section{Distance to atom}
-    \section{``Generation matrix''}
-    \section{``Voxel counter''}
-        A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
-    \section{Cage cage correlation}
-    \section{}
+\input{chap_measurements.tex}
 
 \part{Results}
     \section{Mean square displacement}
