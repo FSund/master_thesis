@@ -1,4 +1,5 @@
 \chapter{Simulations}
+
 \section{Potential}
 \orangebox{
 \begin{itemize}
@@ -43,7 +44,7 @@ $V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stre
 \begin{align*}
     V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
     B_{ijk} 
-    \underbrace{
+    \underbrace{ % use vphantom to get proper vertical alignment
         \vphantom{\frac{\big)^2}{\big)^2}}\exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right)
     }_{\text{bond-stretching}}
     \underbrace{
@@ -267,19 +268,68 @@ Similarly we find
 \end{align*}
 
 
-
-
 \section{Ensemble, observables etc.}
-\section{Initialization}
-To initialize the system we generate a silica crystal in the crystalline form $\upbeta$-cristobalite.
+
+\section{(Initialization) A typical experimental procedure}
+When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{akin to/mimicing} that used by \hl{actual} experiments. Since the duration of the experiments we are realistically able to simulate on are of the order $10^{-9} s$ / nanoseconds or below, we have to be smart when initializing the system. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating silica/glass is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
+
+\orangebox{}{
+    \begin{itemize}
+        \item Something smart about why the small timescales doesn't matter that much, since the length scales are equally small?
+        \item Short/long-range order
+        \item Glass transition temperature
+    \end{itemize}
+    \begin{quote}
+        ``
+        When molten silicon dioxide SiO2 is rapidly cooled, it does not crystallize but solidifies as a glass. The geometry of the silicon and oxygen centers in glass is similar to that in quartz and most other crystalline forms of the same composition, i.e., silicon is surrounded by a regular tetrahedra of oxygen centers. The difference between the glass and the crystalline forms arise from the connectivity of these tetrahedral units. Although there is no long range periodicity in the glassy network there remains significant ordering at length scales well beyond the SiO bond length. One example of this ordering is found in the preference of the network to form rings of 6-tetrahedra.[18]
+        
+        The glass transition temperature of pure SiO2 is about 1475 K.
+        ''
+        
+        \url{http://en.wikipedia.org/wiki/Silicon_dioxide#Fused_quartz}
+    \end{quote}
+}
+
+To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, as see in figure \cref{fig:cristobalite} \todo{Why?}, and give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}. The crystal consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[c]{0.25\textwidth}
+%         \begin{minipage}[c]{\textwidth}
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}
+%         \end{minipage}
+%         \caption{\cite{wikiCristobalite01}}
+        \caption{}
+        \label{fig:cristobalite01}
+    \end{subfigure}
+    \hspace{0.07\textwidth}
+    \begin{subfigure}[c]{0.45\textwidth}
+%         \begin{minipage}[c]{\textwidth}
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}
+%         \end{minipage}
+%         \caption{\cite{wikiCristobalite02}}
+    \caption{}
+    \label{fig:cristobalite02}
+    \end{subfigure}
+    \caption{
+        Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.
+        \label{fig:cristobalite}
+    }
+\end{figure}
+
+We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse.
+
+We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
+
+We are now ready to do measurements.
 
 \section{Passivation}
 Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating the system by inserting atoms on the dangling bonds, turning them into \hl{stable} silanol groups\todo{why silanol?}.
 
 In the passivation procedure we do some basic assumptions, based on the chemical nature of silica and water. In the thermodynamically stable form, silica should have the following properties\todo{source?}:
 \begin{itemize}
-    \item Silicon atoms should have tetrahedral coordination, with four oxygen atoms surrounding each silicon atom in a tetrahedral \hl{shape}. \todo{something about bonds? bonded to four oxygen atoms?}
-    \item Oxygen atoms should have two silicon \hl{neighbors}.
+    \item Silicon atoms should have tetrahedral coordination, with four oxygen atoms surrounding each silicon atom in a tetrahedral \hl{shape}. \todo{On average, not all silica will have this. Something about bonds? bonded to four oxygen atoms?}
+    \item Oxygen atoms should have two silicon \hl{neighbors}\todo{not all, on average}.
     \item The Si-O distance should be in the range 1.5-1.9 pm\todo{source?} (depending on the crystalline form).
 \end{itemize}
 
@@ -383,3 +433,5 @@ What we do is to assign a radius to each atom type \todo{which is hard, Si-O, ??
     \item Fill other voxels with H2O with random O-H orientation, but correct angle
     \item Improvement: Use one voxel size in the beginning (to avoid one-voxel pores), and then use a smaller voxel size when injecting water
 \end{itemize}
+
+\section{Thermostats}

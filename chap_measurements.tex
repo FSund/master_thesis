@@ -1,0 +1,146 @@
+\chapter{Measurements}
+\section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
+When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Establishing which atoms are within a certain radius of each atom is not trivial; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for all points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
+
+Our solution to the problem uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. To find the neighbors within the radius $dr$ of an atom at position $\rvec$ we now only have to find which box the atoms belongs to, and check the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. Pseudocode for this can be seen below \cref{list:voxels}
+
+\todo[inline]{Distance between atoms, $r^2$ instead of $r$}
+
+%     \begin{cppcode*}{gobble=8}
+%         for (int i = 0; i < atoms.size(); i++)
+%         {
+%             int ix = floor(atoms[i].position().x() / voxelSize);
+%             int iy = floor(atoms[i].position().y() / voxelSize);
+%             int iz = floor(atoms[i].position().z() / voxelSize);
+%             voxel[ix][iy][iz].push_back(i);
+%         }
+%     \end{cppcode*}
+%     
+%     \begin{cppcode*}{gobble=8}
+%         // Loop over all atoms
+%         for (int i = 0; i < atoms.size(); i++)
+%         {
+%             // Index of the voxel this atom belongs to
+%             int i1 = floor(atoms[i].position().x() / voxelSize);
+%             int j1 = floor(atoms[i].position().y() / voxelSize);
+%             int k1 = floor(atoms[i].position().z() / voxelSize);
+%             
+%             // Loop over all 27 neighbor voxels (including self)
+%             for (int di = -1; di <= 1; di++)
+%             for (int dj = -1; dj <= 1; dj++)
+%             for (int dk = -1; dk <= 1; dk++)
+%             {{{
+%                 // Find index of neighbor voxel using
+%                 // periodic boundary conditions
+%                 // nx, ny, nz is the number of voxels in each direction
+%                 int i2 = (i1 + di + nx) % nx;
+%                 int j2 = (j1 + dj + ny) % ny;
+%                 int k2 = (k1 + dk + nz) % nz;
+%                 
+%                 // Loop over atoms in neighbor voxel
+%                 for (j = 0; j < voxel[i2][j2][k2].size(); j++)
+%                 {
+%                     int k = voxel[i2][j2][k2][j];
+%                     vec3 dr = atoms[k].position() - atoms[i].position();
+%                     
+%                     // Minimum image convention
+%                     for (int dim = 0; dim < 3; dim++)
+%                     {
+%                         if      (dr[dim] >  L[dim]/2.0) dr[dim] -= L[dim];
+%                         else if (dr[dim] < -L[dim]/2.0) dr[dim] += L[dim];
+%                     }
+%                     
+%                     // Calculate dr^2 instead of sqrt(dr^2), since sqrt() is a very 
+%                     // slow operation, and in this case is unnecessary
+%                     double drSquared = dr.lengthSquared();
+%                 }
+%             }}}
+%         }
+%     \end{cppcode*}
+
+\begin{listing}[H]
+\begin{cppcode*}{gobble=4}
+    for (Atom *atom : atoms)
+    {
+        // Index of the voxel this atom belongs to
+        int i = floor(atom.position().x() / voxelSize);
+        int j = floor(atom.position().y() / voxelSize);
+        int k = floor(atom.position().z() / voxelSize);
+        voxels[i][j][k].push_back(atom);
+    }
+\end{cppcode*}
+\caption{A very long caption on this very interesting listing to see what happens when we get to the end of the line bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
+    \label{list:voxels}
+}
+\end{listing}
+
+\begin{listing}[H]
+\begin{cppcode*}{gobble=4}
+    // Loop over all atoms
+    for (Atom *atom1 : atoms)
+    {
+        // Index of the voxel this atom belongs to
+        int i1 = floor(atom1.position().x() / voxelSize);
+        int j1 = floor(atom1.position().y() / voxelSize);
+        int k1 = floor(atom1.position().z() / voxelSize);
+        
+        // Loop over all 27 neighbor voxels (including self)
+        for (int di = -1; di <= 1; di++)
+        for (int dj = -1; dj <= 1; dj++)
+        for (int dk = -1; dk <= 1; dk++)
+        {{{
+            // Find index of neighbor voxel using periodic boundary conditions
+            // nx, ny, nz is the number of voxels in each direction
+            int i2 = (i1 + di + nx) % nx;
+            int j2 = (j1 + dj + ny) % ny;
+            int k2 = (k1 + dk + nz) % nz;
+            
+            // Loop over atoms in neighbor voxel
+            for (Atom *atom2 : voxels[i2][j2][k2])
+            {
+                if (atom2 != atom1)
+                {
+                    double drSquared = 
+                        calculateDistanceSquaredBetweenAtoms(atom1, atom2);
+                }
+            }
+        }}}
+    }
+    
+\end{cppcode*}
+\caption{Test
+    \label{list:neighbors}
+}
+\end{listing}
+
+\begin{listing}[H]
+\begin{cppcode*}{gobble=4}
+    calculateDistanceSquaredBetweenAtoms(Atom *atom1, Atom atom2)
+    {
+        vec3 dr = atom2.position() - atom1.position();
+        
+        // Minimum image convention
+        for (int dim = 0; dim < 3; dim++)
+        {
+            if      (dr[dim] >  L[dim]/2.0) dr[dim] -= L[dim];
+            else if (dr[dim] < -L[dim]/2.0) dr[dim] += L[dim];
+        }
+        
+        // Calculate dr^2 instead of sqrt(dr^2), since sqrt() is a very 
+        // slow operation, and in this case is unnecessary
+        double drSquared = dr.lengthSquared();
+    }
+\end{cppcode*}
+\caption{Test
+    \label{list:dr2}
+}
+\end{listing}
+
+    \section{Mean square displacement}
+    \section{Density}
+    \section{Distance to atom}
+    \section{``Generation matrix''}
+    \section{``Voxel counter''}
+        A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
+    \section{Cage cage correlation}
+    \section{}
