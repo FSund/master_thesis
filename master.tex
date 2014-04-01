@@ -3,13 +3,13 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-% biblatex
+% ----  biblatex ---- %
 \usepackage[english]{babel}
 \usepackage{csquotes}
 \usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
 \bibliography{JabRef_database,Mendeley_database}
 
-% Code syntax highlighting
+% ---- Code syntax highlighting ---- %
 \usepackage[scaled=0.75]{beramono}
 % \usepackage[chapter]{minted} % included in uiofysmaster package, to load it before hyperref, to fix \listoflistings
 \definecolor{codebg}{rgb}{0.95,0.95,0.95}
@@ -23,14 +23,12 @@
 } 
 % usage: \begin{cppcode}
 % use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
+
+% More options:
 % \renewcommand\listingscaption{Program code}
 % \renewcommand\listoflistingscaption{List of program codes}
-% To control how LATEX counts the listing floats, you can pass either the section
-% chapter or chapter option when loading the minted package. For example, the following
-% will cause listings to be counted per-section:
-% \usepackage[section]{minted}
 
-% Draft stuff
+% ----  Draft stuff (remove before final version) ---- %
 \usepackage{todonotes}
 \usepackage{xcolor}
 \newcommand{\orangebox}[1]{
@@ -40,17 +38,21 @@
         \end{minipage}
     }
 }
-
-\usepackage{graphicx}
-\usepackage{pdfpages}       % To include the frontpage pdf
 \usepackage{soulutf8}       % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
+\usepackage{lipsum}
+
+% ---- Images ---- %
+\usepackage{graphicx}
 \usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
                             % NEEDS ``pdflatex --shell-escape'' !!!
-
-\usepackage{lipsum}
+\setsvg{ % conversion options for svg package
+    inkscape = inkscape -z -D
+}
 \usepackage{subcaption}     % the subfigure and subfig packages are deprecated and shouldn't be used any more: 
                             % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                             % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+
+% ---- Other stuff ---- %
 % \usepackage{minipage}
 \usepackage{commath}        % to correctly typeset differentials \od, \dod, and \tod
 \usepackage{fancyvrb}       % better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
@@ -58,31 +60,28 @@
 \usepackage{upgreek}        % Upper case greek letters
 \usepackage{bm}             % bold symbols in math mode
 \usepackage{mathtools}      % mainly for \vdotswithin{=} and \shortvdotswithin{=}
-
+\usepackage{pdfpages}       % To include the frontpage pdf
 \usepackage{hyperref}       % load hyperref package last
 
-\setsvg{ % conversion options for svg package
-    inkscape = inkscape -z -D
-}
 
+% ---- Custom lengths for figures ---- %
+% (so we can just use \setlength later)
 \newlength{\myfigwidth}
 \newlength{\mycaptionwidth}
 
+% ---- Custom commands and symbols ---- %
 % \newcommand{\bvec}[1]{\mathbf{#1}}
 \newcommand{\bvec}[1]{\bm{#1}}
 \newcommand{\rvec}{\bvec{r}}
 \newcommand{\vvec}{\bvec{v}}
 \newcommand{\avec}{\bvec{a}}
 \newcommand{\Fvec}{\bvec{F}}
-
 \newcommand{\Ang}{\AA ngstr\"om}
 
-%% Formatting settings %%
-
+% ---- Formatting ---- %
 % skip line instead of indent on new paragraph
 \setlength{\parskip}{11pt}
 \setlength{\parindent}{0mm}
-
 % make figure text more narrow than textwidth, use small font, and make ``figure'' bold
 % ! see alternatives in FYS4180 report
 \captionsetup{width=.9\textwidth}
