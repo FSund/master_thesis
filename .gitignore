@@ -12,3 +12,11 @@
 *.blend2
 *.pdf_tex
 *.kate*
+*.fls
+*.fdb_latexmk
+*.dvi
+*.bcf
+*.lol
+*.lof
+*.lot
+*.run.xml
