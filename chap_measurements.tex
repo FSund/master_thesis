@@ -2,7 +2,7 @@
 \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
 When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Establishing which atoms are within a certain radius of each atom is not trivial; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for all points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
 
-Our solution to the problem uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. To find the neighbors within the radius $dr$ of an atom at position $\rvec$ we now only have to find which box the atoms belongs to, and check the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. Pseudocode for this can be seen below \cref{list:voxels}
+Our solution to the problem is inspired by the ``cell list'' method used in MD integrators\hl{(see Frenkel Appendix F)}, and uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. To find the neighbors within the radius $dr$ of an atom at position $\rvec$ we now only have to find which box the atoms belongs to, and check the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. Pseudocode for this can be seen below \cref{list:voxels}
 
 \todo[inline]{Distance between atoms, $r^2$ instead of $r$}
 
@@ -89,7 +89,7 @@ Our solution to the problem uses a method we call ``voxelation''/\emph{voxelatio
         for (int dj = -1; dj <= 1; dj++)
         for (int dk = -1; dk <= 1; dk++)
         {{{
-            // Find index of neighbor voxel using periodic boundary conditions
+            // Index of neighbor voxel using periodic boundary conditions
             // nx, ny, nz is the number of voxels in each direction
             int i2 = (i1 + di + nx) % nx;
             int j2 = (j1 + dj + ny) % ny;
@@ -136,11 +136,29 @@ Our solution to the problem uses a method we call ``voxelation''/\emph{voxelatio
 }
 \end{listing}
 
-    \section{Mean square displacement}
-    \section{Density}
-    \section{Distance to atom}
-    \section{``Generation matrix''}
-    \section{``Voxel counter''}
-        A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
-    \section{Cage cage correlation}
-    \section{}
+\section{Mean square displacement}
+    
+\section{Density}
+\section{Distance to atom}
+We developed a program that finds the distance to the nearest atom, in all points of the 
+\begin{figure}[h!]
+    \centering
+    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r05_n256}
+    \caption{$r = 5$ \Ang}
+    \label{fig:distance_to_atom_r05}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r20_n256}
+    \caption{$r = 20$ \Ang}
+    \label{fig:distance_to_atom_r20}
+\end{figure}
+
+\section{``Generation matrix''}
+    Not very useful. Much of the same as distance to atom, only worse (but faster).
+\section{``Voxel counter''}
+    A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
+\section{Cage cage correlation}
+\section{Tetrahedral order parameter}
+\section{Surface area of pores}
