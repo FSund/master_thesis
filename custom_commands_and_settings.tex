@@ -1,0 +1,41 @@
+% ---- Custom lengths for figures ---- %
+% (so we can just use \setlength later)
+\newlength{\myfigwidth}
+\newlength{\mycaptionwidth}
+
+% ---- Custom commands and symbols ---- %
+% ----- Vectors ---- %
+% \newcommand{\bvec}[1]{\mathbf{#1}}
+\newcommand{\bvec}[1]{\boldsymbol{#1}}    % Using amsmath's boldsymbol
+% \newcommand{\bvec}[1]{\bm{#1}}
+\newcommand{\rvec}{\bvec{r}}
+\newcommand{\vvec}{\bvec{v}}
+\newcommand{\avec}{\bvec{a}}
+\newcommand{\Fvec}{\bvec{F}}
+% ---- Other math commands and symbols ---- %
+% \newcommand\diff{\mathop{}\!\mathrm{d}}   % Already defined as \dif by commath! But maybe this way is better? Commath uses ``\DeclareMathOperator{\dif}{d \!}''
+\DeclareMathOperator{\diff}{d \!}           % See top comment on this reply: http://tex.stackexchange.com/a/95681/31078
+% \newcommand\Ham{\mathop{}\!\mathrm{\mathcal{H}}}
+\DeclareMathOperator{\Ham}{\mathcal{H}}
+% \newcommand\bigint{\mathop{\mathlarger{\int}}}
+\DeclareMathOperator{\bigint}{\mathlarger{\int}}
+% \newcommand\deltaop{\mathop{\!\mathrm{\delta}}}
+% \DeclareMathOperator{\deltaop}{\updelta \!}
+\DeclareMathOperator{\deltaop}{\updelta}
+% \newcommand\biggerint{\mathop{\mathlarger{\mathlarger{\int}}}}
+\DeclareMathOperator{\biggerint}{\mathlarger{\mathlarger{\int}}}
+% ---- Other ---- %
+\newcommand{\Ang}{\AA ngstr\"om}
+\newcommand{\Schr}{Schr\"odinger}
+
+% ---- Fix unicode stuff ---- %
+\DeclareUnicodeCharacter{2212}{-}   % Unicode 'MINUS SIGN' (U+2212) that matplotlib uses for minus on axis tick labes
+
+% ---- Formatting ---- %
+% skip line instead of indent on new paragraph
+\setlength{\parskip}{11pt}
+\setlength{\parindent}{0mm}
+% make figure text more narrow than textwidth, use small font, and make ``figure'' bold
+% ! see alternatives in FYS4180 report
+\captionsetup{width=.9\textwidth}
+\captionsetup{font=small,labelfont=bf}

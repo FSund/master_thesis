@@ -1,29 +1,143 @@
-\chapter{Observables}
-It can be shown that in the classical limit we can write the \hl{thermal???} average of an observable $A$ as\cite{frenkel2001understanding}
+\chapter{Statistical mechanics}
+\hl{The idea behind Molecular Dynamics simulations is that we can study the average behaviour of a many-body system by computing the natural time evolution of the system numerically and averaging the quantity of interest over a sufficiently long time.} -- Frenkel p. 15
+
+Before we start work on to do simulations using molecular dynamics, we need some basics on \emph{why} we can use MD to study atomic systems like silica and water. We first use the Born-Oppenheimer approximation to justify that the Hamiltonian of the system can be expressed as a function of the positions and velocities of the atoms, having averaged out the rapid motion of the individual subatomic particles (like electrons and protons). We then make the approximation that a classical description of the system is adequate, which we 
+
+% To do this we need some \hl{something} from the field of statistical mechanics.
+
+Using statistical mechanics stated in quantum mechanical terms, and using
+
+The basic assumption behind statistical mechanics, from which much of statistical mechanics follows, is that a system with fixed number of particles $N$, volume $V$ and energy $E$ is equally likely to be found in any of its eigenstates. Using this assumption, and stating statistical mechanics in quantum mechanical terms, it can be shown that the probability for finding a system at temperature $T$ in quantum state $i$ is
+\begin{align}
+%     P_i = 
+    \frac{\exp\left(-\beta E_i\right)}{\sum_j \exp\left( -\beta E_j\right)},
+    \label{eq:boltzmann}
+\end{align}
+where $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $E_i$ is the energy of a system in state $i$, and the sum in the divisor goes over all states at temperature $T$. This equation is the well-known Boltzmann distribution for a system at temperature $T$. From \cref{eq:boltzmann} it can be shown that the thermal average of an observable $A$ can be computed as
+\begin{align}
+    \langle A \rangle =
+    \frac{
+        \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
+    }{
+        \exp \left( -\beta E_i \right)
+    },
+    \label{eq:quantum_thermal_average}
+\end{align}
+where $\Braket{i|A|i}$ is the expectation value of the operator $A$ in quantum state $i$. The problem is that to compute a thermal average like this, we have to solve the \Schr~ equation for an arbitray many-body system, which is, in general, an untractable problem. Even if we could, the number of quantum states that contribute to the average in \cref{eq:quantum_thermal_average} would be so astronomically large ($\mathcal{O}(10^{10^{25}})$) that a numerical evaluation of all expectation values would be impossible.
+
+Fortunately \cref{eq:quantum_thermal_average} can be simplified in the classical limit, where we consider \hl{actions} on a scale much larger than $\hbar$, meaning that we can ignore\todo{somethings}. In the classical limit we get
 \begin{align*}
     \left\langle A\right\rangle = \frac
     {
-        \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-            \left[ 
-                \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-            \right]
+        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+        \left\{
+            -\beta \Ham \left( \bvec r^N, \bvec p^N \right)
         \right\} 
-        A(\bvec p^N, \bvec q^N)
+        A\left(\bvec r^N, \bvec p^N\right)
     }
     {
-        \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-            \left[ 
-                \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-            \right]
+        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+        \left\{
+            -\beta \Ham\left( \bvec r^N, \bvec p^N \right)
         \right\}
+    },
+\end{align*}
+where $\Ham$ is the Hamilton operator
+\begin{align*}
+    \Ham(\bvec r^N, \bvec p^N) = 
+        U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i},
+\end{align*}
+$\bvec r^N$ is the position of all the atoms, $\bvec p^N$ is the corresponding momenta, $m_i$ is the mass of atom $i$, and $U$ is the potential energy of the system.
+
+So far we have seen that the 
+
+average value of an observable $A$ can be computed as
+\begin{align*}
+    \langle A \rangle =
+    \frac{
+        \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
+    }{
+        \exp \left( -\beta E_i \right)
+    },
+\end{align*}
+where $i$ denotes the quantum state of a system, the sum $\sum_i$ goes over all  $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $T$ is the temperature, $E_i$ is the energy of a system 
+
+
+time average of a physical quantity
+\begin{align*}
+    \bar A = \lim_{T\rightarrow \infty} \frac{1}{T} \int_0^T A(t) \dif t
+\end{align*}
+then using classical mechanics, classical limit, NVE ensemble
+denoting the state of the system as $X$, and the sum over all states with a fixed energy $E$ as $\sum_{\{X|E\}}$
+\begin{align*}
+    \langle A \rangle = 
+    \frac{
+%         \displaystyle
+        \sum_{\{X|E\}} A(X)
+    }{
+%         \displaystyle
+        \sum_{\{X|E\}}
     }
+    =
+    \frac{
+%         \displaystyle
+        \sum_X A(X) \deltaop \left[ \Ham(X) - E \right]
+    }{
+%         \displaystyle
+        \sum_X \deltaop \left[ \Ham(X) - E \right]
+    }
+    = \bar A
+\end{align*}
+in the sums on the right had side the delta-function $\deltaop[\Ham(X)-E]$ restricts the sum to states with energy $E$
+
+
+in the classical limit we can write the \hl{thermal???} average of an observable $A$ as\cite{frenkel2001understanding}\todo{eq. (2.2.6), p. 13 + eq. (3.1.2) p. 23}
+% \begin{align*}
+%     \left\langle A\right\rangle = \frac
+%     {
+%         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
+%             \left[ 
+%                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
+%             \right]
+%         \right\} 
+%         A(\bvec p^N, \bvec q^N)
+%     }
+%     {
+%         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
+%             \left[ 
+%                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
+%             \right]
+%         \right\}
+%     }
+% \end{align*}
+\begin{align*}
+    \left\langle A\right\rangle = \frac
+    {
+        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+        \left\{
+            -\beta \Ham \left( \bvec r^N, \bvec r^N \right)
+        \right\} 
+        A\left(\bvec r^N, \bvec p^N\right)
+    }
+    {
+        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+        \left\{
+            -\beta \Ham\left( \bvec r^N, \bvec r^N \right)
+        \right\}
+    },
+\end{align*}
+where $\beta = 1/k_B T$, $T$ is the temperature, $k_B$ is the Boltzmann constant, $\bvec r^N$ is the positions of all $N$ atoms, and $\bvec p^N$ the corresponding momenta. The function $\Ham(\bvec r^N, \bvec p^N)$ is the Hamiltonian of the system, and can be expressed as
+\begin{align*}
+    \Ham(\bvec r^N, \bvec p^N) = 
+        U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i}
 \end{align*}
 
-
-
+From this we can show that we can measure for example the average pressure and temperature of a system from the time evolution of those quantities
 \begin{align*}
     \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{1}{2}k_B T
 \end{align*}
+
+\todo[inline]{The alternative is Monte Carlo simulations?}
 
 \chapter{A simple molecular dynamics program?}
 

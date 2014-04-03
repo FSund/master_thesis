@@ -1,0 +1,48 @@
+% ----  biblatex ---- %
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
+\bibliography{JabRef_database,Mendeley_database}
+
+% ---- Code syntax highlighting ---- %
+\usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
+% \usepackage[chapter]{minted} % included in uiofysmaster package, to load it before hyperref, to fix \listoflistings
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\newminted[cppcode]{cpp}{ % can use \newminted{cpp}, gives the same result
+    mathescape,
+%     frame=lines,
+%     framesep=2mm,
+    bgcolor = codebg,
+    fontsize = \small,
+%     fontfamily = courier
+} 
+% usage: \begin{cppcode}
+% use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
+
+% More options:
+% \renewcommand\listingscaption{Program code}
+% \renewcommand\listoflistingscaption{List of program codes}
+
+% ----  Draft stuff (remove before final version) ---- %
+\usepackage{todonotes}
+\usepackage{xcolor}
+\newcommand{\orangebox}[1]{
+    \fcolorbox{black}{orange}{
+        \begin{minipage}{\textwidth}
+            #1
+        \end{minipage}
+    }
+}
+\usepackage{soulutf8}       % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
+\usepackage{lipsum}
+
+% ---- Images ---- %
+\usepackage{graphicx}
+\usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
+                            % NEEDS ``pdflatex --shell-escape'' !!!
+\setsvg{                    % conversion options for svg package
+    inkscape = inkscape -z -D
+}
+\usepackage{subcaption}     % The subfigure and subfig packages are deprecated and shouldn't be used any more: 
+                            % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
+                            % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work

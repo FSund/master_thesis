@@ -3,105 +3,11 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-% ----  biblatex ---- %
-\usepackage[english]{babel}
-\usepackage{csquotes}
-\usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
-\bibliography{JabRef_database,Mendeley_database}
+\input{preamble}
 
-% ---- Code syntax highlighting ---- %
-\usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
-% \usepackage[chapter]{minted} % included in uiofysmaster package, to load it before hyperref, to fix \listoflistings
-\definecolor{codebg}{rgb}{0.95,0.95,0.95}
-\newminted[cppcode]{cpp}{ % can use \newminted{cpp}, gives the same result
-    mathescape,
-%     frame=lines,
-%     framesep=2mm,
-    bgcolor = codebg,
-    fontsize = \small,
-%     fontfamily = courier
-} 
-% usage: \begin{cppcode}
-% use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
+\input{other_packages}
 
-% More options:
-% \renewcommand\listingscaption{Program code}
-% \renewcommand\listoflistingscaption{List of program codes}
-
-% ----  Draft stuff (remove before final version) ---- %
-\usepackage{todonotes}
-\usepackage{xcolor}
-\newcommand{\orangebox}[1]{
-    \fcolorbox{black}{orange}{
-        \begin{minipage}{\textwidth}
-            #1
-        \end{minipage}
-    }
-}
-\usepackage{soulutf8}       % To highlight stuff (when using utf8), using \hl{}. Also has \st{} for strikethrough. Doesn't work that well with equations...
-\usepackage{lipsum}
-
-% ---- Images ---- %
-\usepackage{graphicx}
-\usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
-                            % NEEDS ``pdflatex --shell-escape'' !!!
-\setsvg{                    % conversion options for svg package
-    inkscape = inkscape -z -D
-}
-\usepackage{subcaption}     % The subfigure and subfig packages are deprecated and shouldn't be used any more: 
-                            % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
-                            % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
-
-% ---- Other stuff ---- %
-% \usepackage{minipage}
-\usepackage{commath}        % To correctly typeset differentials \od, \dod, and \tod
-\usepackage{fancyvrb}       % Better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
-\usepackage{cleveref}       % Use \cref{fig:label} instead of \ref{} to get auto ``fig. 1.1a''. \Cref for capitalized.
-\usepackage{upgreek}        % Upper case greek letters
-\usepackage{bm}             % Bold symbols in math mode
-\usepackage{mathtools}      % Mainly for \vdotswithin{=} and \shortvdotswithin{=}
-\usepackage{pdfpages}       % To include the frontpage pdf
-\usepackage{hyperref}       % Load hyperref package last
-% \usepackage{paralist}
-\usepackage{relsize}        % To resize stuff - specifically integration signs
-\usepackage{exscale}        % To resize integration sign twice
-
-% ---- Custom itemize ---- %
-\usepackage{enumitem}       % Better control over enu­mer­ate, item­ize and de­scrip­tion. Su­per­sedes both enu­mer­ate and md­wlist.
-\SetEnumitemKey{midsep}{topsep=3pt,partopsep=3pt,parsep=3pt,itemsep=3pt}
-
-% ---- Custom lengths for figures ---- %
-% (so we can just use \setlength later)
-\newlength{\myfigwidth}
-\newlength{\mycaptionwidth}
-
-% ---- Custom commands and symbols ---- %
-% ----- Vectors ---- %
-% \newcommand{\bvec}[1]{\mathbf{#1}}
-\newcommand{\bvec}[1]{\boldsymbol{#1}}    % Using amsmath's boldsymbol
-% \newcommand{\bvec}[1]{\bm{#1}}
-\newcommand{\rvec}{\bvec{r}}
-\newcommand{\vvec}{\bvec{v}}
-\newcommand{\avec}{\bvec{a}}
-\newcommand{\Fvec}{\bvec{F}}
-% ---- Other ---- %
-\newcommand{\Ang}{\AA ngstr\"om}
-% ---- Other math commands and symbols ---- %
-% \newcommand\diff{\mathop{}\!\mathrm{d}}   % Already defined as \dif by commath! But maybe this way is better? Commath uses ``\DeclareMathOperator{\dif}{d \!}''
-\newcommand\bigint{\mathop{\mathlarger{\int}}}
-\newcommand\biggerint{\mathop{\mathlarger{\mathlarger{\int}}}}
-
-% ---- Fix unicode stuff ---- %
-\DeclareUnicodeCharacter{2212}{-}   % Unicode 'MINUS SIGN' (U+2212) that matplotlib uses for minus on axis tick labes
-
-% ---- Formatting ---- %
-% skip line instead of indent on new paragraph
-\setlength{\parskip}{11pt}
-\setlength{\parindent}{0mm}
-% make figure text more narrow than textwidth, use small font, and make ``figure'' bold
-% ! see alternatives in FYS4180 report
-\captionsetup{width=.9\textwidth}
-\captionsetup{font=small,labelfont=bf}
+\input{custom_commands_and_settings}
 
 \begin{document}
 
@@ -139,8 +45,30 @@
     \item 
 \end{itemize}
 
+\begin{center}
+\begin{table}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    Day & Min Temp & Max Temp & Summary \\ \hline
+    Monday & 11C & 22C & A clear day with lots of sunshine.  
+    However, the strong breeze will bring down the temperatures. \\ \hline
+    Tuesday & 9C & 19C & Cloudy with rain, across many northern regions. Clear spells
+    across most of Scotland and Northern Ireland,
+    but rain reaching the far northwest. \\ \hline
+    Wednesday & 10C & 21C & Rain will still linger for the morning.
+    Conditions will improve by early afternoon and continue
+    throughout the evening. \\
+    \hline
+    \end{tabular}
+\caption{A table for the list of tables, so it won't become envious of the other lists.}
+\end{table}
+\end{center}
+
 
 \part{Molecular dynamics}
+\chapter{Introduction}
+In this chapter we will give an overview of how simulations of atomic systems are done using molecular dynamics. We will show the theory that makes molecular dynamics so efficient and useful, and we will show how to build up and implement a simple molecular dynamics program \hl{using pseudocode}. The program used for producing the results presented in this thesis uses a much more sophisticated model for the interaction between the atoms (\hl{the potential}), and is parallellized and highly optimized for doing calculations on high-performance computing clusters like Abel\todo{cite?}\hl{, using methods not shown here?}, which we will try to gain some insight into by starting from \hl{some basic theory/a basic model}.
+
 % To accurately study molecular many-body systems like water confined in nanoporous silica means that we have to consider the quantum mechanical nature of atoms and molecules. To study the motion of atoms using \hl{ab-initio} quantum mechanical calculations, where we have to consider the effect of all electrons, protons and neutrons for all atoms, we have to solve a problem with dimensionality 
 % 
 % To study water confined in nanoporous silica we use the the method of molecular dynamics simulations. This is a method that use knowledge from the complex quantum mechanical nature of atoms and molecules, to reduce the many-body problems  create simple potentials only depending on the positions \hl{(and velocities?)} of atoms represented as point particles, which we can integrate using Newton's equations of motion. 
@@ -154,8 +82,6 @@
 To do an exact study of a many-body atomic system like water confined in nanoporous silica, we have to take into account the quantum mechanical nature of the atoms and molecules in the system. An \hl{average} oxygen molecule consists of 8 electrons, 8 protons and 8 neutrons, all interacting with each other, and each with 3 translational degrees of freedom. This makes doing calculations on something as \hl{``simple''} an electron pretty complex if we want to do it properly. If we want to study a system consisting of more than a couple of oxygen atoms we see that the number of particles and degrees of freedom quickly makes the problem grow to intractable proportions. Since we are mainly interested in the equilibrium and transport properties of the system, we can reduce the problem to something we can handle by using results from underlying quantum mechanical calculations, to develop approximate models of the system. We assume that the many-body system behaves \hl{clasically}\todo{which is an exellent approx. according to Frenkel p 63}, and model all atoms as point particles. From quantum mechanical results we create potentials that approximate the exact forces between the atoms, that only depend on the position \hl{(and velocity?)} of the \hl{atoms/nuclei/point particles}, which are orders of magnitude faster to evaluate compared to calculating the exact forces between the atoms from quantum mechanical principles. We then solve Newton's equations of motion for the system.
 
 To explain how a Molecular Dynamics simulation work we start with a simple example, using one atom type, and a simple model for the force between the atoms. This allows us to get an understanding of the basic concepts used in \hl{MD}. The program actually used for the calculations in the work presented in this thesis uses a very complex potential, and is highly optimized and parallellized for doing calculations on computing clusters on several hundred \hl{CPU's}. But the inner workings of that program \hl{is both a) too much to cover? and b) not necessary to explain?).}
-
-\hl{The idea behind Molecular Dynamics simulations is that we can study the average behaviour of a many-body system by computing the natural time evolution of the system numerically and averaging the quantity of interest over a sufficiently long time.} -- Frenkel p. 15
 
 \input{chap_simulations.tex}    
 \input{chap_fractures.tex}
