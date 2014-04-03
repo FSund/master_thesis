@@ -3,15 +3,14 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-\input{preamble}
+\input{preamble.tex}
 
-\input{other_packages}
+\input{other_packages.tex}
 
-\input{custom_commands_and_settings}
+\input{custom_commands_and_settings.tex}
 
 \begin{document}
 
-% Front page
 \pagenumbering{roman}
 \includepdf{frontpage.pdf}
 \cleardoublepage
@@ -31,7 +30,6 @@
 \end{acknowledgements}
 
 \tableofcontents
-% \pagenumbering{arabic} -- happens automatically
 
 \listoffigures
 \listoftables
@@ -41,19 +39,24 @@
     \input{introduction}
 
 \part{Molecular dynamics}
-    \input{molecular_dynamics}
+    \input{molecular_dynamics/introduction.tex}
+    \input{molecular_dynamics/simulations.tex}
+    \input{molecular_dynamics/measurements.tex}
+
+    
+\part{Fractures}
+    \input{fractures/fractures.tex}
 
 \part{Results}
-    \input{results/results}
+    \input{results/results.tex}
 
 \part{Discussion}
 
 \part{Appendices}
-    \input{appendices/md_units}
-    \input{appendices/integrators}
-    \input{appendices/pressure}
+    \input{appendices/md_units.tex}
+    \input{appendices/integrators.tex}
+    \input{appendices/pressure.tex}
 
 \printbibliography
-% \bibliography{JabRef_database,Mendeley_database}
 
 \end{document}
