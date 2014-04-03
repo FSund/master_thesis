@@ -1,157 +1,164 @@
 \chapter{Statistical mechanics}
-\hl{The idea behind Molecular Dynamics simulations is that we can study the average behaviour of a many-body system by computing the natural time evolution of the system numerically and averaging the quantity of interest over a sufficiently long time.} -- Frenkel p. 15
-
-Before we start work on to do simulations using molecular dynamics, we need some basics on \emph{why} we can use MD to study atomic systems like silica and water. We first use the Born-Oppenheimer approximation to justify that the Hamiltonian of the system can be expressed as a function of the positions and velocities of the atoms, having averaged out the rapid motion of the individual subatomic particles (like electrons and protons). We then make the approximation that a classical description of the system is adequate, which we 
-
-% To do this we need some \hl{something} from the field of statistical mechanics.
-
-Using statistical mechanics stated in quantum mechanical terms, and using
-
-The basic assumption behind statistical mechanics, from which much of statistical mechanics follows, is that a system with fixed number of particles $N$, volume $V$ and energy $E$ is equally likely to be found in any of its eigenstates. Using this assumption, and stating statistical mechanics in quantum mechanical terms, it can be shown that the probability for finding a system at temperature $T$ in quantum state $i$ is
-\begin{align}
-%     P_i = 
-    \frac{\exp\left(-\beta E_i\right)}{\sum_j \exp\left( -\beta E_j\right)},
-    \label{eq:boltzmann}
-\end{align}
-where $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $E_i$ is the energy of a system in state $i$, and the sum in the divisor goes over all states at temperature $T$. This equation is the well-known Boltzmann distribution for a system at temperature $T$. From \cref{eq:boltzmann} it can be shown that the thermal average of an observable $A$ can be computed as
-\begin{align}
-    \langle A \rangle =
-    \frac{
-        \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
-    }{
-        \exp \left( -\beta E_i \right)
-    },
-    \label{eq:quantum_thermal_average}
-\end{align}
-where $\Braket{i|A|i}$ is the expectation value of the operator $A$ in quantum state $i$. The problem is that to compute a thermal average like this, we have to solve the \Schr~ equation for an arbitray many-body system, which is, in general, an untractable problem. Even if we could, the number of quantum states that contribute to the average in \cref{eq:quantum_thermal_average} would be so astronomically large ($\mathcal{O}(10^{10^{25}})$) that a numerical evaluation of all expectation values would be impossible.
-
-Fortunately \cref{eq:quantum_thermal_average} can be simplified in the classical limit, where we consider \hl{actions} on a scale much larger than $\hbar$, meaning that we can ignore\todo{somethings}. In the classical limit we get
-\begin{align*}
-    \left\langle A\right\rangle = \frac
-    {
-        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-        \left\{
-            -\beta \Ham \left( \bvec r^N, \bvec p^N \right)
-        \right\} 
-        A\left(\bvec r^N, \bvec p^N\right)
-    }
-    {
-        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-        \left\{
-            -\beta \Ham\left( \bvec r^N, \bvec p^N \right)
-        \right\}
-    },
-\end{align*}
-where $\Ham$ is the Hamilton operator
-\begin{align*}
-    \Ham(\bvec r^N, \bvec p^N) = 
-        U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i},
-\end{align*}
-$\bvec r^N$ is the position of all the atoms, $\bvec p^N$ is the corresponding momenta, $m_i$ is the mass of atom $i$, and $U$ is the potential energy of the system.
-
-So far we have seen that the 
-
-average value of an observable $A$ can be computed as
-\begin{align*}
-    \langle A \rangle =
-    \frac{
-        \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
-    }{
-        \exp \left( -\beta E_i \right)
-    },
-\end{align*}
-where $i$ denotes the quantum state of a system, the sum $\sum_i$ goes over all  $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $T$ is the temperature, $E_i$ is the energy of a system 
-
-
-time average of a physical quantity
-\begin{align*}
-    \bar A = \lim_{T\rightarrow \infty} \frac{1}{T} \int_0^T A(t) \dif t
-\end{align*}
-then using classical mechanics, classical limit, NVE ensemble
-denoting the state of the system as $X$, and the sum over all states with a fixed energy $E$ as $\sum_{\{X|E\}}$
-\begin{align*}
-    \langle A \rangle = 
-    \frac{
-%         \displaystyle
-        \sum_{\{X|E\}} A(X)
-    }{
-%         \displaystyle
-        \sum_{\{X|E\}}
-    }
-    =
-    \frac{
-%         \displaystyle
-        \sum_X A(X) \deltaop \left[ \Ham(X) - E \right]
-    }{
-%         \displaystyle
-        \sum_X \deltaop \left[ \Ham(X) - E \right]
-    }
-    = \bar A
-\end{align*}
-in the sums on the right had side the delta-function $\deltaop[\Ham(X)-E]$ restricts the sum to states with energy $E$
-
-
-in the classical limit we can write the \hl{thermal???} average of an observable $A$ as\cite{frenkel2001understanding}\todo{eq. (2.2.6), p. 13 + eq. (3.1.2) p. 23}
+% \hl{The idea behind Molecular Dynamics simulations is that we can study the average behaviour of a many-body system by computing the natural time evolution of the system numerically and averaging the quantity of interest over a sufficiently long time.} -- Frenkel p. 15
+% 
+% Before we start work on to do simulations using molecular dynamics, we need some basics on \emph{why} we can use MD to study atomic systems like silica and water. We first use the Born-Oppenheimer approximation to justify that the Hamiltonian of the system can be expressed as a function of the positions and velocities of the atoms, having averaged out the rapid motion of the individual subatomic particles (like electrons and protons). We then make the approximation that a classical description of the system is adequate, which we 
+% 
+% % To do this we need some \hl{something} from the field of statistical mechanics.
+% 
+% Using statistical mechanics stated in quantum mechanical terms, and using
+% 
+% The basic assumption behind statistical mechanics, from which much of statistical mechanics follows, is that a system with fixed number of particles $N$, volume $V$ and energy $E$ is equally likely to be found in any of its eigenstates. Using this assumption, and stating statistical mechanics in quantum mechanical terms, it can be shown that the probability for finding a system at temperature $T$ in quantum state $i$ is
+% \begin{align}
+% %     P_i = 
+%     \frac{\exp\left(-\beta E_i\right)}{\sum_j \exp\left( -\beta E_j\right)},
+%     \label{eq:boltzmann}
+% \end{align}
+% where $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $E_i$ is the energy of a system in state $i$, and the sum in the divisor goes over all states at temperature $T$. This equation is the well-known Boltzmann distribution for a system at temperature $T$. From \cref{eq:boltzmann} it can be shown that the thermal average of an observable $A$ can be computed as
+% \begin{align}
+%     \langle A \rangle =
+%     \frac{
+%         \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
+%     }{
+%         \exp \left( -\beta E_i \right)
+%     },
+%     \label{eq:quantum_thermal_average}
+% \end{align}
+% where $\Braket{i|A|i}$ is the expectation value of the operator $A$ in quantum state $i$. The problem is that to compute a thermal average like this, we have to solve the \Schr~ equation for an arbitray many-body system, which is, in general, an untractable problem. Even if we could, the number of quantum states that contribute to the average in \cref{eq:quantum_thermal_average} would be so astronomically large ($\mathcal{O}(10^{10^{25}})$) that a numerical evaluation of all expectation values would be impossible.
+% 
+% Fortunately \cref{eq:quantum_thermal_average} can be simplified in the classical limit, where we consider \hl{actions} on a scale much larger than $\hbar$, meaning that we can ignore\todo{somethings}. In the classical limit we get
 % \begin{align*}
 %     \left\langle A\right\rangle = \frac
 %     {
-%         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-%             \left[ 
-%                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-%             \right]
+%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+%         \left\{
+%             -\beta \Ham \left( \bvec r^N, \bvec p^N \right)
 %         \right\} 
-%         A(\bvec p^N, \bvec q^N)
+%         A\left(\bvec r^N, \bvec p^N\right)
 %     }
 %     {
-%         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-%             \left[ 
-%                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-%             \right]
+%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+%         \left\{
+%             -\beta \Ham\left( \bvec r^N, \bvec p^N \right)
 %         \right\}
-%     }
+%     },
 % \end{align*}
-\begin{align*}
-    \left\langle A\right\rangle = \frac
-    {
-        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-        \left\{
-            -\beta \Ham \left( \bvec r^N, \bvec r^N \right)
-        \right\} 
-        A\left(\bvec r^N, \bvec p^N\right)
-    }
-    {
-        \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-        \left\{
-            -\beta \Ham\left( \bvec r^N, \bvec r^N \right)
-        \right\}
-    },
-\end{align*}
-where $\beta = 1/k_B T$, $T$ is the temperature, $k_B$ is the Boltzmann constant, $\bvec r^N$ is the positions of all $N$ atoms, and $\bvec p^N$ the corresponding momenta. The function $\Ham(\bvec r^N, \bvec p^N)$ is the Hamiltonian of the system, and can be expressed as
-\begin{align*}
-    \Ham(\bvec r^N, \bvec p^N) = 
-        U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i}
-\end{align*}
+% where $\Ham$ is the Hamilton operator
+% \begin{align*}
+%     \Ham(\bvec r^N, \bvec p^N) = 
+%         U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i},
+% \end{align*}
+% $\bvec r^N$ is the position of all the atoms, $\bvec p^N$ is the corresponding momenta, $m_i$ is the mass of atom $i$, and $U$ is the potential energy of the system.
+% 
+% So far we have seen that the 
+% 
+% average value of an observable $A$ can be computed as
+% \begin{align*}
+%     \langle A \rangle =
+%     \frac{
+%         \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
+%     }{
+%         \exp \left( -\beta E_i \right)
+%     },
+% \end{align*}
+% where $i$ denotes the quantum state of a system, the sum $\sum_i$ goes over all  $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $T$ is the temperature, $E_i$ is the energy of a system 
+% 
+% 
+% time average of a physical quantity
+% \begin{align*}
+%     \bar A = \lim_{T\rightarrow \infty} \frac{1}{T} \int_0^T A(t) \dif t
+% \end{align*}
+% then using classical mechanics, classical limit, NVE ensemble
+% denoting the state of the system as $X$, and the sum over all states with a fixed energy $E$ as $\sum_{\{X|E\}}$
+% \begin{align*}
+%     \langle A \rangle = 
+%     \frac{
+% %         \displaystyle
+%         \sum_{\{X|E\}} A(X)
+%     }{
+% %         \displaystyle
+%         \sum_{\{X|E\}}
+%     }
+%     =
+%     \frac{
+% %         \displaystyle
+%         \sum_X A(X) \deltaop \left[ \Ham(X) - E \right]
+%     }{
+% %         \displaystyle
+%         \sum_X \deltaop \left[ \Ham(X) - E \right]
+%     }
+%     = \bar A
+% \end{align*}
+% in the sums on the right had side the delta-function $\deltaop[\Ham(X)-E]$ restricts the sum to states with energy $E$
+% 
+% 
+% in the classical limit we can write the \hl{thermal???} average of an observable $A$ as\cite{frenkel2001understanding}\todo{eq. (2.2.6), p. 13 + eq. (3.1.2) p. 23}
+% % \begin{align*}
+% %     \left\langle A\right\rangle = \frac
+% %     {
+% %         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
+% %             \left[ 
+% %                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
+% %             \right]
+% %         \right\} 
+% %         A(\bvec p^N, \bvec q^N)
+% %     }
+% %     {
+% %         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
+% %             \left[ 
+% %                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
+% %             \right]
+% %         \right\}
+% %     }
+% % \end{align*}
+% \begin{align*}
+%     \left\langle A\right\rangle = \frac
+%     {
+%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+%         \left\{
+%             -\beta \Ham \left( \bvec r^N, \bvec r^N \right)
+%         \right\} 
+%         A\left(\bvec r^N, \bvec p^N\right)
+%     }
+%     {
+%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
+%         \left\{
+%             -\beta \Ham\left( \bvec r^N, \bvec r^N \right)
+%         \right\}
+%     },
+% \end{align*}
+% where $\beta = 1/k_B T$, $T$ is the temperature, $k_B$ is the Boltzmann constant, $\bvec r^N$ is the positions of all $N$ atoms, and $\bvec p^N$ the corresponding momenta. The function $\Ham(\bvec r^N, \bvec p^N)$ is the Hamiltonian of the system, and can be expressed as
+% \begin{align*}
+%     \Ham(\bvec r^N, \bvec p^N) = 
+%         U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i}
+% \end{align*}
+% 
+% From this we can show that we can measure for example the average pressure and temperature of a system from the time evolution of those quantities
+% \begin{align*}
+%     \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{1}{2}k_B T
+% \end{align*}
+% 
+% \todo[inline]{The alternative is Monte Carlo simulations?}
 
-From this we can show that we can measure for example the average pressure and temperature of a system from the time evolution of those quantities
-\begin{align*}
-    \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{1}{2}k_B T
-\end{align*}
 
-\todo[inline]{The alternative is Monte Carlo simulations?}
+
+In molecular dynamics we study systems of many interacting atoms and molecules by assuming that they behave classically, and solve Newton's equations of motion using an appropriate integration scheme to evolve the system in time. By assuming that the atoms behave classically we mean that we model the atoms as point particles, and characterize them using their position, $\bvec r$, velocity, $\bvec v$ and the force acting on them, $\bvec f$. The interactions between the atoms, that stem from the quantum mechanical \hl{something}, are described using potentials. It is into these potentials we bake the physical insight of the systems we want to simulate, which we often do by finding potentials using studies and simulations of the underlying quantum mechanical nature of the interactions between the atoms in the system.
+
+
 
 \chapter{A simple molecular dynamics program?}
+Intro
 
-
-
-Deducing how a molecular dynamics program does its simulations isn't always easy from looking at source code, but most programs will follow a flow similar to the following:
+\section{The main program}
+% Deducing how a molecular dynamics program does its simulations isn't always easy from looking at source code, but most programs will follow a flow similar to the following:
+Most molecular dynamics programs will follow an flow similar to the following:
 \begin{itemize}[midsep]
-    \renewcommand{\labelitemii}{$\bullet$} % Set list 2 bullet thing equal to first
+    \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
     \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation.
     \item For each timestep
     \begin{itemize}[midsep]
         \item Calculate the forces between the atoms.
         \item Integrate Newton's equations of motion using an appropriate integration scheme \todo{examples?}.
-        \item Sample the quantities we want to study.
+        \item Sample the values of the quantities we want to study, and add to the averages.
     \end{itemize}
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
 \end{itemize}
@@ -168,12 +175,84 @@ An example of a program that implements the above procedure can be seen in \cref
     }
 \end{cppcode*}
 \caption{
-    A high-level example of a typical implementation of a molecular dynamics program.
+    An example of a typical implementation of a molecular dynamics program using object-oriented programming.
     \label{list:simple_md_program}
 }
 \end{listing}
+When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
-When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid, like a face-centered cubic (fcc), body-centered cubic (bcc), or simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously.
+\section{Calculation of forces}
+The forces are calculated from the derivatives of interatomic potentials, that depend on the positions of the atoms, and generally are of the form
+\begin{align*}
+    U(\rvec) = \sum_{i<j} U_{ij}(r_{ij}) + \sum_{i<j<k} U_{ijk}(\rvec_i, \rvec_i, \rvec_k) + \dots,
+\end{align*}
+where $\rvec_i$ is the position of atom $i$, $r_{ij}$ is the distance between atom $i$ and $j$, $U_{ij}$ is a two-particle potential depending only on the distance between two atoms, and $U_{ijk}$ is a three-particle potential that usually also depends on the angle between three atoms. Higher-order contributions are also often used\todo{ReaxFF}, but they are very demanding to evaluate numerically.
+
+When developing potentials from quantum mechanical calculations one has to weigh the benefits of having a complex potential that models the interactions accurately, against having a less comples potential that will be easier to implement, and faster to evaluate. The limiting factor in any molecular dynamics calculation is the cost of doing simulations on high-performance computing clusters\hl{like abel}, but luckily it seems like the progress in \hl{CPU} development still seems to follow Moore's Law\hl{source?}, that states that the number of transistors on integrated circuits double approximately every two years\cite{moore1965cramming}, effectively halving the price of doing a computation\hl{source?}.
+
+In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential, \hl{after its creator}. The potential is a simple two-particle potential with the following form
+% To model a simple mono-atomic system we use the well-known Lennard-Jones potential\cite{jones1924potential}, which when applied on the noble gas \hl{(inert)} Argon gives results that are in good agreement with experimental results. The potential is usually written as follows
+\begin{align}
+%     U(r) = 4\varepsilon \Big[
+%     \underbrace{
+%         \left(\frac{\sigma}{r}\right)^{12}
+%     }_{\text{attraction}}
+%      - 
+%     \underbrace{
+%         \left(\frac{\sigma}{r}\right)^6
+%     }_{\text{repulsion}}
+%     \Big],
+    U(r_{ij}) = 4\varepsilon\left[ \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^{6} \right]
+    = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right],
+    \label{eq:lennard-jones_potential}
+\end{align}
+where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^12 = (r^6)^2$}. 
+
+The potential was used by Lennard-Jones to study the Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+\begin{figure}
+    \centering
+    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}
+%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}
+    \caption{
+        Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+        \label{fig:lennard-jones_potential}
+    }
+\end{figure}
+
+\section{Integration scheme}
+To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
+
+It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}., and numerically cheap \hl{(compared to other methods)} \hl{requiring on the order of $N$?? flops}. The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
+\begin{align*}
+    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
+\end{align*}
+where $\Delta t$\todo{define timestep} is the timestep, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ \hl{show this}.
+
+We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion of $\rvec(t\pm\Delta t)$, giving
+\begin{align*}
+    \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t},
+\end{align*}
+which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}.
+
+
+The Velocity verlet scheme has 
+
+The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?}.
+
+\section{SiO2 potential (move to appendix?)}
+\orangebox{
+    \begin{itemize}
+        \item Which of the parameters given below are constants?
+        \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
+    \end{itemize}
+}
+
+
+
+
+
+
+
 
 To measure an observable quantity in a simulation we must be able to express it as a function of the positions, velocities and forces of the particles in the system. 
 
@@ -199,40 +278,7 @@ where $V$ is the volume, $\rho$ is the atom density, $\bvec F(\bvec r)$ is the f
 }
 
 \section{Potential}
-To model a simple mono-atomic system we use the well-known Lennard-Jones potential\cite{jones1924potential}, which when applied on the noble gas \hl{(inert)} Argon gives results that are in good agreement with experimental results. The potential is usually written as follows
-\begin{align}
-%     U(r) = 4\varepsilon \Big[
-%     \underbrace{
-%         \left(\frac{\sigma}{r}\right)^{12}
-%     }_{\text{attraction}}
-%      - 
-%     \underbrace{
-%         \left(\frac{\sigma}{r}\right)^6
-%     }_{\text{repulsion}}
-%     \Big],
-    U(r) = 4\varepsilon\left[ \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^{6} \right]
-    = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right]
-    \label{eq:lennard-jones_potential}
-\end{align}
-where $r$ is the distance between two atoms, $\sigma$ is the distance where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = \sigma 2^{1/6}$ is the distance where the potential is at its minimum. The $r^{-12}$ term is the repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is the attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^12 = (r^6)^2$}. See \cref{fig:lennard-jones_potential} for a plot of the potential for the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
 
-\begin{figure}
-    \centering
-    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}
-%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}
-    \caption{
-        Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
-        \label{fig:lennard-jones_potential}
-    }
-\end{figure}
-
-\section{SiO2 potential (move to appendix?)}
-\orangebox{
-    \begin{itemize}
-        \item Which of the parameters given below are constants?
-        \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
-    \end{itemize}
-}
 
 The interatomic potential\cite{vashishta1990interaction} \todo{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
 \begin{align*}
