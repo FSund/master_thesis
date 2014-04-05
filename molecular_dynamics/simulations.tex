@@ -223,6 +223,8 @@ Which leads us to the usual way of implementing the algorithm\cite{allen1989comp
 \end{itemize}
 This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 
 
+\section{Boundary conditions}
+In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But 
 
 
 
@@ -233,10 +235,9 @@ This implementation minimizes the memory needs, as we only need to store one cop
 
 
 
+\chapter{Optimizations?}
 
-\chapter{AnotherAwesomeChapterName}
-    \section{Boundary conditions}
-    \section{Verlet- and cell-lists}
+\section{Verlet- and cell-lists}
     
 
 
