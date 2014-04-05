@@ -4,6 +4,7 @@
 \newlength{\mycaptionwidth}
 
 % ---- Custom commands and symbols ---- %
+
 % ----- Vectors ---- %
 % \newcommand{\bvec}[1]{\mathbf{#1}}
 \newcommand{\oldvec}{\vec}
@@ -14,6 +15,7 @@
 \newcommand{\vvec}{\bvec{v}}
 \newcommand{\avec}{\bvec{a}}
 \newcommand{\Fvec}{\bvec{F}}
+
 % ---- Other math commands and symbols ---- %
 % \newcommand\diff{\mathop{}\!\mathrm{d}}   % Already defined as \dif by commath! But maybe this way is better? Commath uses ``\DeclareMathOperator{\dif}{d \!}''
 \DeclareMathOperator{\diff}{d \!}           % See top comment on this reply: http://tex.stackexchange.com/a/95681/31078
@@ -26,9 +28,12 @@
 \DeclareMathOperator{\deltaop}{\updelta}
 % \newcommand\biggerint{\mathop{\mathlarger{\mathlarger{\int}}}}
 \DeclareMathOperator{\biggerint}{\mathlarger{\mathlarger{\int}}}
+
 % ---- Other ---- %
 \newcommand{\Ang}{\AA ngstr\"om}
 \newcommand{\Schr}{Schr\"odinger}
+% \newcommand{\cpp}{\Verb!C++!} % Doesn't work in captions... Can be fixed with ``\protect'' before the verb, and ``\SaveVerb'' before list of figures, or the cprotect package. More info here: http://tex.stackexchange.com/questions/8810/how-to-include-verbatim-in-a-figure-caption
+\newcommand{\cpp}{\texttt{C++}}
 
 % ---- Fix unicode stuff ---- %
 \DeclareUnicodeCharacter{2212}{-}   % Unicode 'MINUS SIGN' (U+2212) that matplotlib uses for minus on axis tick labes

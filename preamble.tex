@@ -5,10 +5,12 @@
 \bibliography{JabRef_database,Mendeley_database}
 
 % ---- Code syntax highlighting ---- %
-\usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
-% \usepackage[chapter]{minted} % included in uiofysmaster package, to load it before hyperref, to fix \listoflistings
+% \usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
+\usepackage[scale=0.85]{droidmono}
+\usepackage[chapter]{minted} % Load order: float, then hyperref, then minted, so minted will use \newfloat patched by hyperref. See: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
+\usemintedstyle{colorful}
 \definecolor{codebg}{rgb}{0.95,0.95,0.95}
-\newminted[cppcode]{cpp}{ % can use \newminted{cpp}, gives the same result
+\newminted[cppcode]{mdcpp}{ % can use \newminted{cpp}, gives the same result
     mathescape,
 %     frame=lines,
 %     framesep=2mm,
@@ -43,6 +45,7 @@
 \setsvg{                    % conversion options for svg package
     inkscape = inkscape -z -D
 }
+
 \usepackage{subcaption}     % The subfigure and subfig packages are deprecated and shouldn't be used any more: 
                             % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                             % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work

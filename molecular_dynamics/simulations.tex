@@ -1,150 +1,3 @@
-\chapter{Statistical mechanics}
-% \hl{The idea behind Molecular Dynamics simulations is that we can study the average behaviour of a many-body system by computing the natural time evolution of the system numerically and averaging the quantity of interest over a sufficiently long time.} -- Frenkel p. 15
-% 
-% Before we start work on to do simulations using molecular dynamics, we need some basics on \emph{why} we can use MD to study atomic systems like silica and water. We first use the Born-Oppenheimer approximation to justify that the Hamiltonian of the system can be expressed as a function of the positions and velocities of the atoms, having averaged out the rapid motion of the individual subatomic particles (like electrons and protons). We then make the approximation that a classical description of the system is adequate, which we 
-% 
-% % To do this we need some \hl{something} from the field of statistical mechanics.
-% 
-% Using statistical mechanics stated in quantum mechanical terms, and using
-% 
-% The basic assumption behind statistical mechanics, from which much of statistical mechanics follows, is that a system with fixed number of particles $N$, volume $V$ and energy $E$ is equally likely to be found in any of its eigenstates. Using this assumption, and stating statistical mechanics in quantum mechanical terms, it can be shown that the probability for finding a system at temperature $T$ in quantum state $i$ is
-% \begin{align}
-% %     P_i = 
-%     \frac{\exp\left(-\beta E_i\right)}{\sum_j \exp\left( -\beta E_j\right)},
-%     \label{eq:boltzmann}
-% \end{align}
-% where $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $E_i$ is the energy of a system in state $i$, and the sum in the divisor goes over all states at temperature $T$. This equation is the well-known Boltzmann distribution for a system at temperature $T$. From \cref{eq:boltzmann} it can be shown that the thermal average of an observable $A$ can be computed as
-% \begin{align}
-%     \langle A \rangle =
-%     \frac{
-%         \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
-%     }{
-%         \exp \left( -\beta E_i \right)
-%     },
-%     \label{eq:quantum_thermal_average}
-% \end{align}
-% where $\Braket{i|A|i}$ is the expectation value of the operator $A$ in quantum state $i$. The problem is that to compute a thermal average like this, we have to solve the \Schr~ equation for an arbitray many-body system, which is, in general, an untractable problem. Even if we could, the number of quantum states that contribute to the average in \cref{eq:quantum_thermal_average} would be so astronomically large ($\mathcal{O}(10^{10^{25}})$) that a numerical evaluation of all expectation values would be impossible.
-% 
-% Fortunately \cref{eq:quantum_thermal_average} can be simplified in the classical limit, where we consider \hl{actions} on a scale much larger than $\hbar$, meaning that we can ignore\todo{somethings}. In the classical limit we get
-% \begin{align*}
-%     \left\langle A\right\rangle = \frac
-%     {
-%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-%         \left\{
-%             -\beta \Ham \left( \bvec r^N, \bvec p^N \right)
-%         \right\} 
-%         A\left(\bvec r^N, \bvec p^N\right)
-%     }
-%     {
-%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-%         \left\{
-%             -\beta \Ham\left( \bvec r^N, \bvec p^N \right)
-%         \right\}
-%     },
-% \end{align*}
-% where $\Ham$ is the Hamilton operator
-% \begin{align*}
-%     \Ham(\bvec r^N, \bvec p^N) = 
-%         U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i},
-% \end{align*}
-% $\bvec r^N$ is the position of all the atoms, $\bvec p^N$ is the corresponding momenta, $m_i$ is the mass of atom $i$, and $U$ is the potential energy of the system.
-% 
-% So far we have seen that the 
-% 
-% average value of an observable $A$ can be computed as
-% \begin{align*}
-%     \langle A \rangle =
-%     \frac{
-%         \sum_i \exp \left( -\beta E_i \right) \Braket{i|A|i}
-%     }{
-%         \exp \left( -\beta E_i \right)
-%     },
-% \end{align*}
-% where $i$ denotes the quantum state of a system, the sum $\sum_i$ goes over all  $\beta = 1/k_B T$, $k_B$ is the Boltzmann constant, $T$ is the temperature, $E_i$ is the energy of a system 
-% 
-% 
-% time average of a physical quantity
-% \begin{align*}
-%     \bar A = \lim_{T\rightarrow \infty} \frac{1}{T} \int_0^T A(t) \dif t
-% \end{align*}
-% then using classical mechanics, classical limit, NVE ensemble
-% denoting the state of the system as $X$, and the sum over all states with a fixed energy $E$ as $\sum_{\{X|E\}}$
-% \begin{align*}
-%     \langle A \rangle = 
-%     \frac{
-% %         \displaystyle
-%         \sum_{\{X|E\}} A(X)
-%     }{
-% %         \displaystyle
-%         \sum_{\{X|E\}}
-%     }
-%     =
-%     \frac{
-% %         \displaystyle
-%         \sum_X A(X) \deltaop \left[ \Ham(X) - E \right]
-%     }{
-% %         \displaystyle
-%         \sum_X \deltaop \left[ \Ham(X) - E \right]
-%     }
-%     = \bar A
-% \end{align*}
-% in the sums on the right had side the delta-function $\deltaop[\Ham(X)-E]$ restricts the sum to states with energy $E$
-% 
-% 
-% in the classical limit we can write the \hl{thermal???} average of an observable $A$ as\cite{frenkel2001understanding}\todo{eq. (2.2.6), p. 13 + eq. (3.1.2) p. 23}
-% % \begin{align*}
-% %     \left\langle A\right\rangle = \frac
-% %     {
-% %         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-% %             \left[ 
-% %                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-% %             \right]
-% %         \right\} 
-% %         A(\bvec p^N, \bvec q^N)
-% %     }
-% %     {
-% %         \biggerint \dif \bvec p^N \dif \rvec^N \exp \left\{ -\beta
-% %             \left[ 
-% %                 \sum_i \frac{p_i^2}{2m_i} + U(\rvec^N)
-% %             \right]
-% %         \right\}
-% %     }
-% % \end{align*}
-% \begin{align*}
-%     \left\langle A\right\rangle = \frac
-%     {
-%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-%         \left\{
-%             -\beta \Ham \left( \bvec r^N, \bvec r^N \right)
-%         \right\} 
-%         A\left(\bvec r^N, \bvec p^N\right)
-%     }
-%     {
-%         \bigint \dif \bvec r^N \dif \bvec p^N \exp 
-%         \left\{
-%             -\beta \Ham\left( \bvec r^N, \bvec r^N \right)
-%         \right\}
-%     },
-% \end{align*}
-% where $\beta = 1/k_B T$, $T$ is the temperature, $k_B$ is the Boltzmann constant, $\bvec r^N$ is the positions of all $N$ atoms, and $\bvec p^N$ the corresponding momenta. The function $\Ham(\bvec r^N, \bvec p^N)$ is the Hamiltonian of the system, and can be expressed as
-% \begin{align*}
-%     \Ham(\bvec r^N, \bvec p^N) = 
-%         U(\rvec^N) + \sum_i^N \frac{p_i^2}{2m_i}
-% \end{align*}
-% 
-% From this we can show that we can measure for example the average pressure and temperature of a system from the time evolution of those quantities
-% \begin{align*}
-%     \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{1}{2}k_B T
-% \end{align*}
-% 
-% \todo[inline]{The alternative is Monte Carlo simulations?}
-
-
-
-In molecular dynamics we study systems of many interacting atoms and molecules by assuming that they behave classically, and solve Newton's equations of motion using an appropriate integration scheme to evolve the system in time. By assuming that the atoms behave classically we mean that we model the atoms as point particles, and characterize them using their position, $\bvec r$, velocity, $\bvec v$ and the force acting on them, $\bvec f$. The interactions between the atoms, that stem from the quantum mechanical \hl{something}, are described using potentials. It is into these potentials we bake the physical insight of the systems we want to simulate, which we often do by finding potentials using studies and simulations of the underlying quantum mechanical nature of the interactions between the atoms in the system.
-
-
-
 \chapter{A simple molecular dynamics program?}
 Intro
 
@@ -153,7 +6,7 @@ Intro
 Most molecular dynamics programs will follow an flow similar to the following:
 \begin{itemize}[midsep]
     \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
-    \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation.
+    \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation.\todo{remove drift!}
     \item For each timestep
     \begin{itemize}[midsep]
         \item Calculate the forces between the atoms.
@@ -163,14 +16,15 @@ Most molecular dynamics programs will follow an flow similar to the following:
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
 \end{itemize}
 An example of a program that implements the above procedure can be seen in \cref{list:simple_md_program}.
-\begin{listing}
+\begin{listing}[h]
 \begin{cppcode*}{gobble=4}
     System system = initializeSystem(parameters);
-    double time = 0;
-    for (double time = 0; time < tMax; time += timestep)
+    double time = 0.0;
+    double dt = 0.01;
+    for (double time = 0; time < tMax; time += dt)
     {
         calculateForces(system);
-        integrateMotion(system);
+        integrateEquationsOfMotion(system, dt);
         sample(system);
     }
 \end{cppcode*}
@@ -179,7 +33,8 @@ An example of a program that implements the above procedure can be seen in \cref
     \label{list:simple_md_program}
 }
 \end{listing}
-When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
+
+When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces\todo{not defined yet... move this section?}, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
 \section{Calculation of forces}
 The forces are calculated from the derivatives of interatomic potentials, that depend on the positions of the atoms, and generally are of the form
@@ -206,9 +61,9 @@ In this example we will be using a potential first seen as early as 1924\cite{jo
     = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right],
     \label{eq:lennard-jones_potential}
 \end{align}
-where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^12 = (r^6)^2$}. 
+where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
 
-The potential was used by Lennard-Jones to study the Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
 \begin{figure}
     \centering
     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}
@@ -219,233 +74,128 @@ The potential was used by Lennard-Jones to study the Argon, and has been used by
     }
 \end{figure}
 
+\subsection{Newton's third law}
+When calculating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
+
+See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization from Newton's third law.
+\begin{listing}[h]
+% \begin{cppcode*}{gobble=4}
+%     void calculateForces(System &system)
+%     {
+%         for (Atom *atom1 : system.atoms())
+%         {
+%             for (Atom *atom2 : system.atoms())
+%             {
+%                 
+%             }
+%         }
+%     }
+% \end{cppcode*}
+%         for (vector<Atom*>::iterator atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1)
+\begin{cppcode*}{gobble=4}
+    void calculateForces(System &system)
+    {
+        const vector<Atom*> &atoms = system.atoms();
+        for (auto atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1)
+        {
+            // Use Newton's third law to skip half the force calculations
+            for (auto atom2 = atom1.next(); atom2 != atoms.end(); ++atom2)
+            {
+                calculateForceBetweenTwoAtoms(*atom1, *atom2);
+            }
+        }
+    }
+\end{cppcode*}
+\caption{
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
+    Caption.
+    \label{list:calculate_forces}
+}
+\end{listing}
+\begin{listing}[h]
+\begin{cppcode*}{gobble=4}
+    vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2)
+    {
+        vec3 drVec = atom1->position() - atom2->position();
+        
+        double dr2 = drVec.lengthSquared();
+        double dr6 = dr2*dr2*dr2;
+
+        double LJforce = 24.0*(2.0 - dr6)/(dr6*dr6*dr2);
+        vec3 force = drVec*LJforce;
+        
+        atom1->force() += force;
+        atom2->force() -= force; // Newton's third law
+        
+        return force;
+    }
+\end{cppcode*}
+\caption{
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
+    Caption.
+    \label{list:calculate_force_between_atoms}
+}
+\end{listing}
+
 \section{Integration scheme}
 To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
 
-It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}., and numerically cheap \hl{(compared to other methods)} \hl{requiring on the order of $N$?? flops}. The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
-\begin{align*}
+It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3, or derive self in appendix}., and numerically cheap \hl{(compared to other methods)} \hl{requiring on the order of $N$?? flops}. The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
+\begin{align}
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
-\end{align*}
-where $\Delta t$\todo{define timestep} is the timestep, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ \hl{show this}.
+    \label{eq:regular_verlet}
+\end{align}
+where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ \hl{show this}.
 
-We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion of $\rvec(t\pm\Delta t)$, giving
+The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
+
+We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion around $\rvec(t\pm\Delta t)$, which gives
 \begin{align*}
     \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t},
 \end{align*}
-which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}.
+which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}. 
 
+The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually \hl{simply} approximated using the initial velocity, as follows\todo{is this bad?}
+\begin{align*}
+    \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
+\end{align*}
+See \cref{list:regular_verlet} for an example of how to implement the Verlet integration scheme.
 
-The Velocity verlet scheme has 
-
-The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?}.
-
-\section{SiO2 potential (move to appendix?)}
-\orangebox{
-    \begin{itemize}
-        \item Which of the parameters given below are constants?
-        \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
-    \end{itemize}
+\begin{listing}[h]
+\begin{cppcode*}{gobble=4}
+    void integrateEquationsOfMotion(System &system, double dt)
+    {
+        for (Atom *atom : system.atoms())
+        {
+            vec3 newPosition = 2*atom->position() - atom->oldPosition() 
+                               + atom->force()*dt*dt;
+            atom->oldPosition() = atom->position();
+            atom->position() = newPosition;
+            atom->velocity() = (atom->position() - atom->oldPosition())/(2.0*dt);
+        }
+    }
+\end{cppcode*}
+\caption{
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
+    Caption.
+    \label{list:regular_verlet}
 }
+\end{listing}
 
-
-
-
-
-
-
-
-To measure an observable quantity in a simulation we must be able to express it as a function of the positions, velocities and forces of the particles in the system. 
-
-According to the equipartition principle, the average total kinetic energy $\langle E_k \rangle$ is
-\begin{align*}
-    \left\langle E_k \right\rangle = \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{3}{2}Nk_B T,
-\end{align*}
-from which we can derive the temperature of the system. Here $m$ is the mass of a particle, $v$ is the speed of a particle, and $T$ is the corresponding temperature of the system.
-
-An often used method for measuring the pressure $P$ is derived from the virial equation for the pressure, which gives
-\begin{align*}
-    P = \rho k_B T + \frac{1}{3V}\sum_i \sum_{j>i} \bvec F(\rvec_{ij}) \rvec_{ij},
-\end{align*}
-where $V$ is the volume, $\rho$ is the atom density, $\bvec F(\bvec r)$ is the force between two atoms separated by $\bvec r$, and $\rvec_{ij} = \rvec_j - \rvec_i$ is the vector between atom $i$ and atom $j$. \hl{this equation depends on the ensemble, and is only valid for micro-canonical ensemble -- project 1 FYS4460}.
-
-
-
-\orangebox{
-    \begin{itemize}
-        \item Measure pressure, Frenkel eq. (3.4.1) p. 52.
-        \item Measure temperature, Frenkel eq. (4.1.1) and (4.1.2) p. 64
-    \end{itemize}
-}
-
-\section{Potential}
-
-
-The interatomic potential\cite{vashishta1990interaction} \todo{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
-\begin{align*}
-    E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
-\end{align*}
-for
-\begin{align*}
-    1\leq \{i,j,k\} \leq N.
-\end{align*}
-
-
-$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions, and has the form
-\begin{align*}
-    V_{ij}^{(2)} (r) = 
-    \underbrace{
-        \frac{H_{ij}}{r^{\eta_{ij}}}
-    }_{\text{steric repulsion}}
-    +~ 
-    \underbrace{
-        \frac{Z_iZ_j}{r}e^{-r/r_{1\text{s}}}
-    }_{\text{Coulomb}}
-    ~-~
-    \underbrace{
-        \frac{D_{ij}}{2r^4}e^{-r/r_{4\text{s}}}
-    }_{\text{charge-dipole}}
-    ~- 
-    \underbrace{
-        \frac{w_{ij}}{r^6}
-    }_{\text{van der Waals}}
-    ,
-\end{align*}
-where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ and $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
-
-$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds, and has the form\todo{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
-\begin{align*}
-    V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
-    B_{ijk} 
-    \underbrace{ % use vphantom to get proper vertical alignment
-        \vphantom{\frac{\big)^2}{\big)^2}}\exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right)
-    }_{\text{bond-stretching}}
-    \underbrace{
-        \frac{\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}{1 + C_{ijk}\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}
-    }_{\text{bond-bending}}
-    ,
-\end{align*}
-for
-\begin{align*}
-    \{r_{ij}, r_{ik}\} \leq r_0,
-\end{align*}
-where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
-\todo[inline]{$\xi$ and $C_{ijk}$ ???}
-\todo[inline]{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
-
-\section{Integration}
-% \begin{align*}
-%     \rvec(t) = r_n \\
-%     \vvec(t) = v_n \\
-%     \bvec a(t) = a_n.
-% \end{align*}
-% \begin{align*}
-%     \vvec_{n+1/2} = \vvec_n + \frac{1}{2}\bvec a_n \delta t \\
-%     \rvec_{n+1} = \rvec_n + \vvec_{n+\frac{1}{2}}\delta t
-% \end{align*}
-
-% \begin{align*}
-%     \vvec(t + \Delta t/2) &= \vvec(t) + \frac{1}{2}\bvec a(t) \Delta t \\
-%     \rvec(t + \Delta t)   &= \rvec(t) + \vvec(t + \Delta t/2)\Delta t \\
-%     \bvec a(t + \Delta t)   &= \frac{1}{m}\Fvec(\rvec(t + \Delta t)) \\
-%     \vvec(t + \Delta t)   &= \vvec(t + \Delta t) + \frac{1}{2}\bvec a(t + \Delta t) \Delta t
-% \end{align*}
-
-\fcolorbox{black}{orange}{
-\begin{minipage}{\textwidth}
-{\bf TODO:}
-\begin{itemize}
-    \item Truncation error Verlet/velociy Verlet
-    \item Numerical stability?
-    \item Memory?
-    \item Self starting, symplectic, reversible
-\end{itemize}
-\end{minipage}
-}
-
-The equations of motion are integrated using the velocity Verlet algorithm:
-\begin{align*}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
-    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t.
-\end{align*}
-This algorithm has a \hl{glocal/accumulated} error of $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}.
-
-\subsection{Derivation of Verlet algorithm}
-\todo{why do we use velocity Verlet}
-The Verlet algorithm\cite{verlet1967computer} is a simple method for integrating second order differential equations of the form 
-\begin{align*}
-    \dod[2]{\rvec(t)}{t} = \Fvec\big[\rvec(t), t\big] = \Fvec(t).
-\end{align*}
-We first let
-\begin{align*}
-    \dod{\rvec(t)}{t} &= \vvec(t),
-\end{align*}
-and
-\begin{align*}
-    \dod{\vvec(t)}{t} &= \avec(t) = \frac{\Fvec(t)}{m}.
-\end{align*}
-
-We then do a Taylor expansion of $\rvec(t \pm \Delta t)$ around time $t$
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4), \label{eq:verlet_plus}\\
-    \rvec(t - \Delta t) &= \rvec(t) - \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} - \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4).\label{eq:verlet_minus}
-\end{align}
-By summing these two equations we get
-\begin{align*}
-    \rvec(t + \Delta t) + \rvec(t - \Delta t) = 2\rvec(t) + \avec(t)\Delta t^2 + \mathcal{O}(\Delta t^4),
-\end{align*}
-which by rearranging can be written as
-\begin{align*}
-    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
-\end{align*}
-Which is the equation used to update the positions in the regular Verlet algorithm. We see that the estimate of the new position contains an truncation error for one timestep $\Delta t$ of the order $\mathcal{O}(\Delta t^4)$.
-
-The Verlet algorithm does not use the velocity to compute the new position, but we can find an estimate of the velocity by taking the difference between \cref{eq:verlet_plus,eq:verlet_minus}
-\begin{align*}
-    \rvec(t + \Delta t) - \rvec(t - \Delta t) = 2\vvec(t)\Delta t + \mathcal{O}(\Delta t^3),
-\end{align*}
-which by rearranging can be written as
-\begin{align*}
-    \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t} + \mathcal{O}(\Delta t^2).
-\end{align*}
-We see that this estimate of the velocity has a truncation error of the order $\mathcal{O}(\Delta t^2)$, compared to the error in the position $\mathcal{O}(\Delta t^4)$.
-\todo{Something about lower precision}
-
-A modification of the Verlet algorithm usually called the velocity Verlet algorithm\cite{swope1982computer} \todo{something about why velocity Verlet is good} can be derived in a similar way. We have the same Taylor expansion of $\rvec(t+\Delta t)$ around $t$ as before
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
-\end{align}
-and now we also expand $\vvec(t + \Delta t)$ around $t$
-\begin{align}
-    \vvec(t + \Delta t) 
-%     &= \vvec(t) + \dod{\vvec(t)}{t}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{t} + \mathcal{O}(\Delta t^3) \\
-    &= \vvec(t) + \avec(t)\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3).\label{eq:velocity_taylor}
-\end{align}
-We now need an expression for $\od[2]{\vvec(t)}{t}$, which can be found by a Taylor expansion of $\od{\vvec(t+\Delta t)}{t}$
-\begin{align*}
-    \dod{\vvec(t+\Delta t)}{t} = \dod{\vvec(t)}{t} + \dod[2]{\vvec(t)}{t}\Delta t + \mathcal{O}(\Delta t^2),
-\end{align*}
-which by rearranging and multiplying with $\frac{\Delta t}{2}$ gives
-\begin{align*}
-    \dod[2]{\vvec}{t}\frac{\Delta t^2}{2} 
-    &= \left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right)\frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
-    &= \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
-\end{align*}
-Inserting this into \cref{eq:velocity_taylor} we get
-\begin{align}
-    \vvec(t + \Delta t) 
-    &= \vvec(t) + \avec(t)\Delta t + \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \nonumber\\
-    &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).\label{eq:verlet_velocity_taylor_insertion}
-\end{align}
-So the total velocity Verlet algorithm with truncation of the higher-order terms is
+The most used form of the Velocity integration scheme is called the velocity Verlet method\cite{swope1982computer}, and it has the form
 \begin{align}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
-    \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}\label{eq:velocity_verlet_velocity},
+    \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}, \label{eq:velocity_verlet_velocity}
 \end{align}
-with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity. 
+with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the \hl{global/accumulated} error being of the order $\mathcal{O}(\Delta t^2)$\hl{cite/show equivalent to regular Verlet}. 
 
-The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that the new velocities can be written as
+One advantage of this form is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta T)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
+
+\hl{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
+
+The velocity Verlet algorithm is usually rewritten in the following way, \hl{to optimize the implementation on a computer}. We see that the new velocities can be written as
 \begin{align}
-    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2},\label{eq:verlet_velocity_with_halfstep}
+    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2}, \label{eq:verlet_velocity_with_halfstep}
 \end{align}
 where
 \begin{align}
@@ -465,88 +215,75 @@ Which leads us to the usual way of implementing the algorithm\cite{allen1989comp
     \begin{align*}
         \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.
     \end{align*}
-    \item Calculate the new forces $\Fvec(t+\Delta t)$.
+    \item Calculate the new forces $\Fvec(t+\Delta t)$/\hl{accelerations $\avec(t+\Delta t)$}.
     \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
     \begin{align*}
         \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
     \end{align*}
 \end{itemize}
-This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. 
-
-Pseudocode: \todo{do we want this?}
-\begin{verbatim}
-    v += F*dt/(2*m);
-    r += v*dt;
-    F = calculate_forces(r, v);
-    v += F*dt/(2*m);
-\end{verbatim}
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 
 
 
 
-% The velocity Verlet algorithm can be implemented as follows\cite{allen1989computer}
-% \begin{samepage}
-% \begin{itemize}
-%     \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_position}.
-%     \item Calculate the velocities at $t + \frac{1}{2}\Delta t$ using
-%     \begin{align*}
-%         \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
-%     \end{align*}
-%     \item Calculate the new forces $\Fvec(t + \Delta t)$.
-%     \item Finally, calculate the new velocities at $t + \Delta t$ using
-%     \begin{align*}
-%         \vvec(t + \Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}
-%     \end{align*}
-% \end{itemize}
-% \end{samepage}
-% But 
-% This implementation uses $9N$ units of memory, 
 
-\subsection{Global error in the Verlet algorithm}
-Sources:
-\begin{itemize}
-    \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
-    \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
-\end{itemize}
 
-\todo{I don't know if the calculations below are correct} 
-The global error in position can be derived from the local error for one timestep $\Delta t$. We see from \cref{eq:position_taylor} that
-\begin{align*}
-    \text{error}\big(\rvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3),
-\end{align*}
-and from \cref{eq:verlet_velocity_taylor_insertion}
-\begin{align*}
-    \text{error}\big(\vvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3).
-\end{align*}
-The error for two timesteps is
-\begin{align*}
-    \rvec(t_0+2\Delta t) 
-    &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \\
-\end{align*}
-which gives \todo{Error in $\avec(t_0 + \Delta t) = \mathcal{O}(\Delta t^3)$ ??}
-\begin{align*}
-    &\text{error}\big(\rvec(t_0+2\Delta t)\big) \\
-    &~= \text{error}\big(\rvec(t_0+\Delta t)\big) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
-    &~= \mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
-    &~= 2\mathcal{O}(\Delta t^3).
-\end{align*}
-Similarly we find
-\begin{align*}
-    &\text{error}\big(\rvec(t_0+3\Delta t)\big) = 3\mathcal{O}(\Delta t^3) \\
-    &\text{error}\big(\rvec(t_0+4\Delta t)\big) = 4\mathcal{O}(\Delta t^3) \\
-    &\text{error}\big(\rvec(t_0+5\Delta t)\big) = 5\mathcal{O}(\Delta t^3),
-\end{align*}
-\begin{align*}
-    \text{error}\big(\rvec(t_0 + n\Delta t)\big) = n\mathcal{O}(\Delta t^3) = \mathcal{O}(\Delta t^2)
-\end{align*}
 
+
+
+
+
+
+
+\chapter{AnotherAwesomeChapterName}
+    \section{Boundary conditions}
+    \section{Verlet- and cell-lists}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{AwesomeChapterName}
 
 \section{Ensemble, observables etc.}
+
+\orangebox{
+    \begin{itemize}
+        \item Measure pressure, Frenkel eq. (3.4.1) p. 52.
+        \item Measure temperature, Frenkel eq. (4.1.1) and (4.1.2) p. 64
+    \end{itemize}
+}
+
+To measure an observable quantity in a simulation we must be able to express it as a function of the positions, velocities and forces of the particles in the system. 
+
+According to the equipartition principle, the average total kinetic energy $\langle E_k \rangle$ is
+\begin{align*}
+    \left\langle E_k \right\rangle = \left\langle \frac{1}{2}mv^2 \right\rangle = \frac{3}{2}Nk_B T,
+\end{align*}
+from which we can derive the temperature of the system. Here $m$ is the mass of a particle, $v$ is the speed of a particle, and $T$ is the corresponding temperature of the system.
+
+An often used method for measuring the pressure $P$ is derived from the virial equation for the pressure, which gives
+\begin{align*}
+    P = \rho k_B T + \frac{1}{3V}\sum_i \sum_{j>i} \bvec F(\rvec_{ij}) \rvec_{ij},
+\end{align*}
+where $V$ is the volume, $\rho$ is the atom density, $\bvec F(\bvec r)$ is the force between two atoms separated by $\bvec r$, and $\rvec_{ij} = \rvec_j - \rvec_i$ is the vector between atom $i$ and atom $j$. \hl{this equation depends on the ensemble, and is only valid for micro-canonical ensemble -- project 1 FYS4460}.
+
+
 
 \section{(Initialization) A typical experimental procedure}
 When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{akin to/mimicing} that used by \hl{actual} experiments. Since the duration of the experiments we are realistically able to simulate on are of the order $10^{-9} s$ / nanoseconds or below, we have to be smart when initializing the system. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating silica/glass is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
 
 \orangebox{}{
     \begin{itemize}
+        \item Remove drift!
         \item Something smart about why the small timescales doesn't matter that much, since the length scales are equally small?
         \item Short/long-range order
         \item Glass transition temperature
@@ -692,7 +429,7 @@ If we want to inject water with density $\rho$ [kg/m$^3$], we can find the voxel
 \end{align*}
 from which we find the size we need our voxels to be as
 \begin{align*}
-    L = \left(\frac{M}{\rho} \times \frac{10^{30}}{N_A} \text{ [\AA$^3$]}\right)^{1/3}\text{ [\AA]}.
+    L = \left(\frac{M}{\rho} \times \frac{10^{30}}{N_A}\right)^{1/3}\text{ [\AA]}.
 \end{align*}
 
 We then divide the system into voxels of length $L$. And put one water molecule with random orientation in the center of each empty voxel. The naive way of finding the empty voxels is to just find which voxel each existing silicon and oxygen atom is in, and mark those as occupied. But the amorph \hl{structure} of solid silica means that we have a lot of very small pores inside the matrix, which ends up as empty voxels. \todo{something about definition of a pore?}
