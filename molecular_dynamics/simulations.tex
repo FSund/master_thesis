@@ -16,7 +16,7 @@ Most molecular dynamics programs will follow an flow similar to the following:
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
 \end{itemize}
 An example of a program that implements the above procedure can be seen in \cref{list:simple_md_program}.
-\begin{listing}[h]
+\begin{listing}[!ht]
 \begin{cppcode*}{gobble=4}
     System system = initializeSystem(parameters);
     double time = 0.0;
@@ -64,7 +64,7 @@ In this example we will be using a potential first seen as early as 1924\cite{jo
 where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
 
 The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
-\begin{figure}
+\begin{figure}[!ht]
     \centering
     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}
 %     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}
@@ -78,7 +78,7 @@ The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and h
 When calculating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
 
 See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization from Newton's third law.
-\begin{listing}[h]
+\begin{listing}[!ht]
 % \begin{cppcode*}{gobble=4}
 %     void calculateForces(System &system)
 %     {
@@ -112,7 +112,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
     \label{list:calculate_forces}
 }
 \end{listing}
-\begin{listing}[h]
+\begin{listing}[!ht]
 \begin{cppcode*}{gobble=4}
     vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2)
     {
@@ -161,17 +161,18 @@ The implementation of the Verlet scheme is mostly straightforward, the only thin
 \end{align*}
 See \cref{list:regular_verlet} for an example of how to implement the Verlet integration scheme.
 
-\begin{listing}[h]
+\begin{listing}[!ht]
 \begin{cppcode*}{gobble=4}
     void integrateEquationsOfMotion(System &system, double dt)
     {
         for (Atom *atom : system.atoms())
         {
-            vec3 newPosition = 2*atom->position() - atom->oldPosition() 
+            vec3 newPosition = 2.0*atom->position() - atom->oldPosition() 
                                + atom->force()*dt*dt;
             atom->oldPosition() = atom->position();
             atom->position() = newPosition;
-            atom->velocity() = (atom->position() - atom->oldPosition())/(2.0*dt);
+            atom->velocity() = (atom->position() - atom->oldPosition())
+                               /(2.0*dt);
         }
     }
 \end{cppcode*}
@@ -224,11 +225,66 @@ Which leads us to the usual way of implementing the algorithm\cite{allen1989comp
 This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 
 
 \section{Boundary conditions}
-In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But 
+\todo[inline]{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
+In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the one in the center, and, \hl{depending on the potential, will not behave as intended?}. When simulating bulk liquids and solids we remedy this by using periodic boundary conditions. This means that we repeat the \hl{simulation box} an infinite number of times in each direction, so that all atoms \hl{have a bulk-like environment}. Atom $l$ will then have what we call an \hl{\emph{image}/``image''} in all other neighbor boxes, with position
+\begin{align}
+    \rvec_l^{ijk} = \rvec_l + i*L_x + j*L_y + k*L_z,
+    \label{eq:pbc_positions}
+\end{align}
+where $(L_x, L_y, L_z)$ is the dimensions of the box, and $(i, j, k)$ is the index of the \hl{neighbor box/periodic image box}.
+
+The first thing we have to do to implement periodic boundary conditinos is to check if any atoms have moved outside the limits of our system after each time we update the positions. An example of how to do this can be seen in \cref{list:pbc}
+\begin{listing}[!ht]
+\begin{cppcode*}{gobble=4}
+    double calculateDistanceSquaredUsingMinimumImageConvention(
+        const vec3 &u, const vec3 &v, 
+        const vec3 &systemSize, const vec3 &halfSystemSize)
+    {
+        vec3 dr = u - v;
+        for (int dim = 0; dim < 3; dim++)
+        {
+            if (dr[dim] => halfSystemSize[dim]) dr -= systemSize[dim];
+            else if (dr[dim] < -halfSystemSize[dim]) dr += systemSize[dim];
+        }
+        return dr.lengthSquared(); // Avoid calculating $\sqrt{dr^2}$
+    }
+\end{cppcode*}
+\caption{
+    Minimum image convention.
+    \label{list:minimum_image_convention}
+}
+\end{listing}
+
+A consequence of using periodic boundary conditions is that each atom is now affected by an infinite amount of atoms. To avoid having to do an infinite number of evaluations of the potential we \hl{therefore/thus} implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \hl{source/cite?}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{nearest/closest} image of each atom $j$. This can for example be implemented when calculating the distance between the atoms, when calculating the forces. To avoid having an infinite amount of copies of each atom we use \cref{eq:pbc_positions} to calculate the positions of each image if needed. See \cref{list:minimum_image_convention}
+\begin{listing}[!ht]
+\begin{cppcode*}{gobble=4}
+    void checkBoundaryConditions(System &system, const vec3 &systemSize)
+    {
+        for (Atom *atom : system.atoms())
+        {
+            for (int dim = 0; dim < 3; dim++)
+            {
+                if (atom->position()[dim] < 0.0) 
+                    atom->position()[dim] += systemSize[dim];
+                else if (atom->position()[dim] >= systemSize[dim]) 
+                    atom->position()[dim] -= systemSize[dim];
+            }
+        }
+    }
+\end{cppcode*}
+\caption{
+    PBC.
+    \label{list:pbc}
+}
+\end{listing}
+
+The use of periodic boundary conditions has some other consequences for our program. The first thing we need to consider is how to calculate the forces. In theory each atom is now affected by a force from an infinite number of numbers, since we have the image of particle $j$ in an infinte number of repeating periodic boxes. Calculating an infinite number of forces for all atoms in \hl{the periodic box} is unfeasible in a numerical experiment (in nature this infinite sum is incredibly evaluated every timestep $dt = 5.39106(32)\times 10^{-44} \text{s}$ (Planck time)), so we make an approximation where we only consider the force from atoms within the size of the box.
+
+\hl{force calculation unnecessary} Using the Lennard-Jones potential we see that the force from the potential decays as $1/r^{12}$, meaning that the force from most atoms will be neglible. \cref{fig:lennard-jones_potential}
 
 
 
-
+\todo[inline]{Minimum image convention}
 
 
 
@@ -302,7 +358,7 @@ When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{
 
 To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, as see in figure \cref{fig:cristobalite} \todo{Why?}, and give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}. The crystal consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms.
 
-\begin{figure}
+\begin{figure}[!ht]
     \centering
     \begin{subfigure}[c]{0.25\textwidth}
 %         \begin{minipage}[c]{\textwidth}
@@ -365,7 +421,7 @@ All silicon and oxygen atoms with no neighbors we remove, since they aren't real
 
 To find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom.
 
-\begin{figure}
+\begin{figure}[!ht]
     \centering
     \begin{subfigure}[b]{0.24\textwidth}
         \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}

@@ -1,18 +1,18 @@
 % ---- Other stuff ---- %
 % \usepackage{minipage}
 \usepackage{commath}        % To correctly typeset differentials \od, \dod, and \tod
-\usepackage{fancyvrb}       % Better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim}
+\usepackage{fancyvrb}       % Better verbatim, that works inside fcolorbox. Usage: \begin{Verbatim} or \Verb!verbatimThing!
 \usepackage{cleveref}       % Use \cref{fig:label} instead of \ref{} to get auto ``fig. 1.1a''. \Cref for capitalized.
 \usepackage{upgreek}        % Upper case greek letters
 \usepackage{bm}             % Bold symbols in math mode
 \usepackage{mathtools}      % Mainly for \vdotswithin{=} and \shortvdotswithin{=}
 \usepackage{pdfpages}       % To include the frontpage pdf
-\usepackage{hyperref}       % Load hyperref package last
+% \usepackage{hyperref}       % Load hyperref package last % Loaded by uiofysmaster
 % \usepackage{paralist}
 \usepackage{relsize}        % To resize stuff - specifically integration signs
 \usepackage{exscale}        % To resize integration sign twice, ``\DeclareMathOperator{\biggerint}{\mathlarger{\mathlarger{\int}}}''
 \usepackage{braket}         % Dirac bra/kets, \Bra{a}, \Ket{b}, \Braket{a|b|a}. \Braket auto stretches \l/rangles and |'s
-\usepackage{float}
+% \usepackage{float}        % Put at top of master using \RequirePackage{float}, to fix minted/hyperref/float
 
 % ---- Custom itemize ---- %
 \usepackage{enumitem}       % Better control over enu­mer­ate, item­ize and de­scrip­tion. Su­per­sedes both enu­mer­ate and md­wlist.

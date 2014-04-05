@@ -7,7 +7,8 @@
 % ---- Code syntax highlighting ---- %
 % \usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
 \usepackage[scale=0.85]{droidmono}
-\usepackage[chapter]{minted} % Load order: float, then hyperref, then minted, so minted will use \newfloat patched by hyperref. See: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
+\usepackage[chapter]{minted}    % Load order: float (done before \documentclass), then hyperref (done in uiofystmaster), then minted, so minted will use \newfloat patched by hyperref. See: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
+                                % Option [chapter] has to do with \listoflistings numbering
 \usemintedstyle{colorful}
 \definecolor{codebg}{rgb}{0.95,0.95,0.95}
 \newminted[cppcode]{mdcpp}{ % can use \newminted{cpp}, gives the same result
@@ -49,3 +50,28 @@
 \usepackage{subcaption}     % The subfigure and subfig packages are deprecated and shouldn't be used any more: 
                             % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
                             % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+
+% ---- Fix unicode stuff ---- %
+\DeclareUnicodeCharacter{2212}{-}   % Unicode 'MINUS SIGN' (U+2212) that matplotlib uses for minus on axis tick labes
+
+% ---- Formatting ---- %
+% skip line instead of indent on new paragraph
+\setlength{\parskip}{11pt}
+\setlength{\parindent}{0mm}
+
+% ---- Captions ---- %
+% make figure text more narrow than textwidth, use small font, and make ``figure'' bold
+% ! see alternatives in FYS4180 report
+% \usepackage{caption} % Loaded by uiofysmaster
+\captionsetup[table]{width=.9\textwidth,position=above}
+\captionsetup[figure]{width=.9\textwidth,position=below}
+\captionsetup[listing]{width=.9\textwidth,position=below}
+% \captionsetup{font=small,labelfont=bf} % In uiofysmaster
+\captionsetup[subfigure]{position=below}
+
+% See image here for illustration of table space: http://tex.stackexchange.com/a/60479/31078
+\setlength{\belowcaptionskip}{0pt}
+\setlength{\abovecaptionskip}{0pt}
+\setlength{\textfloatsep}{0pt}
+\setlength{\intextsep}{0pt}
+\setlength{\floatsep}{0pt}
