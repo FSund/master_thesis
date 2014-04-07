@@ -1,11 +1,10 @@
 % \chapter{Fractures}
 % \chapter{Introduction}
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=\textwidth]{images/fracture/large_fracture05.jpg}
-    \caption{Caption}
-\end{figure}
+\begin{figure}[htpb]%
+    \centering%
+    \includegraphics[width=\textwidth]{images/fracture/large_fracture05.jpg}%
+    \caption{Caption}%
+\end{figure}%
 
 We want to study the behaviour of water trapped in nanoscale (pores and) fractures in silica, so need want a way to generate and characterize such a structure. (Several methods of characterizing a fracture could be imagined (\hl{SOURCES, examples}), and we will use several of them.)        
 
@@ -79,11 +78,13 @@ where
     &m = \left \lfloor n\theta \right \rfloor &\text{for }0 \leq \theta < 1,
 \end{align*}
 which means that $0 \leq m \leq (n-1)$. $\theta$ is a parameter that controls the position of the square relative to the point $(i,j)$ in $\tilde f_n(i,j)$. There are three \hl{extreme} cases for $\theta$, which are listed below, and are illustrated in \cref{fig:DMA_theta}.
+%
 % \begin{itemize}
 %     \item For $\theta = 0$ we have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
 %     \item For $\theta = 1/2$ we average over a square centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
 %     \item For $\theta = (n-1)/n$ we have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{THESE LIMITS ARE WRONG??}($i \leq k,l \leq (i+n-1)$). See \cref{fig:DMA_theta_c}.
 % \end{itemize}
+%
 \begin{description}
     \item[$\bm{\theta = 0}$:] \hfill\\ 
         We have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
@@ -94,36 +95,36 @@ which means that $0 \leq m \leq (n-1)$. $\theta$ is a parameter that controls th
         We have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{\st{THESE LIMITS ARE WRONG??} fixed}\\(${i \leq k,l \leq (i+n-1)}$). See \cref{fig:DMA_theta_c}.
         }
 \end{description}
-
-\begin{figure}[!ht]
-    \centering
-    \begin{subfigure}[b]{0.25\textwidth}
-        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_a}
-%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}
-        \caption{$\theta = 0$}
-        \label{fig:DMA_theta_a}
-    \end{subfigure}
-    \hspace{0.1\textwidth}
-    \begin{subfigure}[b]{0.25\textwidth}
-        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_b}
-%         \caption{A random fracture made from two periodic heightmaps.}
-        \caption{$\theta = 1/2$}
-        \label{fig:DMA_theta_b}
-    \end{subfigure}
-    \hspace{0.1\textwidth}
-    \begin{subfigure}[b]{0.25\textwidth}
-        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_c}
-%         \caption{A random fracture made from two periodic heightmaps.}
-%         \caption{$\theta \rightarrow 1$ \\ ($\theta = (n-1)/n$)}
-%         \caption{$\theta \rightarrow 1$}
-        \caption{$\theta = (n-1)/n$}
-        \label{fig:DMA_theta_c}
-    \end{subfigure}
-        \caption{
-        Illustration of what the parameter $\theta$ controls in the detrending moving average method in 2 dimensions. The circles are points where the surface is defined, the red star is the point $(i,j)$, and the black square encompasses the points averaged over to calculate $\tilde f_n(i,j)$ in \cref{eq:carbone_average_rewritten}. The illustration uses $n = 3$.
-        \label{fig:DMA_theta}
-    }
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[b]{0.25\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_a}%
+%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
+        \caption{$\theta = 0$}%
+        \label{fig:DMA_theta_a}%
+    \end{subfigure}%
+    \hspace{0.1\textwidth}%
+    \begin{subfigure}[b]{0.25\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_b}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+        \caption{$\theta = 1/2$}%
+        \label{fig:DMA_theta_b}%
+    \end{subfigure}%
+    \hspace{0.1\textwidth}%
+    \begin{subfigure}[b]{0.25\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_c}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \caption{$\theta \rightarrow 1$ \\ ($\theta = (n-1)/n$)}%
+%         \caption{$\theta \rightarrow 1$}%
+        \caption{$\theta = (n-1)/n$}%
+        \label{fig:DMA_theta_c}%
+    \end{subfigure}%
+        \caption{%
+        Illustration of what the parameter $\theta$ controls in the detrending moving average method in 2 dimensions. The circles are points where the surface is defined, the red star is the point $(i,j)$, and the black square encompasses the points averaged over to calculate $\tilde f_n(i,j)$ in \cref{eq:carbone_average_rewritten}. The illustration uses $n = 3$.%
+        \label{fig:DMA_theta}%
+    }%
+\end{figure}%
 
 We then define the generalized variance $\sigma_\text{DMA}^2$
 \begin{align*}
@@ -172,14 +173,14 @@ In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm
 
 
 
-% \begin{figure}[!ht]
-%     \centering
-%     \includesvg[width=0.99\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04}
-%     \caption{
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=0.99\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04}%
+%     \caption{%
 %         Illustration of what the parameter $\theta$ controls in the detrending moving average method in 2 dimensions. The circles are points where a surface is defined, the red star marks the point $(i,j)$, and the black square marks the points averaged over to calculate $\tilde f_n(i,j)$ in \cref{eq:carbone_average_rewritten}.
-%         \label{fig:DMA_theta}
-%     }
-% \end{figure}
+%         \label{fig:DMA_theta}%
+%     }%
+% \end{figure}%
 
 
 
@@ -236,6 +237,7 @@ To generate our random surfaces we use an iterative midpoint displacement method
 \todo[inline]{The most basic method we used is a very basic but widely used method, which has many variations and names. The most common names are ``the diamond-square algorithm''\hl{cite}, ``the midpoint displacement method''\hl{cite}, ``plasma fractal'' and ``cloud fractal''.}
 
 The method we use to generate random surfaces is very similar to the standard midpoint displacement method, which in 1 dimension goes as follows. See \cref{fig:midpoint01} for a visual presentation.
+%
 \begin{enumerate}
     \item Give the values at the endpoints of the interval, $y_0$ and $y_n$, random values from a Gaussian random variable with mean $\mu = 0$ and variance $\sigma_0^2$. This initial standard deviation $\sigma_0$ can be chosen freely.
     \item Generate the value in the center of the interval, $y_{n/2}$, by averaging over the two endpoints and adding a Gaussian random number with mean $\mu = 0$ and a \emph{reduced} variance
@@ -248,15 +250,15 @@ The method we use to generate random surfaces is very similar to the standard mi
         \sigma_i^2 = \left(1/2\right)^{i2H}\sigma_0^2. \label{eq:midpoint_sigma_general}
     \end{align}
 \end{enumerate}
-
-\begin{figure}[!ht]
-    \centering
-    \includesvg[width=0.5\textwidth, svgpath=./images/diamond_square/]{random_midpoint_displacement_regular02}
-    \caption{
-        \hl{Illustration of the midpoint displacement method in 1 dimension.}
-        \label{fig:midpoint01}
-    }
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.5\textwidth, svgpath=./images/diamond_square/]{random_midpoint_displacement_regular02}%
+    \caption{%
+        \hl{Illustration of the midpoint displacement method in 1 dimension.}%
+        \label{fig:midpoint01}%
+    }%
+\end{figure}%
 
 This method generates a \hl{1-dimensional line}, with a Hurst exponent \hl{close} to the input $H$\todo{how close?}. But since we only add random numbers to the new values, the result is non-stationary for $H \neq 0.5$\cite{voss1985random}\hl{, and it is neither self-similar or isotropic, as noted by Mandelbrot}\cite{mandelbrot1982comment}. To mitigate this we implement the addition suggested by Voss\cite{voss1985random}, which consists of adding a random number to \emph{all} points in each iteration, both the new and old. Voss called this modified method \emph{successive random additions}.
 
@@ -274,35 +276,52 @@ The central part of the algorithm consists of two steps often called the \emph{d
     \item[The \emph{square-step}:] The grid can be divided into small squares consisting of four points in each square, as in the leftmost square in \cref{fig:simple_square_step}. We generate the $z$-value in the center of each of these squares by averaging the $z$-values of the four corners of each square, as indicated by the red dots and arrows in \cref{fig:simple_square_step}. Then add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_i^2 = \sigma_{i-1}^2r^{2H}$ to all new and old points, where $\sigma_{i-1}^2$ is the variance used in the last step of the algorithm.
     \label{enum:test}
     
-    \item[The \emph{diamond-step}:] After the square-step the grid can be divided into smaller squares that are tilded by 45 degrees, as in the leftmost square in figure \cref{fig:simple_diamond_step}. We generate the $z$-values in the center of each square by averaging the $z$-values of the four corners of each square, as indicated by the red dots and arrows in \cref{fig:simple_diamond_step}. We then add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_{i+1}^2 = \sigma_i^2r^{2H}$, to all new and old points. 
+    \item[The \emph{diamond-step}:] After the square-step the grid can be divided into smaller squares that are tilded by 45 degrees, as in the leftmost square in \cref{fig:simple_diamond_step}. We generate the $z$-values in the center of each square by averaging the $z$-values of the four corners of each square, as indicated by the red dots and arrows in \cref{fig:simple_diamond_step}. We then add a random Gaussian number with mean $\mu = 0$ and variance $\sigma_{i+1}^2 = \sigma_i^2r^{2H}$, to all new and old points. 
 \end{description}
 See \cref{fig:diamond_square_applied} for an illustration of the algorithm applied once on a larger grid. 
 
-\begin{figure}[!ht]
-\centering
-
-\setlength{\myfigwidth}{0.5\textwidth}
-\setlength{\mycaptionwidth}{0.3\textwidth}
-
-\begin{minipage}[c]{\myfigwidth}
-    \includesvg[width=\textwidth, svgpath = images/diamond_square/]{simple_square_step_solarized08}
-\end{minipage}
-\begin{minipage}[c]{\mycaptionwidth}
-    \subcaption{Square-step}
-    \label{fig:simple_square_step}
-\end{minipage}
-
-\begin{minipage}[c]{\myfigwidth}
-    \includesvg[width=\textwidth, svgpath = images/diamond_square/]{simple_diamond_step_solarized05}
-\end{minipage}
-\begin{minipage}[c]{\mycaptionwidth}
-    \subcaption{Diamond-step}
-    \label{fig:simple_diamond_step}
-\end{minipage}
-
-\caption{Illustration of the two steps used in the diamond square algorithm for generating random surfaces. The grey points are old points, the black points are new points, and the red points are the points used in the calcuation of the averages when generating the new points.}
-\label{fig:diamond_square_steps}
-\end{figure}
+\begin{figure}[htpb]%
+\centering%
+%
+\setlength{\myfigwidth}{0.5\textwidth}%
+\setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+% \parbox[c][2cm][c]{\myfigwidth}{
+%     \includesvg[width=\myfigwidth, svgpath = images/diamond_square/]{simple_square_step_solarized08}
+% }
+% \parbox[c][2cm][c]{\mycaptionwidth}{
+%     \subcaption{Square-step}
+%     \label{fig:simple_square_step}
+% }
+%
+% \begin{minipage}[c][2cm][c]{\myfigwidth}
+%     \includesvg[height=2cm, svgpath = images/diamond_square/]{simple_square_step_solarized08}
+% \end{minipage}
+% \begin{minipage}[c][2cm][c]{\mycaptionwidth}
+%     \subcaption{Square-step}
+%     \label{fig:simple_square_step}
+% \end{minipage}
+%
+\begin{minipage}[c]{\myfigwidth}%
+    \includesvg[width=\textwidth, svgpath = images/diamond_square/]{simple_square_step_solarized08}%
+\end{minipage}%
+\begin{minipage}[c]{\mycaptionwidth}%
+    \subcaption{Square-step}%
+    \label{fig:simple_square_step}%
+\end{minipage}%
+\\%
+\vspace{2mm}%
+\begin{minipage}[c]{\myfigwidth}%
+    \includesvg[width=\textwidth, svgpath = images/diamond_square/]{simple_diamond_step_solarized05}%
+\end{minipage}%
+\begin{minipage}[c]{\mycaptionwidth}%
+    \subcaption{Diamond-step}%
+    \label{fig:simple_diamond_step}%
+\end{minipage}%
+%
+\caption{Illustration of the two steps used in the diamond square algorithm for generating random surfaces. The grey points are old points, the black points are new points, and the red points are the points used in the calcuation of the averages when generating the new points.}%
+\label{fig:diamond_square_steps}%
+\end{figure}%
 
 We see that by first applying the square-step and then applying the diamond-step, we add one point in between each point in each direction, almost doubling the resolution of the grid. In general we go from $n$ to $n + (n-1)$ points in each direction. By applying the algorithm several times we get \todo{replace $n$ with $N$ and $i$ with $n$?}
 \begin{align}
@@ -314,15 +333,15 @@ We see that by first applying the square-step and then applying the diamond-step
     n_i &= 2^i(n_0-1) + 1, \label{eq:diamond_step_resolution}
 \end{align}
 where $i$ is the number of times we have applied the algorithm. This means that using the diamond-square algorithm we can go from any resolution $n_0$ to all resolutions satisfying $n_i = 2^i(n_0 - 1) + 1$.
-
-\begin{figure}[!ht]
-    \centering
-    \includesvg[width=0.7\textwidth, svgpath = images/diamond_square/]{increase_resolution_solarized_starssquares03}
-    \caption{
-        The diamond-square algorithm applied once on a grid of $3\times 3$ points, increasing the number of points from 9 to 25. The orange square points are generated by the square-step (see \cref{fig:simple_square_step}), and the blue star-shaped points by the diamond-step (see \cref{fig:simple_diamond_step}).
-    }
-    \label{fig:diamond_square_applied}
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath = images/diamond_square/]{increase_resolution_solarized_starssquares03}%
+    \caption{%
+        The diamond-square algorithm applied once on a grid of $3\times 3$ points, increasing the number of points from 9 to 25. The orange square points are generated by the square-step (see \cref{fig:simple_square_step}), and the blue star-shaped points by the diamond-step (see \cref{fig:simple_diamond_step}).%
+    }%
+    \label{fig:diamond_square_applied}%
+\end{figure}%
 
 \subsection{Successive random additions on a finite grid (in 2 dimensions)}
 Since we are using computers to generate our surfaces, which have limited memory, we can't use infinite grids. This means we get some special cases that needs to be taken care of when generating points near the edges of the grid.\todo{transition to below}
@@ -432,15 +451,15 @@ This leaves us with the following algorithm for generating a surface which appro
 \end{enumerate}
 
 See \cref{fig:diamond_square_surface} for a surface generated by the algorithm.
-
-\begin{figure}[!ht]
-    \centering
-    \includesvg[width=0.7\textwidth, svgpath=./images/diamond_square/surface_example/]{surface_labels}
-    \caption{
-        Caption.
-        \label{fig:diamond_square_surface}
-    }
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/diamond_square/surface_example/]{surface_labels}%
+    \caption{%
+        Caption.%
+        \label{fig:diamond_square_surface}%
+    }%
+\end{figure}%
 
 
 \orangebox{
@@ -481,45 +500,45 @@ for
     0 \leq i,j < N,
 \end{align*}
 where $(x^1_i,y^1_j)$ are points in one surface and $(x^2_i,y^2_j)$ in the other. We then divide each \hl{convex hexahedra} into five tetrahedron, as illustrated in \cref{fig:hex_to_tetra}, giving a total of $5(N-1)^2$ tetrahedra.
-
+%
 % We do this by utilizing the fact that the points in each heighmap lie on a regular grid in the $x$-$y$-plane. This means that we can divide the volume into tetrahedra, . If the two heightmaps are not intersecting, we see that we can divide the volume between them into convex hexahedra, one for each set of points
 % ($x_{i}, y_{i}$), ($x_{i}, y_{i+1}$), ($x_{i+1}, y_{i}$), and ($x_{i+1}, y_{i+1}$) 
 % % $(x_i, y_i)$  $(x_i, y_{i+1})$ $(x_{i+1}, y_i)$ $(x_{i+1}, y_{i+1})$
 % in the $x$-$y$-grid. Each of these hexahedra can then be divided into five tetrahedra, as illustrated in \cref{fig:hex_to_tetra}.
-
-% \begin{figure}[!ht]
-%     \centering
-%     \includegraphics[width=0.4\textwidth]{images/fracture/hexahedron_to_tetrahedra.png}
-%     \caption{
-%         Illustration of how to divide a hexahedron into five tetraheda.
-%         \label{fig:hex_to_tetra}
-%     }
-% \end{figure}
-% 
-% \begin{figure}[!ht]
-%     \centering
-%     \includegraphics[width=0.6\textwidth]{images/fracture/fracture.png}
-%     \caption{
-%         A model of a fracture.
-%         \label{fig:fracture_model}
-%     }
-% \end{figure}
-
-\begin{figure}[!ht]
-    \centering
-    \begin{subfigure}[b]{0.35\textwidth}
-        \includegraphics[width=\textwidth]{images/fracture/hexahedron_to_tetrahedra01_cycles_n200.png}
-        \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}
-        \label{fig:hex_to_tetra}
-    \end{subfigure}
-    \hspace{5mm}
-    \begin{subfigure}[b]{0.55\textwidth}
-        \includegraphics[width=\textwidth]{images/fracture/fracture05_n200.png}
-%         \includegraphics[width=\textwidth]{images/fracture/large_fracture04_300dpi_w20cm}
-        \caption{A random fracture made from two periodic heightmaps.}
-        \label{fig:fracture_model}
-    \end{subfigure}
-\end{figure}
+%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includegraphics[width=0.4\textwidth]{images/fracture/hexahedron_to_tetrahedra.png}%
+%     \caption{%
+%         Illustration of how to divide a hexahedron into five tetraheda.%
+%         \label{fig:hex_to_tetra}%
+%     }%
+% \end{figure}%
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includegraphics[width=0.6\textwidth]{images/fracture/fracture.png}%
+%     \caption{%
+%         A model of a fracture.%
+%         \label{fig:fracture_model}%
+%     }%
+% \end{figure}%
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[b]{0.35\textwidth}%
+        \includegraphics[width=\textwidth]{images/fracture/hexahedron_to_tetrahedra01_cycles_n200.png}%
+        \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
+        \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hspace{5mm}%
+    \begin{subfigure}[b]{0.55\textwidth}%
+        \includegraphics[width=\textwidth]{images/fracture/fracture05_n200.png}%
+%         \includegraphics[width=\textwidth]{images/fracture/large_fracture04_300dpi_w20cm}%
+        \caption{A random fracture made from two periodic heightmaps.}%
+        \label{fig:fracture_model}%
+    \end{subfigure}%
+\end{figure}%
 
 \subsection{Finding a point inside a tetrahedron}
 A tetrahedron consists of four points $\bvec a$, $\bvec b$, $\bvec c$, and $\bvec d$, and four faces spanned by the four possible combinations of the four points. For a face spanned by the points $\bvec a$, $\bvec b$, and $\bvec c$ we can find if a point $\bvec P$ is on the same side of the face as the point $\bvec d$ (the point not used to construct the face) by doing some geometry. We find the normal vector to the surface $\bvec n$ by the cross product 

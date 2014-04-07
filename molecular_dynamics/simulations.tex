@@ -16,7 +16,7 @@ Most molecular dynamics programs will follow an flow similar to the following:
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
 \end{itemize}
 An example of a program that implements the above procedure can be seen in \cref{list:simple_md_program}.
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 \begin{cppcode*}{gobble=4}
     System system = initializeSystem(parameters);
     double time = 0.0;
@@ -64,21 +64,22 @@ In this example we will be using a potential first seen as early as 1924\cite{jo
 where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
 
 The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
-\begin{figure}[!ht]
-    \centering
-    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}
-%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}
-    \caption{
-        Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
-        \label{fig:lennard-jones_potential}
-    }
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}%
+    \caption{%
+        Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.%
+        \label{fig:lennard-jones_potential}%
+    }%
+\end{figure}%
 
 \subsection{Newton's third law}
 When calculating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
 
 See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization from Newton's third law.
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 % \begin{cppcode*}{gobble=4}
 %     void calculateForces(System &system)
 %     {
@@ -112,7 +113,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
     \label{list:calculate_forces}
 }
 \end{listing}
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 \begin{cppcode*}{gobble=4}
     vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2)
     {
@@ -161,7 +162,7 @@ The implementation of the Verlet scheme is mostly straightforward, the only thin
 \end{align*}
 See \cref{list:regular_verlet} for an example of how to implement the Verlet integration scheme.
 
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 \begin{cppcode*}{gobble=4}
     void integrateEquationsOfMotion(System &system, double dt)
     {
@@ -234,7 +235,7 @@ In theory we now have a working molecular dynamics program by combining \cref{li
 where $(L_x, L_y, L_z)$ is the dimensions of the box, and $(i, j, k)$ is the index of the \hl{neighbor box/periodic image box}.
 
 The first thing we have to do to implement periodic boundary conditinos is to check if any atoms have moved outside the limits of our system after each time we update the positions. An example of how to do this can be seen in \cref{list:pbc}
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 \begin{cppcode*}{gobble=4}
     double calculateDistanceSquaredUsingMinimumImageConvention(
         const vec3 &u, const vec3 &v, 
@@ -256,7 +257,7 @@ The first thing we have to do to implement periodic boundary conditinos is to ch
 \end{listing}
 
 A consequence of using periodic boundary conditions is that each atom is now affected by an infinite amount of atoms. To avoid having to do an infinite number of evaluations of the potential we \hl{therefore/thus} implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \hl{source/cite?}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{nearest/closest} image of each atom $j$. This can for example be implemented when calculating the distance between the atoms, when calculating the forces. To avoid having an infinite amount of copies of each atom we use \cref{eq:pbc_positions} to calculate the positions of each image if needed. See \cref{list:minimum_image_convention}
-\begin{listing}[!ht]
+\begin{listing}[!htb]
 \begin{cppcode*}{gobble=4}
     void checkBoundaryConditions(System &system, const vec3 &systemSize)
     {
@@ -357,31 +358,31 @@ When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{
 }
 
 To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, as see in figure \cref{fig:cristobalite} \todo{Why?}, and give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}. The crystal consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms.
-
-\begin{figure}[!ht]
-    \centering
-    \begin{subfigure}[c]{0.25\textwidth}
-%         \begin{minipage}[c]{\textwidth}
-        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}
-%         \end{minipage}
-%         \caption{\cite{wikiCristobalite01}}
-        \caption{}
-        \label{fig:cristobalite01}
-    \end{subfigure}
-    \hspace{0.07\textwidth}
-    \begin{subfigure}[c]{0.45\textwidth}
-%         \begin{minipage}[c]{\textwidth}
-        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}
-%         \end{minipage}
-%         \caption{\cite{wikiCristobalite02}}
-    \caption{}
-    \label{fig:cristobalite02}
-    \end{subfigure}
-    \caption{
-        Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.
-        \label{fig:cristobalite}
-    }
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[c]{0.25\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite01}}%
+        \caption{}%
+        \label{fig:cristobalite01}%
+    \end{subfigure}%
+    \hspace{0.07\textwidth}%
+    \begin{subfigure}[c]{0.45\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite02}}%
+    \caption{}%
+    \label{fig:cristobalite02}%
+    \end{subfigure}%
+    \caption{%
+        Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.%
+        \label{fig:cristobalite}%
+    }%
+\end{figure}%
 
 We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse.
 
@@ -420,39 +421,39 @@ When passivating a oxygen atom with a missing silicon neighbor, we put one hydro
 All silicon and oxygen atoms with no neighbors we remove, since they aren't really part of the silica.
 
 To find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom.
-
-\begin{figure}[!ht]
-    \centering
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}
-        \caption{}
-%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}
-%         \label{fig:hex_to_tetra}
-    \end{subfigure}
-%     \hspace{5mm}
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02.png}
-        \caption{}
-%         \caption{A random fracture made from two periodic heightmaps.}
-%         \label{fig:fracture_model}
-    \end{subfigure}
-%     \hspace{5mm}
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03.png}
-        \caption{}
-%         \caption{A random fracture made from two periodic heightmaps.}
-%         \label{fig:fracture_model}
-    \end{subfigure}
-%     \hspace{5mm}
-    \begin{subfigure}[b]{0.24\textwidth}
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04.png}
-        \caption{}
-%         \caption{A random fracture made from two periodic heightmaps.}
-%         \label{fig:fracture_model}\caption{}
-    \end{subfigure}
-    \caption{\hl{Caption}}
-    \label{fig:passivation}
-\end{figure}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}%
+        \caption{}%
+%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}\caption{}%
+    \end{subfigure}%
+    \caption{\hl{Caption}}%
+    \label{fig:passivation}%
+\end{figure}%
 
 \begin{itemize}
     \item Tetrahedra
