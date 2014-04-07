@@ -3,7 +3,9 @@ Intro
 
 \section{The main program}
 % Deducing how a molecular dynamics program does its simulations isn't always easy from looking at source code, but most programs will follow a flow similar to the following:
+%
 Most molecular dynamics programs will follow an flow similar to the following:
+%
 \begin{itemize}[midsep]
     \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
     \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation.\todo{remove drift!}
@@ -15,8 +17,10 @@ Most molecular dynamics programs will follow an flow similar to the following:
     \end{itemize}
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
 \end{itemize}
+%
 An example of a program that implements the above procedure can be seen in \cref{list:simple_md_program}.
-\begin{listing}[!htb]
+%
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     System system = initializeSystem(parameters);
     double time = 0.0;
@@ -27,12 +31,12 @@ An example of a program that implements the above procedure can be seen in \cref
         integrateEquationsOfMotion(system, dt);
         sample(system);
     }
-\end{cppcode*}
-\caption{
-    An example of a typical implementation of a molecular dynamics program using object-oriented programming.
-    \label{list:simple_md_program}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{%
+    An example of a typical implementation of a molecular dynamics program using object-oriented programming.%
+    \label{list:simple_md_program}%
+}%
+\end{listing}%
 
 When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces\todo{not defined yet... move this section?}, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
@@ -79,7 +83,8 @@ The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and h
 When calculating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
 
 See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization from Newton's third law.
-\begin{listing}[!htb]
+%
+\begin{listing}[!htb]%
 % \begin{cppcode*}{gobble=4}
 %     void calculateForces(System &system)
 %     {
@@ -106,14 +111,15 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
             }
         }
     }
-\end{cppcode*}
-\caption{
-%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
-    Caption.
-    \label{list:calculate_forces}
-}
-\end{listing}
-\begin{listing}[!htb]
+\end{cppcode*}%
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Caption.%
+    \label{list:calculate_forces}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2)
     {
@@ -130,13 +136,13 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
         
         return force;
     }
-\end{cppcode*}
-\caption{
-%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
-    Caption.
-    \label{list:calculate_force_between_atoms}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Caption.%
+    \label{list:calculate_force_between_atoms}%
+}%
+\end{listing}%
 
 \section{Integration scheme}
 To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
@@ -161,8 +167,8 @@ The implementation of the Verlet scheme is mostly straightforward, the only thin
     \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
 \end{align*}
 See \cref{list:regular_verlet} for an example of how to implement the Verlet integration scheme.
-
-\begin{listing}[!htb]
+%
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void integrateEquationsOfMotion(System &system, double dt)
     {
@@ -176,13 +182,13 @@ See \cref{list:regular_verlet} for an example of how to implement the Verlet int
                                /(2.0*dt);
         }
     }
-\end{cppcode*}
-\caption{
-%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.
-    Caption.
-    \label{list:regular_verlet}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Caption.%
+    \label{list:regular_verlet}%
+}%
+\end{listing}%
 
 The most used form of the Velocity integration scheme is called the velocity Verlet method\cite{swope1982computer}, and it has the form
 \begin{align}
@@ -235,7 +241,7 @@ In theory we now have a working molecular dynamics program by combining \cref{li
 where $(L_x, L_y, L_z)$ is the dimensions of the box, and $(i, j, k)$ is the index of the \hl{neighbor box/periodic image box}.
 
 The first thing we have to do to implement periodic boundary conditinos is to check if any atoms have moved outside the limits of our system after each time we update the positions. An example of how to do this can be seen in \cref{list:pbc}
-\begin{listing}[!htb]
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     double calculateDistanceSquaredUsingMinimumImageConvention(
         const vec3 &u, const vec3 &v, 
@@ -249,15 +255,15 @@ The first thing we have to do to implement periodic boundary conditinos is to ch
         }
         return dr.lengthSquared(); // Avoid calculating $\sqrt{dr^2}$
     }
-\end{cppcode*}
-\caption{
-    Minimum image convention.
-    \label{list:minimum_image_convention}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{%
+    Minimum image convention.%
+    \label{list:minimum_image_convention}%
+}%
+\end{listing}%
 
 A consequence of using periodic boundary conditions is that each atom is now affected by an infinite amount of atoms. To avoid having to do an infinite number of evaluations of the potential we \hl{therefore/thus} implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \hl{source/cite?}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{nearest/closest} image of each atom $j$. This can for example be implemented when calculating the distance between the atoms, when calculating the forces. To avoid having an infinite amount of copies of each atom we use \cref{eq:pbc_positions} to calculate the positions of each image if needed. See \cref{list:minimum_image_convention}
-\begin{listing}[!htb]
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void checkBoundaryConditions(System &system, const vec3 &systemSize)
     {
@@ -272,12 +278,12 @@ A consequence of using periodic boundary conditions is that each atom is now aff
             }
         }
     }
-\end{cppcode*}
-\caption{
-    PBC.
-    \label{list:pbc}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{%
+    PBC.%
+    \label{list:pbc}%
+}%
+\end{listing}%
 
 The use of periodic boundary conditions has some other consequences for our program. The first thing we need to consider is how to calculate the forces. In theory each atom is now affected by a force from an infinite number of numbers, since we have the image of particle $j$ in an infinte number of repeating periodic boxes. Calculating an infinite number of forces for all atoms in \hl{the periodic box} is unfeasible in a numerical experiment (in nature this infinite sum is incredibly evaluated every timestep $dt = 5.39106(32)\times 10^{-44} \text{s}$ (Planck time)), so we make an approximation where we only consider the force from atoms within the size of the box.
 

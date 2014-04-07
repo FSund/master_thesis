@@ -58,7 +58,7 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
 %         }
 %     \end{cppcode*}
 
-\begin{listing}[!htb]
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     for (Atom *atom : atoms)
     {
@@ -68,13 +68,13 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
         int k = floor(atom.position().z() / voxelSize);
         voxels[i][j][k].push_back(atom);
     }
-\end{cppcode*}
-\caption{A very long caption on this very interesting listing to see what happens when we get to the end of the line bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
-    \label{list:voxels}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{A very long caption on this very interesting listing to see what happens when we get to the end of the line bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla %
+    \label{list:voxels}%
+}%
+\end{listing}%
 
-\begin{listing}[!htb]
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     // Loop over all atoms
     for (Atom *atom1 : atoms)
@@ -107,13 +107,13 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
         }}}
     }
     
-\end{cppcode*}
-\caption{Test
-    \label{list:neighbors}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{Test%
+    \label{list:neighbors}%
+}%
+\end{listing}%
 
-\begin{listing}[!htb]
+\begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     calculateDistanceSquaredBetweenAtoms(Atom *atom1, Atom atom2)
     {
@@ -130,11 +130,11 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
         // slow operation, and in this case is unnecessary
         double drSquared = dr.lengthSquared();
     }
-\end{cppcode*}
-\caption{Test
-    \label{list:dr2}
-}
-\end{listing}
+\end{cppcode*}%
+\caption{Test%
+    \label{list:dr2}%
+}%
+\end{listing}%
 
 \section{Mean square displacement}
     
