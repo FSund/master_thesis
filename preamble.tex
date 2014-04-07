@@ -1,30 +1,27 @@
 % ----  biblatex ---- %
 \usepackage[english]{babel}
-\usepackage{csquotes}
+\usepackage{csquotes} % required by {babel} (or biblatex?)
 \usepackage[backend=biber, sorting=none]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
 \bibliography{JabRef_database,Mendeley_database}
 
 % ---- Code syntax highlighting ---- %
 % \usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^
 \usepackage[scale=0.85]{droidmono}
-\usepackage[chapter]{minted}    % Load order: float (done before \documentclass), then hyperref (done in uiofystmaster), then minted, so minted will use \newfloat patched by hyperref. See: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
-                                % Option [chapter] has to do with \listoflistings numbering
-\usemintedstyle{colorful}
-\definecolor{codebg}{rgb}{0.95,0.95,0.95}
-\newminted[cppcode]{mdcpp}{ % can use \newminted{cpp}, gives the same result
-    mathescape,
-%     frame=lines,
-%     framesep=2mm,
-    bgcolor = codebg,
-    fontsize = \small,
-%     fontfamily = courier
-} 
-% usage: \begin{cppcode}
-% use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
 
-% More options:
-% \renewcommand\listingscaption{Program code}
-% \renewcommand\listoflistingscaption{List of program codes}
+% Order: float - (fix \listoflistings) - hyperref - minted
+\usepackage{float}
+
+% Fix listoflistings (need to do this before loading hyperref)
+\input{preamble/listoflistings_fix.tex}
+
+% Load hyperref after fixing listoflistings
+\usepackage{hyperref}
+\input{preamble/hyperref.tex}
+
+% Finally load minted
+\usepackage[chapter]{minted} % Option [chapter] has to do with \listoflistings numbering. Alternative is ``section''
+\input{preamble/minted.tex}
+
 
 % ----  Draft stuff (remove before final version) ---- %
 \usepackage{todonotes}
@@ -43,63 +40,23 @@
 \usepackage{graphicx}
 \usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
                             % NEEDS ``pdflatex --shell-escape'' !!!
+                            
 \setsvg{                    % conversion options for svg package
     inkscape = inkscape -z -D
 }
 
-\usepackage{subcaption}     % The subfigure and subfig packages are deprecated and shouldn't be used any more: 
-                            % http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
-                            % the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+% The subfigure and subfig packages are deprecated and shouldn't be used any more: 
+% http://tex.stackexchange.com/questions/144782/subfigure-and-subfig-packages-deprecated
+% the svg-package originally uses subfig, but replacing subfig with subcaption seems to work
+\usepackage{subcaption}     % \begin{subfigure}, \subcaption{}, and \subcaptionbox{}
 
 % ---- Fix unicode stuff ---- %
 \DeclareUnicodeCharacter{2212}{-}   % Unicode 'MINUS SIGN' (U+2212) that matplotlib uses for minus on axis tick labes
 
 % ---- Formatting ---- %
 % skip line instead of indent on new paragraph
-\setlength{\parskip}{11pt}
-\setlength{\parindent}{0mm}
+% \setlength{\parskip}{11pt}
+% \setlength{\parindent}{0mm}
+\usepackage[parfill]{parskip} % The option parfill is a useful addition: it avoids that a paragraph ends almost flush right. So, paragraphs could easier be distinguished.
 
-% ---- Floats ---- %
-% With \renewcommand{\floatpagefraction}{.8}% I was able to specify that only pages with more than 80% of floats, will become pure float-only pages. The default is 0.6 so if a figure consumes 60% of the page it will get its own float-page.
-\renewcommand{\floatpagefraction}{.8}
-
-% There are four counters that control how many floats can go into areas:
-% totalnumber (default 3) is the maximum number of floats on a text (!) page
-% topnumber (default 2) is the maximum number of floats in the top area
-% bottomnumber (default 1) is the maximum number of floats in the bottom area
-% dbltopnumber (default 2) is the maximum number of full sized floats in two-colum mode going above the text columns.
-\setcounter{totalnumber}{6}
-\setcounter{topnumber}{4}
-\setcounter{bottomnumber}{2}
-
-%TODO:
-% Consider increasing +- ranges?
-% Show defaults using \showthe\textfloatsep or \the\textfloatsep
-% See here for defaults: http://tex.stackexchange.com/a/23316/31078
-% See image here for illustration of space: http://tex.stackexchange.com/a/60479/31078
-% Defaults for uiofysmaster using default font size
-% \floatsep:        12.0pt plus 2.0pt minus 4.0pt
-% \textfloatsep:    20.0pt plus 2.0pt minus 4.0pt
-% \intextsep:       14.0pt plus 4.0pt minus 4.0pt
-% \dbltextfloatsep: 20.0pt plus 2.0pt minus 4.0pt
-% \dblfloatsep:     14.0pt plus 2.0pt minus 4.0pt
-\setlength{\textfloatsep}{8.0pt plus 2.0pt minus 2.0pt} % 20.0pt plus 2.0pt minus 4.0pt
-\setlength{\intextsep}{8.0pt plus 2.0pt minus 2.0pt} % 14.0pt plus 4.0pt minus 4.0pt 
-\setlength{\floatsep}{8.0pt plus 2.0pt minus 2.0pt} % 12.0pt plus 2.0pt minus 4.0pt
-
-% ---- Captions ---- %
-% \usepackage{caption} % Loaded by uiofysmaster
-\captionsetup[table]{width=.9\textwidth,position=above}
-\captionsetup[figure]{width=.9\textwidth,position=below}
-\captionsetup[listing]{width=.9\textwidth,position=below}
-% \captionsetup{font=small,labelfont=bf} % In uiofysmaster
-\captionsetup[subfigure]{position=below}
-
-% See image here for illustration of space: http://tex.stackexchange.com/a/60479/31078
-% See here for defaults: http://tex.stackexchange.com/a/23316/31078
-% Show defaults using \showthe\textfloatsep or \the\textfloatsep
-% Defaults for uiofysmaster using default font size
-% \abovecaptionskip: 10.0pt
-% \belowcaptionskip:  0.0pt
-\setlength{\belowcaptionskip}{0.0pt} % 0.0pt
-\setlength{\abovecaptionskip}{8.0pt} % 10.0pt
+\input{preamble/layout_lengths_floats.tex}

@@ -1,0 +1,24 @@
+% Need to load the float package before hyperref, so hyperref detects and patches it, so when we load minted later it uses the patched \newfloat (minted loads float). 
+% More info here: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
+
+\usemintedstyle{colorful}
+\definecolor{codebg}{rgb}{0.95,0.95,0.95}
+\newminted[cppcode]{mdcpp}{ % can use \newminted{cpp} to replace default ``cpp'', gives the same result
+    mathescape,
+%     frame=lines,
+%     framesep=2mm,
+    bgcolor = codebg,
+    fontsize = \small,
+%     fontfamily = courier
+} 
+% usage: \begin{cppcode}
+% use \begin{cppcode*}{<extra options>} if you want to add extra options on the fly
+
+% More options:
+% \renewcommand\listingscaption{Program code}
+% \renewcommand\listoflistingscaption{List of program codes}
+
+% FIX LIST OF LISTINGS: 
+% http://tex.stackexchange.com/a/58498/31078
+% http://tex.stackexchange.com/questions/14856/change-spacing-between-elements-in-newfloat-listof/14867#14867
+% http://tex.stackexchange.com/questions/139533/using-listing-with-minted-gets-wrong-listoflistingscaption

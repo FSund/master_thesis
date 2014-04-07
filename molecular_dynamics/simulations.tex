@@ -31,9 +31,9 @@ An example of a program that implements the above procedure can be seen in \cref
         integrateEquationsOfMotion(system, dt);
         sample(system);
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
-    An example of a typical implementation of a molecular dynamics program using object-oriented programming.%
+    An example of a typical implementation of a molecular dynamics program using object-oriented programming. See \cref{list:calculate_forces,list:regular_verlet,list:sampling} for examples of implementations of the functions \texttt{calculateForces}, \texttt{integrateEquationsOfMotion}, and \texttt{sample}.%
     \label{list:simple_md_program}%
 }%
 \end{listing}%
@@ -111,10 +111,10 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
             }
         }
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Caption.%
+    Implementation of \texttt{calculateForces} from \cref{list:simple_md_program}.%
     \label{list:calculate_forces}%
 }%
 \end{listing}%
@@ -136,10 +136,10 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
         
         return force;
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Caption.%
+    Implementation of \texttt{calculateForceBetweenTwoAtoms} from \cref{list:calculate_forces}.%
     \label{list:calculate_force_between_atoms}%
 }%
 \end{listing}%
@@ -182,10 +182,10 @@ See \cref{list:regular_verlet} for an example of how to implement the Verlet int
                                /(2.0*dt);
         }
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Caption.%
+    Implentation of \texttt{integrateEquationsOfMotion} from \cref{list:simple_md_program}.%
     \label{list:regular_verlet}%
 }%
 \end{listing}%
@@ -235,12 +235,52 @@ This implementation minimizes the memory needs, as we only need to store one cop
 \todo[inline]{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
 In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the one in the center, and, \hl{depending on the potential, will not behave as intended?}. When simulating bulk liquids and solids we remedy this by using periodic boundary conditions. This means that we repeat the \hl{simulation box} an infinite number of times in each direction, so that all atoms \hl{have a bulk-like environment}. Atom $l$ will then have what we call an \hl{\emph{image}/``image''} in all other neighbor boxes, with position
 \begin{align}
-    \rvec_l^{ijk} = \rvec_l + i*L_x + j*L_y + k*L_z,
+    \rvec_l^{ijk} = \rvec_l + iL_x + jL_y + kL_z,
     \label{eq:pbc_positions}
 \end{align}
 where $(L_x, L_y, L_z)$ is the dimensions of the box, and $(i, j, k)$ is the index of the \hl{neighbor box/periodic image box}.
 
 The first thing we have to do to implement periodic boundary conditinos is to check if any atoms have moved outside the limits of our system after each time we update the positions. An example of how to do this can be seen in \cref{list:pbc}
+\begin{listing}[!htb]%
+% \begin{cppcode*}{gobble=4}
+%     void checkBoundaryConditions(System &system, const vec3 &systemSize)
+%     {
+%         for (Atom *atom : system.atoms())
+%         {
+%             for (int dim = 0; dim < 3; dim++)
+%             {
+%                 if (atom->position()[dim] < 0.0) 
+%                     atom->position()[dim] += systemSize[dim];
+%                 else if (atom->position()[dim] >= systemSize[dim]) 
+%                     atom->position()[dim] -= systemSize[dim];
+%             }
+%         }
+%     }
+% \end{cppcode*}%
+\begin{cppcode*}{gobble=4}
+    void checkBoundaryConditions(System &system)
+    {
+        for (Atom *atom : system.atoms())
+        {
+            for (int dim = 0; dim < 3; dim++)
+            {
+                if (atom->position()[dim] < 0.0) 
+                    atom->position()[dim] += system.size()[dim];
+                else if (atom->position()[dim] >= system.size()[dim]) 
+                    atom->position()[dim] -= system.size()[dim];
+            }
+        }
+    }
+\end{cppcode*}
+\caption{%
+    \texttt{checkBoundaryConditions}.%
+    \label{list:pbc}%
+}%
+\end{listing}%
+
+A consequence of using periodic boundary conditions is that each atom is now \hl{affected} by an infinite amount of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \hl{source/cite?}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{nearest/closest} image of each atom $j$, effectively limiting the \hl{reach} of the potential to \hl{half?} the size of the system. \todo{really $L\sqrt{3}$, diagonally}
+
+To find the distance between atom $i$ and the closes image of atom $j$ we \hl{just} have to calculate the distance between $i$ and \hl{any image of} $j$, $\rvec_{ij}$, and then check if the length of this vector is more than half the system size in any of the three dimensions. See \cref{list:minimum_image_convention} for an implementation of how to find the distance between a point $u$ to the closest image of a point $v$ using the \emph{minimum image convention}.
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     double calculateDistanceSquaredUsingMinimumImageConvention(
@@ -250,38 +290,15 @@ The first thing we have to do to implement periodic boundary conditinos is to ch
         vec3 dr = u - v;
         for (int dim = 0; dim < 3; dim++)
         {
-            if (dr[dim] => halfSystemSize[dim]) dr -= systemSize[dim];
+            if (dr[dim] >= halfSystemSize[dim]) dr -= systemSize[dim];
             else if (dr[dim] < -halfSystemSize[dim]) dr += systemSize[dim];
         }
         return dr.lengthSquared(); // Avoid calculating $\sqrt{dr^2}$
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
-    Minimum image convention.%
+    An example of how to find the distance between two points \texttt{u} and \texttt{v} in a periodic system of size \texttt{systemSize} using the \emph{minimum image convention}. We calculate the distance squared to avoid taking the square root, since this is a slow operation \hl{on a computer}.%
     \label{list:minimum_image_convention}%
-}%
-\end{listing}%
-
-A consequence of using periodic boundary conditions is that each atom is now affected by an infinite amount of atoms. To avoid having to do an infinite number of evaluations of the potential we \hl{therefore/thus} implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \hl{source/cite?}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{nearest/closest} image of each atom $j$. This can for example be implemented when calculating the distance between the atoms, when calculating the forces. To avoid having an infinite amount of copies of each atom we use \cref{eq:pbc_positions} to calculate the positions of each image if needed. See \cref{list:minimum_image_convention}
-\begin{listing}[!htb]%
-\begin{cppcode*}{gobble=4}
-    void checkBoundaryConditions(System &system, const vec3 &systemSize)
-    {
-        for (Atom *atom : system.atoms())
-        {
-            for (int dim = 0; dim < 3; dim++)
-            {
-                if (atom->position()[dim] < 0.0) 
-                    atom->position()[dim] += systemSize[dim];
-                else if (atom->position()[dim] >= systemSize[dim]) 
-                    atom->position()[dim] -= systemSize[dim];
-            }
-        }
-    }
-\end{cppcode*}%
-\caption{%
-    PBC.%
-    \label{list:pbc}%
 }%
 \end{listing}%
 

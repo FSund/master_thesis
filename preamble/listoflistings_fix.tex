@@ -1,0 +1,14 @@
+% Fix \listoflistings
+\usepackage{etoolbox}
+% \newfloat{listing}{h}{lol} % Not necessary
+\makeatletter
+\patchcmd{\@chapter}%
+ {\addtocontents{lof}}%
+ {\addtocontents{lol}{\protect\addvspace{10pt}}%  % <-- "lol" is the extension minted use
+  \addtocontents{lof}}%
+\makeatother
+
+% FIX LIST OF LISTINGS: 
+% http://tex.stackexchange.com/a/58498/31078
+% http://tex.stackexchange.com/questions/14856/change-spacing-between-elements-in-newfloat-listof/14867#14867
+% http://tex.stackexchange.com/questions/139533/using-listing-with-minted-gets-wrong-listoflistings
