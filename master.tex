@@ -1,28 +1,3 @@
-% \RequirePackage{float} % Need to load the float package before hyperref, so hyperref detects and patches it, so when we load minted later it uses the patched \newfloat (minted loads float). More info here: http://tex.stackexchange.com/questions/19371/minteds-listing-environment-with-hyperref-and-caption-package-together
-
-% % Need to do this before
-% \makeatletter
-% \renewcommand*{\listof}[2]{%
-%   \@ifundefined{ext@#1}{\float@error{#1}}{%
-%     \expandafter\let\csname l@#1\endcsname \l@figure  % <- use layout of figure
-%     \float@listhead{#2}%
-%     \begingroup
-%       \setlength\parskip{0pt plus 1pt}%               % <- or drop this line completely
-%       \@starttoc{\@nameuse{ext@#1}}%
-%     \endgroup}}
-% \makeatother
-
-% Need to do this before loading hyperref and minted ??
-% But can't do this before \documentclass{book} (because it doesn't work then..)
-% \RequirePackage{etoolbox}
-% \makeatletter
-% \patchcmd{\@chapter}%
-%  {\addtocontents{lof}}%
-%  {\addtocontents{lol}{\protect\addvspace{10pt}}%  % <-- "alg" is the extension you use
-%   \addtocontents{lof}}%
-%  {\typeout{*** SUCCESS ***}}{\typeout{*** FAIL ***}}
-% \makeatother
-
 \documentclass[twoside,english,a4paper]{uiofysmaster}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -32,19 +7,6 @@
 \input{preamble.tex}
 \input{other_packages.tex}
 \input{custom_commands_and_settings.tex}
-
-% % \usepackage{float}
-% \makeatletter
-% \renewcommand*{\listof}[2]{%
-%   \@ifundefined{ext@#1}{\float@error{#1}}{%
-%     \expandafter\let\csname l@#1\endcsname \l@figure  % <- use layout of figure
-%     \float@listhead{#2}%
-%     \begingroup
-%       \setlength\parskip{0pt plus 1pt}%               % <- or drop this line completely
-%       \@starttoc{\@nameuse{ext@#1}}%
-%     \endgroup}}
-% \makeatother
-
 
 \author{Filip Sund}
 \title{\uppercase{Water confined in nanoporous media}}
