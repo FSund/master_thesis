@@ -11,14 +11,18 @@
 \newcommand{\bvec}[1]{\boldsymbol{#1}}      % Using amsmath's boldsymbol
 \renewcommand{\vec}{\bvec}
 % \newcommand{\bvec}[1]{\bm{#1}}
-\newcommand{\rvec}{\bvec{r}}
-\newcommand{\vvec}{\bvec{v}}
-\newcommand{\avec}{\bvec{a}}
-\newcommand{\Fvec}{\bvec{F}}
+\newcommand{\rvec}{\vec{r}}
+\newcommand{\vvec}{\vec{v}}
+\newcommand{\avec}{\vec{a}}
+\newcommand{\Fvec}{\vec{F}}
+\newcommand{\rvecij}{\rvec_{ij}}
 
 % ---- Math commands and symbols ---- %
 % \newcommand\diff{\mathop{}\!\mathrm{d}}   % Already defined as \dif by commath! But maybe this way is better? Commath uses ``\DeclareMathOperator{\dif}{d \!}''
 \DeclareMathOperator{\diff}{d \!}           % See top comment on this reply: http://tex.stackexchange.com/a/95681/31078
+\newcommand{\drvec}{\dif \rvec}
+% \DeclareMathOperator{\nablaop}{\nabla}
+\renewcommand\div{\mathop{}\!\vec\nabla}
 % \newcommand\Ham{\mathop{}\!\mathrm{\mathcal{H}}}
 \DeclareMathOperator{\Ham}{\mathcal{H}}
 % \newcommand\bigint{\mathop{\mathlarger{\int}}}

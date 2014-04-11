@@ -1,5 +1,12 @@
 \chapter{Integrators}
-Liouville operator, velocity Verlet, global error
+\orangebox{
+    Liouville operator, velocity Verlet, global error
+
+    \begin{itemize}
+        \item See Understanding Molecular. section 4.3.3., p. 77(97) for Luouville stuff
+    \end{itemize}
+}
+
 
 
 \section{Integration}
@@ -82,7 +89,7 @@ We see that this estimate of the velocity has a truncation error of the order $\
 
 A modification of the Verlet algorithm usually called the velocity Verlet algorithm\cite{swope1982computer} \todo{something about why velocity Verlet is good} can be derived in a similar way. We have the same Taylor expansion of $\rvec(t+\Delta t)$ around $t$ as before
 \begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), %\label{eq:position_taylor}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
 \end{align}
 and now we also expand $\vvec(t + \Delta t)$ around $t$
 \begin{align}
@@ -104,7 +111,7 @@ Inserting this into \cref{eq:velocity_taylor} we get
 \begin{align}
     \vvec(t + \Delta t) 
     &= \vvec(t) + \avec(t)\Delta t + \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \nonumber\\
-    &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3). %\label{eq:verlet_velocity_taylor_insertion}
+    &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3). \label{eq:verlet_velocity_taylor_insertion}
 \end{align}
 So the total velocity Verlet algorithm with truncation of the higher-order terms is
 \begin{align}
