@@ -1,88 +1,45 @@
 \chapter{Measurements}
 \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
-When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Establishing which atoms are within a certain radius of each atom is not trivial; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for all points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
+When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Finding out which atoms are within a certain radius of each atom can take a long time; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for \emph{all} points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
 
-Our solution to the problem is inspired by the ``cell list'' method used in MD integrators\hl{(see Frenkel Appendix F)}, and uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. To find the neighbors within the radius $dr$ of an atom at position $\rvec$ we now only have to find which box the atoms belongs to, and check the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. Pseudocode for this can be seen below \cref{list:voxels}
+Our solution to the problem is inspired by the ``cell list'' method used in MD integrators\hl{(see Frenkel Appendix F)}, and uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. See \cref{list:sortAtomsIntoVoxels} for an example of how to do this. For an atom at position $\rvec$ we can now find the \hl{neighboring} atoms within the radius $dr$ by finding which box the atoms belongs to, and checking the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. See \cref{list:check_neighbor_voxels} for an example of how to find neighbor atoms using this method.
 
 \todo[inline]{Distance between atoms, $r^2$ instead of $r$}
 
-%     \begin{cppcode*}{gobble=8}
-%         for (int i = 0; i < atoms.size(); i++)
-%         {
-%             int ix = floor(atoms[i].position().x() / voxelSize);
-%             int iy = floor(atoms[i].position().y() / voxelSize);
-%             int iz = floor(atoms[i].position().z() / voxelSize);
-%             voxel[ix][iy][iz].push_back(i);
-%         }
-%     \end{cppcode*}
-%     
-%     \begin{cppcode*}{gobble=8}
-%         // Loop over all atoms
-%         for (int i = 0; i < atoms.size(); i++)
-%         {
-%             // Index of the voxel this atom belongs to
-%             int i1 = floor(atoms[i].position().x() / voxelSize);
-%             int j1 = floor(atoms[i].position().y() / voxelSize);
-%             int k1 = floor(atoms[i].position().z() / voxelSize);
-%             
-%             // Loop over all 27 neighbor voxels (including self)
-%             for (int di = -1; di <= 1; di++)
-%             for (int dj = -1; dj <= 1; dj++)
-%             for (int dk = -1; dk <= 1; dk++)
-%             {{{
-%                 // Find index of neighbor voxel using
-%                 // periodic boundary conditions
-%                 // nx, ny, nz is the number of voxels in each direction
-%                 int i2 = (i1 + di + nx) % nx;
-%                 int j2 = (j1 + dj + ny) % ny;
-%                 int k2 = (k1 + dk + nz) % nz;
-%                 
-%                 // Loop over atoms in neighbor voxel
-%                 for (j = 0; j < voxel[i2][j2][k2].size(); j++)
-%                 {
-%                     int k = voxel[i2][j2][k2][j];
-%                     vec3 dr = atoms[k].position() - atoms[i].position();
-%                     
-%                     // Minimum image convention
-%                     for (int dim = 0; dim < 3; dim++)
-%                     {
-%                         if      (dr[dim] >  L[dim]/2.0) dr[dim] -= L[dim];
-%                         else if (dr[dim] < -L[dim]/2.0) dr[dim] += L[dim];
-%                     }
-%                     
-%                     // Calculate dr^2 instead of sqrt(dr^2), since sqrt() is a very 
-%                     // slow operation, and in this case is unnecessary
-%                     double drSquared = dr.lengthSquared();
-%                 }
-%             }}}
-%         }
-%     \end{cppcode*}
-
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    for (Atom *atom : atoms)
+    void sortAtomsIntoVoxels(
+        const vector<Atom*> &atoms, 
+        double voxelSize, 
+        vector<vector<vector<Atom*> > > &voxels)
     {
-        // Index of the voxel this atom belongs to
-        int i = floor(atom.position().x() / voxelSize);
-        int j = floor(atom.position().y() / voxelSize);
-        int k = floor(atom.position().z() / voxelSize);
-        voxels[i][j][k].push_back(atom);
+        for (Atom *atom : atoms)
+        {
+            // Index of the voxel this atom belongs to
+            int i = floor(atom.position().x() / voxelSize);
+            int j = floor(atom.position().y() / voxelSize);
+            int k = floor(atom.position().z() / voxelSize);
+            voxels[i][j][k].push_back(atom);
+        }
     }
-\end{cppcode*}
-\caption{A very long caption on this very interesting listing to see what happens when we get to the end of the line bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla %
-    \label{list:voxels}%
+\end{cppcode*}%
+\caption{%
+    \texttt{sortAtomsIntoVoxels}. %
+    \label{list:sortAtomsIntoVoxels}%
 }%
 \end{listing}%
 
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
+    sortAtomsIntoVoxels(atoms, voxelSize, voxels);
+    
+    vector<vector<Atom*> > neighborAtoms(atoms.size());
+    
     // Loop over all atoms
-    for (Atom *atom1 : atoms)
+    for (Atom *atom : atoms)
     {
         // Index of the voxel this atom belongs to
-        int i1 = floor(atom1.position().x() / voxelSize);
-        int j1 = floor(atom1.position().y() / voxelSize);
-        int k1 = floor(atom1.position().z() / voxelSize);
+        ivec3 index = floor(atom.position() / voxelSize)
         
         // Loop over all 27 neighbor voxels (including self)
         for (int di = -1; di <= 1; di++)
@@ -91,32 +48,56 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
         {{{
             // Index of neighbor voxel using periodic boundary conditions
             // nx, ny, nz is the number of voxels in each direction
-            int i2 = (i1 + di + nx) % nx;
-            int j2 = (j1 + dj + ny) % ny;
-            int k2 = (k1 + dk + nz) % nz;
+            int i = (index[0] + di + nx) % nx;
+            int j = (index[1] + dj + ny) % ny;
+            int k = (index[2] + dk + nz) % nz;
             
-            // Loop over atoms in neighbor voxel
-            for (Atom *atom2 : voxels[i2][j2][k2])
-            {
-                if (atom2 != atom1)
-                {
-                    double drSquared = 
-                        calculateDistanceSquaredBetweenAtoms(atom1, atom2);
-                }
-            }
+            neighborAtoms[atom.index()].push_back(
+                findAtomsWithinRadius(atom, voxels[i][j][k], radiusSquared)
+            );
         }}}
     }
-\end{cppcode*}
+\end{cppcode*}%
 \caption{Test%
-    \label{list:neighbors}%
+    An example of how to find the neighbor atoms within a given radius of all atoms. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \texttt{sortAtomsIntoVoxels} and \texttt{findAtomsWithinRadius}. %
+    \label{list:check_neighbor_voxels}%
 }%
 \end{listing}%
 
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    calculateDistanceSquaredBetweenAtoms(Atom *atom1, Atom atom2)
+    vector<Atom*> findAtomsWithinRadius(
+        Atom *atom1, const vector<Atom*> &voxel, double radiusSquared)
     {
-        vec3 dr = atom2.position() - atom1.position();
+        vector<Atom*> neighborAtoms;
+        
+        // Loop over atoms in neighbor voxel
+        for (Atom *atom2 : voxel)
+        {
+            if (atom2 != atom1)
+            {
+                double drSquared = 
+                    calculateDistanceSquaredBetweenAtoms(atom1, atom2);
+                if (drSquared < radiusSquared)
+                {
+                    neighborAtoms.push_back(atom2);
+                }
+            }
+        }
+        return neighborAtoms;
+    }
+\end{cppcode*}%
+\caption{Test%
+    \texttt{findAtomsWithinRadius}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \texttt{calculateDistanceSquaredBetweenAtoms}.%
+    \label{list:findAtomsWithinRadius}%
+}%
+\end{listing}%
+
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    double calculateDistanceSquaredBetweenAtoms(Atom *atom1, Atom *atom2)
+    {
+        vec3 dr = atom2->position() - atom1->position();
         
         // Minimum image convention
         for (int dim = 0; dim < 3; dim++)
@@ -127,11 +108,12 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
         
         // Calculate $dr^2$ instead of $\sqrt{dr^2}$, since sqrt() is a very 
         // slow operation, and in this case is unnecessary
-        double drSquared = dr.lengthSquared();
+        return dr.lengthSquared();
     }
-\end{cppcode*}
-\caption{Test%
-    \label{list:dr2}%
+\end{cppcode*}%
+\caption{%
+    \texttt{calculateDistanceSquaredBetweenAtoms}%
+    \label{list:calculateDistanceSquaredBetweenAtoms}%
 }%
 \end{listing}%
 
