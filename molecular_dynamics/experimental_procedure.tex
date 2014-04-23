@@ -1,0 +1,166 @@
+\chapter{ChapterName}
+\section{(Initialization) A typical experimental procedure}
+When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{akin to/mimicing} that used by \hl{actual} experiments. Since the duration of the experiments we are realistically able to simulate on are of the order $10^{-9}$ s / nanoseconds or below, we have to be smart when initializing the system, to avoid having to simulate for a long time to get to the state we want to study. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating \hl{silica/glass} is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
+%
+% \orangebox{}{
+%     \begin{itemize}
+%         \item Remove drift!
+%         \item Something smart about why the small timescales doesn't matter that much, since the length scales are equally small?
+%         \item Short/long-range order
+%         \item Glass transition temperature
+%     \end{itemize}
+%     \begin{quote}
+%         ``
+%         When molten silicon dioxide SiO2 is rapidly cooled, it does not crystallize but solidifies as a glass. The geometry of the silicon and oxygen centers in glass is similar to that in quartz and most other crystalline forms of the same composition, i.e., silicon is surrounded by a regular tetrahedra of oxygen centers. The difference between the glass and the crystalline forms arise from the connectivity of these tetrahedral units. Although there is no long range periodicity in the glassy network there remains significant ordering at length scales well beyond the SiO bond length. One example of this ordering is found in the preference of the network to form rings of 6-tetrahedra.[18]
+%         
+%         The glass transition temperature of pure SiO2 is about 1475 K.
+%         ''
+%         
+%         \url{http://en.wikipedia.org/wiki/Silicon_dioxide#Fused_quartz}
+%     \end{quote}
+% }
+
+To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, as see in figure \cref{fig:cristobalite} \todo{Why?}, and give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}. The crystal consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[c]{0.25\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite01}}%
+        \caption{}%
+        \label{fig:cristobalite01}%
+    \end{subfigure}%
+    \hspace{0.07\textwidth}%
+    \begin{subfigure}[c]{0.45\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite02}}%
+    \caption{}%
+    \label{fig:cristobalite02}%
+    \end{subfigure}%
+    \caption{%
+        Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.%
+        \label{fig:cristobalite}%
+    }%
+\end{figure}%
+
+We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse.
+
+We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
+
+We are now ready to do measurements.
+
+\section{Passivation}
+Since we don't take into consideration molecular bonds in the silica when removing atoms to create pores, we get dangling unsaturated bonds in the system. We rectify this by passivating the system by inserting atoms on the dangling bonds, turning them into \hl{stable} silanol groups\todo{why silanol?}.
+
+In the passivation procedure we do some basic assumptions, based on the chemical nature of silica and water. In the thermodynamically stable form, silica should have the following properties\todo{source?}:
+\begin{itemize}
+    \item Silicon atoms should have tetrahedral coordination, with four oxygen atoms surrounding each silicon atom in a tetrahedral \hl{shape}. \todo{On average, not all silica will have this. Something about bonds? bonded to four oxygen atoms?}
+    \item Oxygen atoms should have two silicon \hl{neighbors}\todo{not all, on average}.
+    \item The Si-O distance should be in the range 1.5-1.9 pm\todo{source?} (depending on the crystalline form).
+\end{itemize}
+
+\hl{When removing atoms to create pores we don't care about these properties, which leads us to the following cases}
+\begin{itemize}
+    \item Silicon atoms with less than four oxygen neighbors.
+    \item Oxygen atoms with one missing silicon neighbor.
+    \item Silicon and oxygen atoms with no neighbors.
+    \item \hl{Silicon and oxygen atoms with too many neighbors?}
+\end{itemize}
+
+\hl{When inserting oxygen and hydrogen we must make sure to inject neutrally, meaning twice as much hydrogen as oxygen (H$_2$O)}
+
+Silicon atoms with less than four oxygen atoms bound to them get ($4-n_\text{O}$) hydroxide (OH$^-$) groups attached to them, where $n_\text{O}$ is the numer of oxygen atoms bound to the silicon. Oxygen atoms with a missing silicon neighbor get a hydrogen attached. 
+% \hl{(oxygen atoms with two missing neighbors are removed)}.
+% Oxygen atoms with less than two silicon atoms get ($2-n_\text{Si}$) hydrogen atom attached, where $n_\text{Si}$ is the number of silicon atoms bound to the oxygen. 
+
+When passivating a silicon atom with missing oxygen neighbors by \hl{simply} filling in the missing atoms to complete the SiO$_4$-tetrahedra. We then put one hydrogen atom on each new oxygen atom, to avoid dangling bonds on the inserted oxygen atoms.
+
+When passivating a oxygen atom with a missing silicon neighbor, we put one hydrogen atom on the opposite side of the oxygen atom compared to the silicon atom.
+
+All silicon and oxygen atoms with no neighbors we remove, since they aren't really part of the silica.
+
+To find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}%
+        \caption{}%
+%         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}%
+    \end{subfigure}%
+%     \hspace{5mm}%
+    \begin{subfigure}[b]{0.24\textwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04.png}%
+        \caption{}%
+%         \caption{A random fracture made from two periodic heightmaps.}%
+%         \label{fig:fracture_model}\caption{}%
+    \end{subfigure}%
+    \caption{\hl{Caption}}%
+    \label{fig:passivation}%
+\end{figure}%
+
+\begin{itemize}
+    \item Tetrahedra
+    \item Neighbor lists -- see base\_code/passivate\_using\_tetrahedra/passivator.cpp near line 700
+    \begin{itemize}
+        \item Create list of atoms in each voxel
+        \item Create neighbor lists for each atom by looping through neighbor voxels for each atoms
+    \end{itemize}
+    \item Count number of neighbors of different types -- find number of missing neighbors, Si - 4 Oxygen, Oxygen 2 Si
+    \item Insert OH on Si with missing O neighbors, insert H on Oxygen with missing Si neighbors
+    \begin{itemize}
+        \item Insert O/H at good angles
+    \end{itemize}
+    \item Improvement: find the atoms near surface using voxels, only passivate those atoms
+\end{itemize}
+
+\section{Injecting water}
+To fill the pore we have made \hl{(after passivating the system)} we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), and put one water molecule in each unoccupied voxel. The water density is then controlled by the size of the voxels.
+
+If we want to inject water with density $\rho$ [kg/m$^3$], we can find the voxel size we need using the molar mass of water, $M_\text{H$_2$O} = M = 0.0180158 \text{ kg/mol}$. We find the ``volume'' of a water atom in \Ang, the unit used in the \hl{MD integrator/program and output files}, as follows
+\begin{align*}
+    V 
+    &= \frac{ M\text{ [kg/mol]} }{ \rho\text{ [kg/m$^3$]} } \\
+    &= \frac{
+            M\text{ [kg/mol]} \times \dfrac{1}{N_A \text{ [mol$^{-1}$]}}
+        }{
+            \rho\text{ [kg/m$^3$]} \times \left(10^{-10} \text{ [\AA/m]}\right)^3
+        } \\
+    &= \frac{M}{\rho} \times \frac{10^{-30}}{N_A} \text{ [\AA$^3$]},
+%     \times \frac{N_A \text{ [mol$^{-1}$]}}{10^{-10} \text{ [\AA/m]}} 10 \text{ [m$^3$]} \\
+\end{align*}
+from which we find the size we need our voxels to be as
+\begin{align*}
+    L = \left(\frac{M}{\rho} \times \frac{10^{30}}{N_A}\right)^{1/3}\text{ [\AA]}.
+\end{align*}
+
+We then divide the system into voxels of length $L$. And put one water molecule with random orientation in the center of each empty voxel. The naive way of finding the empty voxels is to just find which voxel each existing silicon and oxygen atom is in, and mark those as occupied. But the amorph \hl{structure} of solid silica means that we have a lot of very small pores inside the matrix, which ends up as empty voxels. \todo{something about definition of a pore?}
+
+What we do is to assign a radius to each atom type \todo{which is hard, Si-O, ???}, and mark all voxels with it's center within this radius as occupied.
+
+\begin{itemize}
+    \item Voxelize system -- size depends on wanted density
+    \item Mark all voxels within distance from other atoms as occupied
+    \item Fill other voxels with H2O with random O-H orientation, but correct angle
+    \item Improvement: Use one voxel size in the beginning (to avoid one-voxel pores), and then use a smaller voxel size when injecting water
+\end{itemize}
+
