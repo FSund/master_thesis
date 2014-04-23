@@ -6,7 +6,12 @@
 \end{itemize}
 
 
-\section{Ensemble, observables etc.}
+\section{Ensemble/thermostats}
+We have now developed a molecular dynamics program that simulates simple systems \hl{like liquid/gas Argon}, with constant number of particles $N$, constant volume $V$ and constant energy $E$ \hl{$V$ and $E$ depend on integrator?}, which means that the system can't exchange particles or energy with the environment. This forms a statistical ensemble called the microcanonical ensemble or the $NVE$-ensemble, \hl{which has some implications for what we can measure?}. Other ensembles that might be of interest \hl{is/are?} the canonical ensemble (constant $N$, $V$ and temperature $T$) and the grand canonical ensemble (constant chemical potential $\mu$, $V$ and $T$) \hl{and $NPT$? see Thijssen p. 209(222)}.
+
+\hl{To study the canonical ensemble we can use a thermostat, which is a method for controlling the temperature of the system.} \todo{transition to parts below}
+
+The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todo{small discussion of how heat bath really works? see thijssen p. 203(216)} We measure the temperature via the kinetic energy of the system, so we know we have to \hl{modify} the velocities of the system to control the temperature. 
 
 \orangebox{
     \begin{itemize}
@@ -16,8 +21,44 @@
     \end{itemize}
 }
 
-\section{Thermostats}
+\subsection{Berendsen thermostat}
+Perhaps the simplest example of a thermostat is the Berendsen thermostat\cite{berendsen1984molecular}, which \hl{simply} rescales all velocities by muliplying them with a factor $\gamma$
+\begin{align*}
+    \gamma = \sqrt{1 + \frac{\Delta t}{\tau}\left(\frac{T_\text{bath}}{T} - 1\right)},
+\end{align*}
+where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \hl{strength} of the thermostat (setting $\tau = \Delta t$ makes the temperature \hl{exactly constant equal to $T_\text{bath}$}), $T$ is the temperature of the system and $T_\text{bath}$ is the temperature of the \hl{simulated} heat bath. The velocities should be multiplied by this factor every timestep \hl{after calculating the new velocities}. An example of how to apply the Berendsen thermostat can be seen in \cref{list:applyBerendsenThermostat}.
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    void applyBerendsenThermostat(System &system, double T, double Tbath, 
+        double dt, double tau)
+    void applyBerendsenThermostat(vector<Atom*> &atoms, double T, double Tbath, 
+        double dt, double tau)
+    {
+        double gamma = sqrt(1 + dt/tau(Tbath/T - 1));
+        for (Atom *atom : system.atoms())
+        for (Atom *atom : atoms)
+        {
+            atom->velocity() *= gamma;
+        }
+    }
+\end{cppcode*}
+\caption{%
+    \texttt{applyBerendsenThermostat}. \hl{decide on System or vector<Atom*> as input}%
+    \label{list:applyBerendsenThermostat}%
+}%
+\end{listing}%
 
+\subsection{Nos\'e-Hoover}
+\orangebox{
+    \begin{itemize}
+        \item Nosé-Hoover and Nosé-Hoover chains
+    \end{itemize}
+}
+
+
+
+\section{Observables? Measurements?}
 % To measure an observable quantity in a simulation we must be able to express it as a function of the positions, velocities and forces on the particles in the system. 
 % 
 % According to the equipartition principle, the average total kinetic energy $\langle E_k \rangle$ is
@@ -46,6 +87,7 @@
 }%
 \end{listing}%
 \todo{finish this listing}
+
 
 \subsection{Temperature}
 According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
