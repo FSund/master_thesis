@@ -1,0 +1,186 @@
+\chapter{Optimizations?}
+
+\section{Verlet- and cell-lists\label{sec:cell_lists}}
+If we try to simulate systems with a lot of atoms using the program we now have developed, we see that the number of evaluations of the potential quickly grow with the number of atoms, scaling as $\mathcal{O}(N^2)$. To optimize the program we can limit the number of evaluations by realizing that the Lennard-Jones in potential decays as $r^{-12}$, meaning that the force between most atoms will be neglible (see also \cref{fig:lennard-jones_potential}). The equilibrium distance of the potential is $r_{\text{eq}} =  2^{1/6}\sigma \approx 3.8 \text{~\AA}$, and we find that the potential has decreased to $21\%$ of the value at the equilibrium distance at a distance $r_{ij} =  5.5$, and to $0.5\%$ at a distance $r_{ij} =  3\sigma \approx 10.2\text{~\AA}$. \hl{This means that we can skip the force calculations for atoms further apart than} $r_{\text{cutoff}} = 3\sigma$.
+
+The naive implementation of this cutoff length is to do a test inside the force calculation \texttt{calculateForces} in \cref{list:calculate_forces} and see if the distance between atom $i$ and $j$ is greater than the cutoff distance, $r_{ij} > r_\text{cutoff}$, but this still requires the calculation of a lot of interatomic distances. What we do instead is to implement something called \hl{\emph{cell-lists} (different name?)}. This is done by dividing the system into boxes of length 
+\begin{align*}
+    l &= L/n,
+\end{align*}
+where
+\begin{align*}
+    n &= \lfloor  L/r_\text{cutoff} \rfloor,
+\end{align*}
+which guarantees that $l \geq r_\text{cutoff}$. We then only calculate the force between atom $i$ and all atoms in the box it belongs to, and between it all atoms in the 26 neighboring boxes. Since $l\geq r_\text{cutoff}$, we know that we include all atoms within a radius at least as large as $r_\text{cutoff}$ in the force calculations. See \cref{fig:cell_lists} for an illustration of cell lists in 2 dimensions.
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.6\textwidth, svgpath=./images/lennard-jones/]{cell_list02}%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}%
+    \caption{%
+        An illustration of cell lists in 2 dimensions. We divide the system into cells of size $r \geq r_\text{cutoff}$, and calculate the force between atom $i$ and all atoms in the cell of that atom, and between that atom and all atoms in the 8 neighbor cells (26 neighbor cells in 3 dimensions). %
+        \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
+One issue that arises when using the cell lists is how to utilize Newton's third law. We see that after calculating the force between all atoms in cell $(i,j,k)$ and all atoms in the 26 neighboring cells, adding the calculated forces to the other atoms using Newton's third law, we must not include that cell \hl{(cell ($(i,j,k)$))} in any other force calculations \hl{this timestep}, or else we will get double contributions from atoms in that cell. One simple way of solving this is to keep a list of all cells we have calculated the forces on so far, and then check against that every time we are calculating the force from a neighbor cell. But since we loop through the cells in the same order every time, we see that it would perhaps be more efficent to make a list over neighbor cells for each cell, so that we can just loop through a list of neighbors. \hl{But this is neglible compared to computing forces?}
+
+An implementation of the calculation of forces using cell lists can be seen in \cref{list:cutoff_forcecalculation,list:sort_atoms_into_cells,list:calculateForceFromNeighborCells}. In these examples we don't use Newton's third law for optimization, to make the example simpler. \hl{(we skip Newton's third law to make the example easier to read)}.
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    void calculateForces(System &system)
+    {
+        ivec3 nCells;
+        vector<Atom*> cells = 
+            sortAtomsIntoCells(system, cutoffLength, nCells);
+        
+        // Loop over all cells
+        for (int i = 0; i < nCells[0]; i ++)
+        for (int j = 0; j < nCells[1]; j ++)
+        for (int k = 0; k < nCells[2]; k ++)
+        {{{
+            for (Atom *atom : cells[i][j][k])
+            {
+                atom->force() += 
+                    calculateForceFromNeighborCells(
+                        cells, nCells, atom, i, j, k
+                    );
+            }
+        }}}
+    }
+\end{cppcode*}
+\caption{%
+    An example of an implementation of the force calculation \texttt{calculateForces} from \cref{list:simple_md_program}, using the Lennard-Jones potential with a cutoff length for the force, and cell lists. Notice that we don't use Newton's third law, to simplify the example. Examples of how to calculate the forces using cell lists and Newton's third law are described \cref{sec:cell_lists}.%
+    \label{list:cutoff_forcecalculation}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    vector<Atom*> sortAtomsIntoCells(
+        System &system, double cutoffLength, ivec3 &nCells)
+    {
+        nCells = floor(system.size() / cutoffLength);
+        ivec3 boxSize = system.size() / vec3(nCells);
+        
+        vector<Atom*> cells;
+        for (Atom *atom : system.atoms())
+        {
+            ivec3 index = floor(atom->position() / boxSize);
+            cells[index[0]][index[1]][index[2]].push_back(atom);
+        }
+        return cells;
+    }
+\end{cppcode*}
+\caption{%
+    An example of an implementation of \texttt{sortAtomsIntoCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to sort atoms into cells for the cell list optimization described in \cref{sec:cell_lists}.%
+    \label{list:sort_atoms_into_cells}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    vec3 calculateForceFromNeighborCells(
+        vector<Atom*> &cells, ivec3 &nCells, Atom *atom1, 
+        int i1, int j1, int k1)
+    {
+        vec3 force = zeros<vec3>();
+        // Loop over 27 neighbor cells (including self)
+        for (int di = -1; di <= 1; di++)
+        for (int dj = -1; dj <= 1; dj++)
+        for (int dk = -1; dk <= 1; dk++)
+        {{{
+            // Periodic boundary conditions
+            int i2 = (i1 + di + nCells[0]) % nCells[0];
+            int j2 = (j1 + dj + nCells[1]) % nCells[1];
+            int k2 = (k1 + dk + nCells[2]) % nCells[2];
+            // Loop over atoms in neighbor cell
+            for (Atom *atom2 : cells[i2][j2][k2])
+            {
+                if (atom1 == atom2) continue; // Skip i == j
+                force() += calculateForceBetweenTwoAtoms(atom1, atom2);
+            }
+        }}}
+        return force;
+    }
+\end{cppcode*}
+\caption{%
+    An example of an implementation of \texttt{calculateForceFromNeighborCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to calculate the force on an atom (\texttt{atom1}), from the atoms in the cell it belongs to (\texttt{cells[i1][j1][k1]}), and from the atoms in all 26 neighbor cells.%
+    \label{list:calculateForceFromNeighborCells}%
+}%
+\end{listing}%
+
+\todo[inline]{scaling of cell lists compared to regular, and Verlet lists?}
+\todo[inline]{illustration of neighbor box vs. cutoff length?}
+\todo[inline]{Update lists every other timestep, $r+dr$, }
+
+\section{Reduced units/atomic units/dimensionless?}
+When doing atomic and molecular simulations we soon realize that most of the \hl{numbers} involved in our calculations, like positions, forces, velocities, pressure, etc. are very small, when expressed in SI units. Lengths are on nanometer scales ($10^{-9}$ m) \hl{more examples}. To simplify code and output, and for convenience, units are usually rescaled so they are around 1. One advantage when using the Lennard-Jones potential is that the mass can be rescaled to 1, so that we save some computations.
+
+\hl{Make equations and calculations dimensionless?}
+
+We have the Lennard-Jones potential for the interatomic interactions
+\begin{align}%
+    U(r) = 4\varepsilon \left[ \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^6 \right], \label{eq:LJ}%
+\end{align}%
+where $r$ is the distance between the atoms%
+%, and $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $\sigma$ is related to the optimal distance between atoms (the position of the minimum value of the potential)
+. Typical parameters for simulating Argon are
+\begin{align*}%
+    &\sigma = 3.405 \text{ \AA}& &\text{and}& &\frac{\varepsilon}{k_B} = 119.74 \text{ K}&%
+\end{align*}%
+%for these constants
+. See \cref{fig:lennard-jones_potential,sec:program:lj} for more information about the Lennard-Jones potential. We find the force from this potential as follows
+\begin{align*}%
+    F &= -\nabla U(r) = - \frac{d}{dr}U(r) \\%
+    &= -\frac{d}{dr} 4\varepsilon \left[\left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^6 \right] \\%
+    &= -4\varepsilon \left[-12 \frac{\sigma^{12}}{r^{13}} + 6 \frac{\sigma^6}{r^7} \right] \\%
+    &= -4 \varepsilon \left[ -\frac{12}{\sigma}\left(\frac{\sigma}{r}\right)^{13} + \frac{6}{\sigma}\left(\frac{\sigma}{r}\right)^7 \right] \\%
+    &= 24 \frac{\varepsilon}{\sigma} \left[ 2\left(\frac{\sigma}{r}\right)^{13} - \left(\frac{\sigma}{r}\right)^7 \right].%
+\end{align*}%
+
+We want to make our equations and calculations dimensionless, so we introduce the dimensionless variable for length, $r'$, with $r = r'L_0 = r' \sigma$. Then we have
+\begin{align*}%
+    F(r) &= 24 \frac{\varepsilon}{\sigma} \left( 2 \frac{1}{r'^{13}} - \frac{1}{r'^7}\right) \\%
+    &= 24 \frac{\varepsilon}{\sigma}  \left( 2 - r'^{6} \right) \frac{1}{r'^{13}}.%
+\end{align*}%
+Now we can introduce a dimensionless variable for time, $t'$, with $t = t't_0$, where we can choose $t_0$ as we please. If we insert this and the force from above, in Newton's second law, we get
+\begin{align*}%
+    &F(r) = m\frac{d^2r}{dt^2} = m\frac{dr'\sigma}{dt'^2t_0^2} = 24 \frac{\varepsilon}{\sigma}  \left( 2 - r'^{6} \right) \frac{1}{r'^{13}}\\%
+    &\Leftrightarrow \frac{d^2r'}{dt'^2} = 24 \frac{\varepsilon t_0^2}{\sigma^2 m} \left( 2 - r'^{6} \right) \frac{1}{r'^{13}}%
+\end{align*}%
+Now we see that we can make the acceleration dimensionless by letting
+\[%
+    \frac{\varepsilon t_0^2}{\sigma^2 m} = 1,%
+\]%
+which gives
+\[%
+    t_0 = \sigma\sqrt{\frac{m_0}{\varepsilon}} = 3.405\text{ \AA} \cdot \frac{39.948\text{ amu}}{0.010318\text{ eV}} = 2.1569\text{ ps},%
+\]%
+where we have used the mass of Argon as $m_0$, and also introduced the dimensionless mass $m' = 1.0$, with $m = m'm_0$. From this we can find the rest of the dimensionless conversion factors, for example for the force
+\[%
+    F_0 = \frac{m_0 L_0}{t_0^2} = \frac{\varepsilon}{\sigma} = \frac{0.010318\text{ eV}}{3.405\text{ \AA}} = 0.0030302\text{ eV/\AA}.%
+\]%
+See table \ref{tab:conversion} for the most used conversion factors.
+%
+\begin{table}%
+    \begin{center}%
+        \caption{%
+            \small{%
+                Table of conversion factors for \hl{reduced units} for the Lennard-Jones potential, for simulating Argon.%
+            }%
+            \label{tab:conversion}%
+        }%
+        \begin{tabular}{l l l l}
+            Quantity & Conversion factor & Value \\ \hline
+            Length & $L_0 = \sigma$ & 3.405 \AA \\
+            Time & $t_0 = \sigma\sqrt{m/\varepsilon}$ & $2.1569$ ps \\
+            Mass & $m_0$ & 39.948 amu \\
+            Force & $F_0 = m_0L_0/t_0^2 = \varepsilon/\sigma$ & 0.0030302 eV/\AA \\
+            Energy & $E_0 = \varepsilon$ & 0.010318\text{ eV} \\
+            Temperature & $T_0 = \varepsilon/k_B$ & 119.74 K \\
+            Velocity & $v_0 = \sigma/t_0^2$ & 1.5787 \AA/ps \\
+        \end{tabular}%
+    \end{center}%
+\end{table}%
+%

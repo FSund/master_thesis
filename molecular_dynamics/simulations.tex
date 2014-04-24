@@ -42,7 +42,7 @@ where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \h
             atom->velocity() *= gamma;
         }
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     \texttt{applyBerendsenThermostat}. \hl{decide on System or vector<Atom*> as input}%
     \label{list:applyBerendsenThermostat}%
@@ -80,7 +80,7 @@ where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \h
     void sample(System &system)
     {
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     \hl{FINISH THIS LISTING}. Implementation of the function \texttt{sample} from \cref{list:simple_md_program}.%
     \label{list:sampling}%
@@ -118,7 +118,7 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
                                                 *boltzmannConstant);  // SI units
         return temperature;
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     An example of how to calculate the temperature in a molecular dynamics simulation. Example implementation of \texttt{temperatureSample} from \cref{list:sampling}.%
     \label{list:temperatureSample}%
@@ -155,7 +155,7 @@ An example of how to calculate the pressure in a molecular dynamics simulation c
         pressure += density*boltzmannConstant*temperature; // SI units
         return pressure;
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     An example of how to calculate the pressure in a molecular dynamics simulation. Example implementation of \texttt{pressureSample} from \cref{list:sampling}. Note that this function needs the temperature of the system as input, and assumes that the system is homogeneous, so we can estimate the density using $\rho = N/V$. We assume that the contribution to the pressure from each atom $\sum_{i<j}\vec F(\rvec_{ij})\cdot\rvec_{ij}$ (stored as \texttt{atom->pressure()}) has been calculated previously. This is usually calculated while calculating the forces between the atoms, since we need $\vec F(\rvec_{ij})$. See \cref{subsec:pressure} for more information.%
     \label{list:pressureSample}%
@@ -246,7 +246,7 @@ An example of how to measure the mean square displacement in a molecular dynamic
         rSquared /= system.nAtoms();
         return rSquared;
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \texttt{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \texttt{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \hl{\emph{real}} position of the atom can be calculated by adding \texttt{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
     \label{list:diffusionSample}%
