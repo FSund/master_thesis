@@ -114,6 +114,8 @@ An implementation of the calculation of forces using cell lists can be seen in \
 \todo[inline]{illustration of neighbor box vs. cutoff length?}
 \todo[inline]{Update lists every other timestep, $r+dr$, }
 
+\FloatBarrier
+
 \section{Reduced units/atomic units/dimensionless?}
 When doing atomic and molecular simulations we soon realize that most of the \hl{numbers} involved in our calculations, like positions, forces, velocities, pressure, etc. are very small, when expressed in SI units. Lengths are on nanometer scales ($10^{-9}$ m) \hl{more examples}. To simplify code and output, and for convenience, units are usually rescaled so they are around 1. One advantage when using the Lennard-Jones potential is that the mass can be rescaled to 1, so that we save some computations.
 
