@@ -73,7 +73,7 @@ In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should
 The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
 
 \subsection{Nos\'e-Hoover thermostat}
-The Nos\'e-Hoover thermostat is the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} This thermostat is in widespread use because of it's \hl{excellent properties}, although it is a lot harder to implement than the Berendsen and Andersen thermostat.
+The Nos\'e-Hoover thermostat\cite{nose1984unified,hoover1985canonical} is the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} This thermostat is in widespread use because of it's \hl{excellent properties}, although it is a lot harder to implement than the Berendsen and Andersen thermostat.
 
 % To show how the thermostat works we need to formulate statistical mechanics in the language of quantum mechanics. In classical mechanics the momentum $\vec p$ of a particle is defined in terms of its velocity $\vec v$ by
 % \begin{align*}
@@ -118,7 +118,7 @@ and what is called the \emph{generalized} momentum $\vec p_i$ of a \emph{general
 \end{align}
 \hl{where we denote the time derivative by a dot.} These generalized coordinates and momenta are not bound to any one coordinate system, and may be any quantitative attribute of the system.
 
-What the Nosé-Hoover thermostat does is to introduce an additional coordinate $s$ to the Lagrangian, creating a \hl{(virtual,)} extended system, with the following Lagrangian:
+What the Nosé-Hoover thermostat does is to introduce an additional coordinate $s$ to the Lagrangian, creating a \hl{(virtual,)} extended system, with the following Lagrangian\cite{nose1984unified}:
 \begin{align}
     \mathcal{L}_\text{Nos\'e} = \sum_{i=1}^N \frac{m_i}{2}s^2 \dot{\vec r}_i^2 - U(\vec r) + \frac{Q}{2}\dot s^2 - 3Nk_BT \ln s,
     \label{eq:nose_lag}
@@ -146,7 +146,7 @@ From \cref{eq:nose_time_scale} we see that $s$ can be interpreted as a scaling f
 %     \tau' = \int_0^\tau \dif \frac{1}{s(t)}
 % \end{align*}
 
-From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of motion for the virtual variables $\vec r$, $\vec p$, and $t$, and the real variables $\vec r'$, $\vec p'$, and $t'$ \hl{cite}
+From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of motion for the virtual variables $\vec r$, $\vec p$, and $t$, and the real variables $\vec r'$, $\vec p'$, and $t'$ \hl{hoover1985canonical}
 \begin{align*}
     \dod{\vec r_i'}{t'}     &= s\dod{\vec r_i}{t} = \frac{\vec p_i}{m_is} = \frac{\vec p_i'}{m_i} \\
     \dod{\vec p_i'}{t'}     &= s\dod{\vec (p_i/s)}{t} = \dod{\vec p_i}{t} - \frac{1}{s}\vec p_i\dod{s}{t} = -\frac{\partial U(\vec r')}{\partial \vec r_i'} - \frac{s'p_s'}{Q}\vec p_i' \\
@@ -180,11 +180,13 @@ Using the Nosé-Hoover equations of motion in \cref{eq:nose_xi,eq:nose_position,
         \Bigg] 
         \frac{\Delta t}{2}.
 \end{align*}
-We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v(t+\Delta t)$ we see that we need to know $\vec v(t+\Delta t)$ itself \hl{($\vec v(t+\Delta t)$ appears on both sides)}. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. Martyna \emph{et al.} \hl{cite. [85] Frenkel} has developed a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems.\todo{this paragraph is copied from Frenkel p. 535/555..!}
+We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v(t+\Delta t)$ we see that we need to know $\vec v(t+\Delta t)$ itself \hl{($\vec v(t+\Delta t)$ appears on both sides)}, turning the velocity Verlet integrator into an \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. Martyna \emph{et al.}\cite{martyna1996explicit} has developed a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems.\todo{this paragraph is copied from Frenkel p. 535/555..!}
+
+It can be shown that the Nosé-Hoover scheme only generates a correct canonical distribution for molecular systems in which \hl{there is only one conserved quantity or if} there are no external forces and the center of mass remains fixed \cite{frenkel2001understanding}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocit, which we usually do in our simulations, \hl{to avoid drift/flow}.
 
 \subsection{Nos\'e-Hoover chains}
 
-
+\todo[inline]{Why use chains? What is wrong with the regular Nosé-Hoover?} 
 
 % where $Q$ is a parameter \hl{what does it do?} (effective mass associated with $s$ -- Frenkel), $T$ is \hl{??? wanted $T$?}, $p_s$ is \hl{???}. The coordinates in this ``extended'' system, momentum $\tilde{\vec p}_i$, position $\tilde{\vec r}_i$, and time $t$ are virtual, and can be related to the real coordinates via
 % \begin{align*}

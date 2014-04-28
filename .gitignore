@@ -22,5 +22,7 @@
 *.run.xml
 *.bib_backup_before_deleting_Mendeley
 *.pyg
+*.tex_old
 
 images/
+texmf/

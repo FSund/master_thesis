@@ -1,12 +1,15 @@
 \chapter{Other measurements???}
 % \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
-\section{Neighbor lists\label{sec:voxelation}}
+\section{Neighbor lists\label{sec:neighbor_lists}}
 When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Finding out which atoms are within a certain radius of each atom can take a long time; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for \emph{all} points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
 
-Our solution to the problem is inspired by the ``cell list'' method used in MD integrators\hl{(see Frenkel Appendix F)}, and uses a method we call ``voxelation''/\emph{voxelation}. If we want to find all neighbors within a radius $dr$ we divide the system into 3-dimensional boxes (\emph{voxels}) of size $l = dr$. We then loop through all atoms, sorting each atom into the box it belongs in. See \cref{list:sortAtomsIntoVoxels} for an example of how to do this. For an atom at position $\rvec$ we can now find the \hl{neighboring} atoms within the radius $dr$ by finding which box the atoms belongs to, and checking the distance between the atom and all atoms in that box, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. See \cref{list:check_neighbor_voxels} for an example of how to find neighbor atoms using this method.
-
-\todo[inline]{Distance between atoms, $r^2$ instead of $r$}
-
+\subsection{Voxelation\label{sec:voxelation}}
+Our solution to the problem is inspired by the ``cell list'' method used in MD integrators\hl{(see Frenkel Appendix F)}, and uses a method we call ``voxelation''/\emph{voxelation}. This method divides the system into $n_x \times n_y \times n_y$ boxes, or 3-dimensional pixels, called \emph{voxels}, with $n_i$ voxels in each direction. We then sort all atoms into their respective voxels (usually implemented using a list of indexes or pointers to objects in \cpp). To find the index ($i,j,k$) of the voxel each atom belongs to, we use the \Verb!floor! function
+\begin{align*}
+    &i = \Bigg\lfloor \frac{x}{l_x} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{y}{l_y} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{z}{l_z} \Bigg\rfloor,&
+\end{align*}
+where $l_i$ is the size of the voxels in each direction, and ($x,y,z$) is the position of the atom. Here we use zero-based numbering. See \cref{list:sortAtomsIntoVoxels} for an example of an algorithm that sorts the atoms into their respective voxels.
+%
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void sortAtomsIntoVoxels(
@@ -25,13 +28,34 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
     }
 \end{cppcode*}
 \caption{%
-    \texttt{sortAtomsIntoVoxels}. %
+    Example implementation of the procedure detailed in \cref{sec:voxelation}, to sort atoms into voxels of size \texttt{voxelSize}. We use the \texttt{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \texttt{sortAtomsIntoVoxels}. %
     \label{list:sortAtomsIntoVoxels}%
 }%
 \end{listing}%
 
+One detail we should look out for is if we have very small voxel sizes compared to the system size. Since the number of voxels scale as $n^3$, $n$ being the number of voxels in each direction (in a cubic system), we soon run in to memory problems on a computer if we try to use a lot of voxels. To avoid this we can implement a minimum voxel size, or a maximum number of voxels. We found that limiting the number of voxels to $n \leq 256$ seemed to work well in most cases, but this depends heavily on the simulated system and the available memory on the computer.
+
+\subsection{Finding nearest neighbors}
+If we want to find all neighbors within a radius $dr$ we can divide the system into voxels of size $l \geq dr$ and sort the atoms into their respective voxels. See \cref{list:sortAtomsIntoVoxels} for an example of how to do this. To get an integer number of voxels, while ensuring that we use large enough voxels, we use the \Verb!floor! function to calculate the number of voxels $n_i$ we should use in each direction
+\begin{align*}
+    n_i = \left\lfloor \frac{L_i}{dr} \right\rfloor,
+\end{align*}
+where $L_i$ is the system size in each direction. We then calculate the size of the voxels in each direction $l_i$ from the number of voxels using
+\begin{align*}
+    l_i = L_i*n_i.
+\end{align*}
+
+For an atom at position $\rvec$ we can now find the \hl{neighboring} atoms within the radius $dr$ by finding which voxel the atoms belongs to, and checking the distance between the atom and all atoms in that voxel, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. See \cref{list:check_neighbor_voxels} for an example of how to find neighbor atoms using this method.
+
+\todo[inline]{Distance between atoms, $r^2$ instead of $r$}
+
+
+
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
+    int nVoxels = floor(systemSize/radius);
+    double voxelSize = systemSize*nVoxels;
+    
     sortAtomsIntoVoxels(atoms, voxelSize, voxels);
     
     vector<vector<Atom*> > neighborAtoms(atoms.size());
@@ -60,7 +84,7 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
     }
 \end{cppcode*}
 \caption{Test%
-    An example of how to find the neighbor atoms within a given radius of all atoms. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \texttt{sortAtomsIntoVoxels} and \texttt{findAtomsWithinRadius}. %
+    An example of how to find the neighbor atoms within a given distance (\texttt{radius}) of all atoms. This example assumes a cubic system of size \texttt{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \texttt{sortAtomsIntoVoxels} and \texttt{findAtomsWithinRadius}. %
     \label{list:check_neighbor_voxels}%
 }%
 \end{listing}%
@@ -121,26 +145,7 @@ Our solution to the problem is inspired by the ``cell list'' method used in MD i
 % \section{Mean square displacement} % - in ensemble chapter?
 % \section{Density} % - in ensemble chapter?
 % \section{Diffusion} % - in ensemble chapter?
-\FloatBarrier
-\section{Distance to atom}
-We developed a program that finds the distance to the nearest atom, in all points of the 
-%
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r05_n256}%
-    \caption{$r = 5$ \Ang}%
-    \label{fig:distance_to_atom_r05}%
-\end{figure}%
-%
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r20_n256}%
-    \caption{$r = 20$ \Ang}%
-    \label{fig:distance_to_atom_r20}%
-\end{figure}%
 
-\section{``Generation matrix''}
-    Not very useful. Much of the same as distance to atom, only worse (but faster).
 \section{``Voxel counter''}
     A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
 \section{Cage cage correlation}
