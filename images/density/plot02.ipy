@@ -1,0 +1,209 @@
+import numpy as np
+import math
+
+default_backend = 'Qt4Agg'
+backend = 'SVG'
+# backend = 'AGG'
+backend = default_backend
+
+if backend == "SVG":
+    import matplotlib
+    matplotlib.use(backend)
+    matplotlib.rcParams['svg.fonttype'] = 'none'    # To make text in the resulting svg actual text, instead of a path.
+    matplotlib.rcParams['savefig.dpi'] = 120        # Doesn't affect svg backend
+    matplotlib.rcParams['text.usetex'] = False      # To stop matplotlib from interpreting latex. Still interprets some stuff inside $$ though... Escape with \$ to get dollar signs in text.
+
+import matplotlib.pyplot as plt
+
+if backend == default_backend:
+    plt.ion()
+
+
+def load_results(data_files):
+    results = [] # empty list
+    
+    ## Load data from files
+    for idx, data_file in enumerate(data_files):
+    
+        data = np.genfromtxt( # makes np.ndarray
+            data_file,
+            # names = True, #  If `names` is True, the field names are read from the first valid line
+            comments = '#', # Skip characters after #
+            # delimiter = '\t', # tab separated values
+            # dtype = None # guess the dtype of each column
+        )
+    
+        results.append(data) # append to list
+    
+    results = np.array(results) # convert to np.array
+    
+    return results
+
+def average_over_timesteps(results, n, n_timesteps_between_states):
+    
+    number_of_timesteps_to_average_over = math.floor(len(results)/float(n))
+    
+    shape = np.array(np.shape(results[:,:,0]))
+    new_shape = shape
+    new_shape[0] = n
+    
+    average_density = np.zeros(new_shape)
+    average_n_tagged_atoms = np.zeros(new_shape)
+    density_row_index = 3
+    n_tagged_atoms_row_index = 1
+    for i in range(n):
+        first = i*number_of_timesteps_to_average_over
+        last = (i+1)*number_of_timesteps_to_average_over
+        
+        average_density[i] = np.mean(results[first:last, :, density_row_index], axis=0, dtype=np.float64)
+        average_n_tagged_atoms[i] = np.mean(results[first:last, :, n_tagged_atoms_row_index], axis=0, dtype=np.float64)
+    
+    r_row_index = 0
+    r_vector = results[0, :, r_row_index] # all r values are (should be) the same in each file, so we just take the one from file # 0
+    
+    n_states = np.shape(results)[0]
+    total_n_timesteps = n_states*n_timesteps_between_states
+    timesteps_per_average = total_n_timesteps/float(n)
+    
+    timestep_vector = np.linspace(0, total_n_timesteps, n+1)
+    timestep_vector = timestep_vector.astype(int)
+    
+    return average_density, average_n_tagged_atoms, r_vector, timestep_vector
+
+def find_indices_in_range(vector, min_distance, max_distance):
+    n_min, n_max = indices = np.where((vector >= min_distance) & (vector <= max_distance))[0][[0,-1]]
+
+    return n_min, n_max
+
+def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between_states, output_folder, backend, savefig = True):
+
+    default_fig_size = np.array([8.0, 6.0]) # inches
+    inchtomm = 25.4 # mm per inch
+    a4width = 210   # mm
+    left = 28       # mm, margin
+    right = 37.5    # mm, margin
+    textwidth = a4width - (left+right)
+    print "textwidth = " + str(textwidth) + "mm"
+    figwidth = 0.8*textwidth
+    reduction_factor = default_fig_size[0]/(figwidth/inchtomm)
+    reduction_factor = 0.9
+    print "reduction_factor = " + str(reduction_factor)
+
+    plt.figure(1, figsize = default_fig_size/reduction_factor)
+    plt.figure(2, figsize = default_fig_size/reduction_factor)
+    plt.figure(3, figsize = default_fig_size/reduction_factor)
+    plt.figure(4, figsize = default_fig_size/reduction_factor)
+
+    title_width = 60
+
+    def mysavefig(filename):  
+        if backend == 'AGG':  
+            plt.savefig(filename + ".png", bbox_inches='tight')
+            
+        elif backend == 'SVG':
+            plt.savefig(filename + ".svg", bbox_inches='tight')
+            
+        elif backend == default_backend:
+            plt.show()
+        else:
+            print "Error in mysavefig!"
+
+    if (type(results_list) is list):
+
+        # Difference between frac and flat
+        average_density_2 = []
+        for dataset in range(len(results_list)):
+            results = results_list[dataset]
+            average_density, average_n_tagged_atoms, r_vector, timestep_vector = \
+                average_over_timesteps(results = results, n = 1, n_timesteps_between_states = n_timesteps_between_states)
+
+            average_density_2.append(average_density)
+
+        n_min, n_max = find_indices_in_range(r_vector, 3.0, 25.0);
+
+        plt.figure(3)
+        for i in range(2):
+            # plt.plot(r_vector[n_min:n_max], average_density_2[i][0, n_min:n_max] - np.mean(np.mean(average_density_2[i][0, n_min:n_max])))
+            plt.plot(r_vector[n_min:n_max], average_density_2[i][0, n_min:n_max] - np.mean(np.mean(average_density_2[i][0, n_max-1])))
+            # plt.plot(r_vector[n_min:n_max], average_density_2[i][0, n_min:n_max] - np.mean(np.mean(average_density_2[i][0, n_min])))
+        plt.title("Normalized")
+        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.figure(4)
+        plt.plot(r_vector[n_min:n_max], np.abs(average_density_2[0][0, n_min:n_max] - average_density_2[1][0, n_min:n_max]))
+        plt.title("Difference")
+
+        # Normal
+        for dataset in range(len(results_list)):
+            results = results_list[dataset]
+            
+            average_density, average_n_tagged_atoms, r_vector, timestep_vector = \
+                average_over_timesteps(results = results, n = n_lines_to_plot, n_timesteps_between_states = n_timesteps_between_states)
+        
+            min_distance = 3.0
+            max_distance = 25.0
+            n_min, n_max = find_indices_in_range(r_vector, min_distance, max_distance);
+            
+            for i in range(n_lines_to_plot):
+                plt.figure(1)
+                #plt.plot(r_vector, average_density[i,:])
+                plt.plot(r_vector[n_min:n_max], average_density[i, n_min:n_max])
+            
+                plt.figure(2)
+                #plt.plot(r_vector, average_n_tagged_atoms[i,:])
+                plt.plot(r_vector[n_min:n_max], average_n_tagged_atoms[i, n_min:n_max])
+    
+        plt.figure(1)
+        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.xlabel(r"Distance from silica matrix [\$\text{\AA}\$]") # use \$ so python/matplotlib doesn't read LaTeX
+        plt.ylabel(r"Density of water \$[\text{kg/m}^3]\$") # use r"" to fix \text{}-command
+        # title = "Plot of density of water as function of distance from the silica matrix, for different number of timesteps after injection of water"
+        # title = "Density of water as function of distance from silica matrix"
+        title = "Density of water"
+        plt.title(title)
+        if savefig:
+            mysavefig(output_folder + "/density_water02")
+        
+        plt.figure(2)
+        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.xlabel(r"Distance from silica matrix \$\text{\AA}\$")
+        plt.ylabel(r"Number of water molecules")
+        # title = r"Plot of number of water molecules (in each bin) as function of distance from silica matrix. Bin width = 0.2 \$\AA\$."
+        # title = r"Number of water molecules (in each bin) as function of distance from silica matrix. Bin width = 0.2 \$\AA\$."
+        title = r"Number of water molecules in each bin"
+        plt.title(title)
+        if savefig:
+            mysavefig(output_folder + "/number_of_molecules02")
+        else:
+            plt.show()
+            
+    else:
+        print 'Wrong datatype'
+
+import os.path
+
+initial_cwd = os.getcwd()
+top_cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks"
+cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density"
+os.chdir(cwd)
+print os.getcwd()
+
+# Load results
+results = []
+
+input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+results.append(load_results(data_files))
+
+input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+results.append(load_results(data_files))
+
+n_timesteps_between_states = 100
+n_lines_to_plot = 1
+
+os.chdir(initial_cwd)
+print os.getcwd()
+
+#plot_density_inline_more_datasets(results, n_lines_to_plot = n_lines_to_plot, n_timesteps_between_states = n_timesteps_between_states)
+plot_to_svg_more_datasets(results, n_lines_to_plot = n_lines_to_plot, n_timesteps_between_states = n_timesteps_between_states,
+    output_folder = initial_cwd, backend = backend, savefig = True)

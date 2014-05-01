@@ -8,6 +8,7 @@ pbc = 0;
 randomCorners = 1;
 sigma = 1.0;
 randomFactor = 1/sqrt(2);
+rng = 2;
 
 % theta = ?
 
@@ -22,7 +23,8 @@ for addition = [0,1]
             H = input_H(iH)
             for sample = 1:nSamples
 %                 tic
-                fBm = diamondSquare(power2, H, randomCorners, sigma, randomFactor, addition, pbc);
+                seed = randi([0,1000000]);
+                fBm = diamondSquare(power2, H, randomCorners, sigma, randomFactor, addition, pbc, rng, seed);
         %         fBm = synth2(2^power2+1, H);
 %                 toc
                 tic
@@ -30,6 +32,7 @@ for addition = [0,1]
                 toc
             end
         end
-        dlmwrite(sprintf('H_samples_diamondSquare_HDDMA_addition-%d_pbc-%d_nSamples-%d_H0.0-0.1-1.2.txt', addition, pbc, nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
+        H_samples
+        dlmwrite(sprintf('randseed_H_samples_diamondSquare_HDDMA_addition-%d_pbc-%d_nSamples-%d_H0.0-0.1-1.2.txt', addition, pbc, nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
     end
 end

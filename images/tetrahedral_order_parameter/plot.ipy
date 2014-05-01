@@ -1,0 +1,152 @@
+import os.path
+import numpy as np
+
+default_backend = 'Qt4Agg'
+default_fig_size = np.array([8.0, 6.0]) # inches
+fig_size_reduction_factor = 3.0
+
+renderer = 'SVG'
+# renderer = 'AGG'
+# renderer = default_backend
+
+import matplotlib
+matplotlib.use(renderer)
+matplotlib.rcParams['svg.fonttype'] = 'none' # To make text in the resulting svg actual text, instead of a path. 
+matplotlib.rcParams['savefig.dpi'] = 150 # Doesn't apply when using svg backend?
+
+import matplotlib.pyplot as mpl
+
+
+## Settings/load ##
+start = 0;
+stop = 199;
+step = 1;
+
+num_bins = 150;
+Q_start = -0.5; 
+Q_stop = 1;
+
+distances_start = 0.0;
+distances_width = 0.5;
+distances_stop = 20;
+distances_vec = np.arange(distances_start, distances_stop+1, distances_width)
+
+distances_to_plot = np.array([2.0, 3.5, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0, 10.0])
+distance_indices = [np.where(distances_vec == distance)[0] for distance in distances_to_plot if np.argwhere(distances_vec == distance).size]
+print distance_indices
+
+# projects_folder = '/home/fsund/Projects'
+project_names = ['flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps', 
+                 'rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps']
+# projects = []
+# for project_name in project_names:
+    # projects.append(os.path.join(projects_folder, project_name))
+
+# Results folder names
+results_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/tetrahedral_order_parameter"
+results_folder_name = "results"
+results_folder_numbers = [18, 5]
+results_folders = []
+for idx, number in enumerate(results_folder_numbers):
+    results_folders.append(os.path.join(results_folder, project_names[idx], results_folder_name + "%03d" %number))
+
+
+## Plot ##
+def plot_from_file(filename, num_y_col, label):
+    data = np.genfromtxt( # makes np.ndarray
+        filename,
+        # names = True,     #  If `names` is True, the field names are read from the first valid line
+        # comments = '#',   # Skip characters after #
+        # delimiter = '\t', # tab separated values
+        # dtype = None      # guess the dtype of each column
+        skip_header = 1     # skip header
+    )
+    x = data[:,0]
+    y = data[:,num_y_col]
+
+    # mpl.plot(x, y, ".-", label = "{\\footnotesize {}}".format(label), prop={'size':'small'});
+    mpl.plot(x, y, ".-", label = "{\\footnotesize %s}" %label);
+
+def mysavefig(filename):  
+    if renderer == 'AGG':  
+        mpl.savefig(filename + ".png", bbox_inches='tight')
+        
+    elif renderer == 'SVG':
+        mpl.savefig(filename + ".svg", bbox_inches='tight')
+        
+    else:
+        print "Error in mysavefig!"
+
+## Plot ? ##
+hist_legends = [[] for n in range(len(distances_vec))] # create empty list of lists
+legends = []
+avg_figure_index = len(distances_vec)
+
+for result_idx, results_folder in enumerate(results_folders):
+
+    #TOP = TOP_module(nx[idx], nx[idx], nx[idx], executable = executable);
+
+    avr_file = os.path.join(results_folder, "avr_TOP_from_dump_nt_%i_Q_%.1f_%.1f_num_bins_%i.txt" %((stop-start)/float(step), Q_start, Q_stop, num_bins))
+    hist_file = os.path.join(results_folder, "hist_TOP_from_dump_nt_%i_Q_%.1f_%.1f_num_bins_%i.txt"%((stop-start)/float(step), Q_start, Q_stop, num_bins))
+
+    print "Hist file \"" + hist_file + "\""
+    print "\nAverage file \"" + avr_file + "\""
+
+    # Plot the histograms, each shell get's its own plot    
+    # for fig_idx, distance in enumerate(distances_vec):
+    for fig_idx in distance_indices:
+        distance = distances_vec[fig_idx]
+        mpl.figure(fig_idx, figsize = default_fig_size/fig_size_reduction_factor)
+        mpl.hold("on");
+        plot_from_file(hist_file, fig_idx, label = "System \\#%d" %result_idx);
+        # mpl.title("tetrahedral order parameter(Q) for distance = %g A" %(distance))
+        mpl.title("TOP(Q) for \$r = %g\$ \\AA" %(distance))
+        mpl.xlabel("Q")
+        mpl.ylabel("relative occurrence")
+        # hist_legends[fig_idx].append("System \\#%d" %result_idx);
+
+    # Plot the averages. One plot in total
+    mpl.figure(avg_figure_index, figsize = default_fig_size/fig_size_reduction_factor)
+    mpl.hold("on");
+    plot_from_file(avr_file, 1, label = "System \\#%d" %result_idx);
+    # mpl.title("tetrahedral order parameter(Q) - average")
+    mpl.title("TOP(Q) - average")
+    mpl.xlabel("\$r\$")
+    mpl.ylabel("Q")
+    # legends.append("System \\#%d" %result_idx)
+
+
+## Legends and saving figures ##
+
+import matplotlib.ticker as mticker
+# myLocator = mticker.MultipleLocator(2)
+myXLocator = mticker.MaxNLocator(4)
+myYLocator = mticker.MaxNLocator(4)
+
+mpl.figure(avg_figure_index)
+leg = mpl.legend(loc="upper left", prop={'size':'small'})
+frame = leg.get_frame()
+frame.set_visible(False) # remove box completely
+mpl.gca().xaxis.set_major_locator(myXLocator)
+mpl.gca().yaxis.set_major_locator(myYLocator)
+
+# for fig_idx, distance in enumerate(distances_vec):
+for fig_idx in distance_indices:
+    mpl.figure(fig_idx)
+    leg = mpl.legend(loc="upper left", prop={'size':'small'})
+    frame = leg.get_frame()
+    frame.set_visible(False) # remove box completely
+    # mpl.legend(hist_legends[fig_idx], loc = 'lower center');
+
+    mpl.gca().set_ylim([0, 0.025])
+    # mpl.gca().set_xlim([-0.4, 1.1])
+    mpl.gca().xaxis.set_major_locator(myXLocator)
+    mpl.gca().yaxis.set_major_locator(myYLocator)
+
+if renderer == default_backend:
+    mpl.show()
+
+else:
+    for fig_idx in distance_indices:
+        mpl.figure(fig_idx)
+        mysavefig("figure{:02d}".format(fig_idx[0]))

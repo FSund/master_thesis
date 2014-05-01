@@ -170,10 +170,25 @@ Since we don't have actual bonds in molecular dynamics simulations, we don't kno
 %     \item Improvement: find the atoms near surface using voxels, only passivate those atoms
 % \end{itemize}
 
+\subsection{Only passivating surface atoms}
+When implementing the passivation method detailed above, we soon ran into problems with silica and oxygen atoms that were bonded to too few atoms according to our rules above, while counting the number of bonds using a fixed radius. Some improvements were made by fine-tuning the radius used for each atom type, but we still often ended up passivating atoms that were inside the silica matrix, where we shouldn't have any dangling \hl{bonds/ends}. To avoid this we came up with a method to only passivate the atoms \hl{at or near} the surface of the fracture.
+
+To do this we \hl{again (not used it yet?)} use the voxelation method from \ref{sec:voxelation}, but this time we use a voxel size of around $6\text{ \AA}$. We then mark all voxels with atoms in them as occupied. We now see that if we find all \emph{occupied} voxels with a \hl{unoccupied} neighbor voxel \hl{(using 26-connected)}, we should have a list of voxels that contain all atoms at or near the surface of the fracture. We then use this list of atoms as input to the passivation program, and only passivate atoms in that list. See \cref{fig:find_surface_atoms} for an illustration of the method that finds the voxels and atoms at the surface of the fracture.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.5\textwidth, svgpath = ./images/passivation/]{select_surface_voxels02}%
+    \caption{
+        Illustration of a method for finding atoms and voxels at the surface of a fracture. All gray voxels are occupied voxels (with at least one atom in them), and the dark gray voxels are the voxels with at least one unoccupied neighbor voxel. \hl{FINISH} \hl{change to v1 of illustration?} \hl{what size shoud fig be?}
+    }%
+    \label{fig:find_surface_atoms}%
+\end{figure}%
+
+\FloatBarrier
 \section{Injecting water}
 After removing atoms to create a fracture, and passivating the system, we are now ready to inject water into the fracture. To do this we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), divide the system into voxels, and put one water molecule in each unoccupied voxel. The water density is controlled by the size of the voxels.
 
-\subsection{Finding correct voxel size}
+\subsection[Finding correct voxel size/water density?]{Finding correct voxel size/\hl{water density?}}
 If we want to inject water with density $\rho$% [kg/m$^3$]
 , we can find the voxel size we need from the molar mass of water, $M_\text{H$_2$O} = M = 0.0180158 \text{ kg/mol}$\hl{SOURCE}. We use the molar mass and wanted density to find the ``volume'' each water atom should occupy% , the unit used in the \hl{MD integrator/program and output files}
 , as follows

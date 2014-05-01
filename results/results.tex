@@ -20,7 +20,19 @@
 \section{Diffusion/mean square displacement}
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.95\textwidth, svgpath=./images/diffusion/]{diffusion}%
+    {
+        \newcommand{\f}{\footnotesize}
+        \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion}%
+    }
+    \caption{%
+        Diffusion. \hl{FINISH CAPTION}. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.5\textwidth, svgpath=./images/diffusion/]{diffusion_constant}%
     \caption{%
         Diffusion. \hl{FINISH CAPTION}. %
 %         \label{fig:cell_lists}%
@@ -32,17 +44,17 @@
 \todo{replace these with results from actual fracture system?}
 We developed a program that finds the distance to the nearest atom, in all points of the 
 %
-\setlength{\myfigwidth}{0.90\textwidth}
+\setlength{\myfigwidth}{0.90\textwidth}%
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r05_n256}%
+    \includesvg[width=\myfigwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r05_n256}%
     \caption{$r = 5$ \Ang}%
     \label{fig:distance_to_atom_r05}%
 \end{figure}%
 %
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=1.0\textwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r20_n256}%
+    \includesvg[width=\myfigwidth, svgpath = ./images/distance_to_atom/]{SiO2_06_slice_r20_n256}%
     \caption{$r = 20$ \Ang}%
     \label{fig:distance_to_atom_r20}%
 \end{figure}%
@@ -73,6 +85,61 @@ Not very useful. Much of the same as distance to atom, only worse (but faster).
     \label{fig:generation_matrix_r40}%
 \end{figure}%
 
-    \section{Area}
-    \section{Volume?}
+\FloatBarrier
+\section{Tetrahedral order parameter}
+
+
+% \setlength{\myfigwidth}{0.499\textwidth}%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure04}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet01}%
+%     \end{subfigure}%
+% %     \hspace{0.05\textwidth}%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure07}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet02}%
+%     \end{subfigure}%
+%     
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure09}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet02}%
+%     \end{subfigure}%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure10}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet02}%
+%     \end{subfigure}%
+%     
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure11}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet02}%
+%     \end{subfigure}%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{figure12}%
+%         \caption{Caption}%
+% %         \label{fig:pass_tet02}%
+%     \end{subfigure}%
+%     %
+%     \caption{%
+%         \hl{Caption}%
+%     }%
+% %     \label{fig:inject_empty_voxel}%
+% \end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=1.0\textwidth, svgpath = ./images/tetrahedral_order_parameter/]{fancyfig03}%
+    \caption{}%
+%     \label{fig:distance_to_atom_r20}%
+\end{figure}%
+
+\section{Area}
+\section{Volume?}
 

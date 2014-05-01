@@ -24,5 +24,8 @@
 *.pyg
 *.tex_old
 
+*.m~
+octave-core
+
 images/
 texmf/

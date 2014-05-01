@@ -1,0 +1,54 @@
+# dlmwrite(sprintf('H_samples_wfbm_HDDMA_nSamples-%d_H0.05-0.1-0.95.txt', nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
+# dlmwrite(sprintf('H_samples_fbmwoodchan_HDDMA_nSamples-%d_H0.05-0.1-0.95.txt', nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
+# dlmwrite(sprintf('H_samples_fbmlevinson_HDDMA_nSamples-%d_H0.05-0.1-0.95.txt', nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
+# dlmwrite(sprintf('H_samples_synth2_HDDMA_nSamples-%d_H0.05-0.1-0.95.txt', nSamples), H_samples, 'delimiter','\t','precision', '%.5f')
+
+
+default_backend = "Qt4Agg"
+
+backend = default_backend
+# backend = "SVG"
+
+import matplotlib
+matplotlib.use(backend)
+import matplotlib.pyplot as plt
+
+if backend == default_backend:
+    plt.ion()
+
+import numpy as np
+
+gens = ["wfbm", "fbmwoodchan", "fbmlevinson", "synth2"]
+nSamples = [1000, 1000, 1000, 100]
+input_H = np.arange(0.05, 1.0, 0.1)
+
+fig = plt.figure();
+fig.hold('on')
+ax = plt.gca()
+for idx, gen in enumerate(gens):
+    fileName = "H_samples_{}_HDDMA_nSamples-{:d}_H0.05-0.1-0.95.txt".format(gen, nSamples[idx])
+    
+    data = np.genfromtxt( # makes np.ndarray
+        fileName,
+        # names = True, #  If `names` is True, the field names are read from the first valid line
+        # comments = '#', # Skip characters after #
+        delimiter = '\t', # tab separated values
+        # dtype = None # guess the dtype of each column
+    )
+
+    ax.plot(input_H, np.mean(data,0), 
+        label = gen,
+        # linestyle = linestyle,
+        # marker = marker
+    )
+
+ax.legend(loc = "best")
+ax.set_xlabel("input H")
+ax.set_ylabel("measured H")
+ax.set_title("HDDMA")
+
+
+if backend == default_backend:
+    plt.show()
+else:
+    fig.savefig("fig.svg", bbox_inches='tight')

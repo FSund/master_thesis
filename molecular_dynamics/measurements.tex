@@ -146,11 +146,31 @@ For an atom at position $\rvec$ we can now find the \hl{neighboring} atoms withi
 % \section{Density} % - in ensemble chapter?
 % \section{Diffusion} % - in ensemble chapter?
 
+\FloatBarrier
 \section{``Voxel counter''}
     A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
+    
+\FloatBarrier
 \section{Cage cage correlation}
     \hl{Not measured (yet)}
+
+\FloatBarrier
 \section{Tetrahedral order parameter}
-    Mathilde's code/program
+The tetrahedral order parameter\cite{errington2001relationship} is effectively a measure of how tetrahedral a \hl{molecule?} is. The tetrahedral order parameter $Q$ for a molecule $k$ is calculated as follows
+\begin{align*}
+    Q_k = 1 - \frac{3}{8}\sum_i^3\sum_{j=i+1}^4 \left[ \cos \theta_{ikj} + \frac{1}{3} \right]^2,
+\end{align*}
+where $\theta_{ikj}$ is the angle between two vectors from the main molecule, $k$, to respectively atom $i$ and atom $j$, and the two sums go over the 6 possible angles $\theta_{ikj}$, between the main molecule and \hl{its} four nearest neighbors. See \cref{fig:top_tetrahedra} for an illustration of the angles and molecules involved in the calculation.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.3\textwidth, svgpath=./images/tetrahedral_order_parameter/]{tetrahedra}%
+    \caption{%
+        Illustration of the angles and molecules involved in the calculation of the tetrahedral order parameter. The \hl{blue} dots are molecules, in our case usually water molecules. We have the center molecule $k$, and \hl{its} four nearest neighbors. $\theta_{ikj}$ is the angle between molecule $i$, $k$ and $j$, as indicated by the \hl{orange} arc. \hl{FINISH CAPTION}. %
+        \label{fig:top_tetrahedra}%
+    }%
+\end{figure}%
+
+\FloatBarrier
 \section{Surface area of pores}
     Only one large pore in my system, so not useful?
