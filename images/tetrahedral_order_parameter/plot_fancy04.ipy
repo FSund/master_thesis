@@ -6,9 +6,8 @@ default_backend = 'Qt4Agg'
 default_fig_size = np.array([8.0, 6.0]) # inches
 fig_size_reduction_factor = 3.0
 
+renderer = default_backend
 renderer = 'SVG'
-# renderer = 'AGG'
-# renderer = default_backend
 
 import matplotlib
 matplotlib.use(renderer)
@@ -134,10 +133,22 @@ for idx, distance in enumerate(distances_to_plot):
 
 # Set limits and ticks (all axes share x- and y-axes with axes[-1][0])
 ax = axes[-1][0]
-ax.set_ylim([0, 0.022])
-ax.set_yticks([0.005, 0.010, 0.015, 0.020])
+ax.set_ylim([-0.002, 0.022])
+ax.set_yticks(np.linspace(0.0, 0.020, 9))
+# Reduce decimals in yticklabels
+ll = ax.get_yticklabels()
+xx = ax.get_yticks()
+ll = ['%.3f' % a for a in xx]
+ax.set_yticklabels(ll)
+for i in range(n_rows):
+    ax = axes[i][0]
+    plt.setp(ax.get_yticklabels()[1::2], visible=False) # 1::2 is every other, starting at #1, ::1 is every other starting at 0
+
+ax = axes[-1][0]
 ax.set_xlim([-0.6, 1.1])
-ax.set_xticks([-0.5, 0.0, 0.5, 1.0])
+ax.set_xticks(np.linspace(-0.5, 1.0, 7))
+for ax in axes[-1]:
+    plt.setp(ax.get_xticklabels()[1::2], visible=False) # 1::2 is every other, starting at #1, ::1 is every other starting at 0
 
 ## Make legends
 ax = axes[0][0]
@@ -194,4 +205,4 @@ if renderer == default_backend:
     plt.show()
 
 elif renderer == 'SVG':
-    fig.savefig("fancyfig03.svg", bbox_inches='tight')
+    fig.savefig("fancyfig04.svg", bbox_inches='tight')

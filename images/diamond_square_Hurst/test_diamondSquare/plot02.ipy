@@ -15,6 +15,10 @@ import matplotlib.pyplot as plt
 if default_backend == default_backend:
     plt.ion()
 
+def make_font_small(text):
+    text = "{\\f " + text + "}"
+    return text
+
 input_H = np.arange(0.0, 1.2+0.05, 0.1)
 nSamples = 100
 
@@ -25,13 +29,8 @@ ax = fig.add_subplot(1,1,1)
 
 wanted_H = 0.75
 ax.plot([input_H[0], input_H[-1]], [wanted_H, wanted_H], 
-    '--', label = "\$H = 0.75\$", color = 'k')
-ax.plot(input_H, input_H, '-', label = '\$H_\\x{in}=H_\\x{out}\$', color = 'b')
-
-# Plot lines for custom legend stuff
-ax.plot([0.0], [0.0], '-', color = 'g', label = 'PBC') # PBC
-ax.plot([0.0], [0.0], '--', color = 'k', label = 'Addition') # Addition
-
+    '--', label = make_font_small("\$H = 0.75\$"), color = '0.5')
+ax.plot(input_H, input_H, '-', label = "\\hh", color = '0.5')
 
 for addition in [0,1]:
     for pbc in [0,1]:
@@ -44,24 +43,24 @@ for addition in [0,1]:
             # dtype = None # guess the dtype of each column
         )
 
+        label = ""
         if addition:
             linestyle = '--'
+            label += "SRA"
         else:
             linestyle = '-'
+            label += "MDM"
         if pbc:
             color = 'g'
+            label += ", PBC"
         else:
             color = 'r'
-        # if pbc:
-            # marker = 'o'
-        # else:
-            # marker = 'None'
-        marker = 'None'
+
+        label = make_font_small(label)
 
         ax.plot(input_H, np.mean(data,0), 
-            # label = "addition = {}, pbc = {}".format(addition, pbc),
+            label = label,
             linestyle = linestyle,
-            marker = marker,
             color = color)
 
         # print np.shape(data)
@@ -69,13 +68,24 @@ for addition in [0,1]:
 
 ax.set_xlabel('Input \$H\$')
 ax.set_ylabel('Measured \$H\$')
-leg = ax.legend(loc = 'best', 
+# leg = ax.legend(loc = 'best', 
+#     framealpha = 0.0, 
+#     bbox_to_anchor = (1.0, 0.45), 
+#     bbox_transform = ax.transAxes,
+#     fontsize = "small", # to make .svg a bit smaller when saving
+#     labelspacing = 0.8, # since we use normal font size in pdf, we need more room when using small fontsize when plottin...
+#     borderpad = 0.0     # reduce size of .svg
+# )
+
+leg = ax.legend(
+    # loc = 'best', 
     framealpha = 0.0, 
-    bbox_to_anchor = (1.1,0.42), 
+    bbox_to_anchor = (0.95, 0.45), 
     bbox_transform = ax.transAxes,
-    fontsize = "small", # to make .svg a bit smaller when saving
-    labelspacing = 1.3, # since we use normal font size in pdf, we need more room when using small fontsize when plottin...
-    borderpad = 0.0     # reduce size of .svg
+    fontsize = "xx-small", # to make .svg a bit smaller when saving
+    labelspacing = 1.5, # since we use normal font size in pdf, we need more room when using small fontsize when plottin...
+    borderpad = 0.0,    # reduce size of .svg
+    handlelength = 5.0
 )
 
 ax.set_xlim([0.0, 1.2])
