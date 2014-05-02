@@ -1,4 +1,4 @@
-\subsection{Detrending moving average}
+\section{Detrending moving average}
 To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) first described by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. We use this method because ??? 
 
 \todo[inline]{good results, easy to implement? }
@@ -86,73 +86,30 @@ which we can use to find the Hurst exponent $H$, by calculating $\sigma_\text{DM
 
 In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
-A modification mentioned mentioned in \cite{carbone2007algorithm} is replacing $\tilde f_n(i,j)$ in \cref{eq:dma_variance} with
+A modification of the method mentioned in \cite{carbone2007algorithm} is replacing $\tilde f_n(i,j)$ in \cref{eq:dma_variance} with
 \begin{align*}
     \tilde f_n^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \tilde f_n(i-1,j-1),
 \end{align*}
-where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cref{eq:carbone_average_rewritten}. This modification \hl{can give/gives} better results, so we have  implemented both the regular, and the modified method.
-
-% With $\theta = 0$ we have $m = 0$ and average over all points $(\leq k \leq i,l \leq j)$. 
-
-% With $\theta = n/(n-1)$ we have $m = n-1$, and average over all points $(k \geq i,l \geq j)$.
-
-% We define the generalized variance $\sigma_\text{DMA}^2$ as the variance 
-% \begin{align*}
-%     \sigma_\text{DMA}^2 
-%     = \frac{1}{(N-n)^2}\sum_{i=n-m}^{N-m}\sum_{j=n-m}^{N-m} 
-%     \big(
-%         f(i,j) - \tilde f_n(i,j)
-%     \big)^2,
-% \end{align*}
-% where\footnote{We rewrite \cref{eq:carbone_average} for easier understanding}
-% \begin{align}
-%     \tilde f_n(i,j) 
-%     &= \frac{1}{n^2}\sum_{k=-m}^{n-1-m}\sum_{l=-m}^{n-1-m} f(i-k, j-l) \label{eq:carbone_average}\\
-% %     &= \frac{1}{n^2}\sum_{k=i-m}^{i-n+1+m}\sum_{l=j-m}^{j-n+1+m} f(i-k, j-l) \\
-%     &= \frac{1}{n^2} \sum_{k=(i+m)-n+1}^{i+m} ~ \sum_{l=(i+m)-n+1}^{i+m} f(k, l).\nonumber %\label{eq:carbone_average_rewritten}
-% \end{align}
-% \begin{align*}
-%     m = \left \lfloor n\theta \right \rfloor
-% \end{align*}
-% $\theta = 1$ or $\theta = 0$ (directed implementation, for fractals with preferential growth direction) \\
-% $\theta = 0.5$ (isotropic implementation, ``uniformity in all orientations'') \\
-
-
-
-% \begin{figure}[htpb]%
-%     \centering%
-%     \includesvg[width=0.99\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04}%
-%     \caption{%
-%         Illustration of what the parameter $\theta$ controls in the detrending moving average method in 2 dimensions. The circles are points where a surface is defined, the red star marks the point $(i,j)$, and the black square marks the points averaged over to calculate $\tilde f_n(i,j)$ in \cref{eq:carbone_average_rewritten}.
-%         \label{fig:DMA_theta}%
-%     }%
-% \end{figure}%
-
-
-
-% \subsubsection{Detrended fluctuation analysis in higher dimensions}
-% original DFA\cite{peng1994mosaic}
-% HDDMA\cite{gu2006detrended}
-% 
-% To estimate the Hurst exponent of a fracture we use a generalized version of a method called \emph{detrended fluctuation analysis}\cite{peng1994mosaic}, which was generalized to higher dimensions by Gu and Zhou\cite{gu2006detrended}.
-% 
-% The two-dimensional DFA:
-% 
-% We have a self-affine surface stored in the matrix $f(i,j)$, where $f$ \hl{is} the height of the surface in the point $(i,j)$, with $i,j = 1,\dots,N$, and $N^2$ is the number of points where the surface is defined. The surface is divided into $n\times n$ disjoint (non-overlapping) \hl{and neighboring} surfaces \todo{sub-surface?} of the same size $s\times s$, where $n = N/s$. Each of these surfaces is denoted by $f_{u,v}$ such that $f_{u,v}(i,j) = f(i+k, j+l)$ for $i,j = 1, \dots, s$, where $k = (u-1)s$ and $l = (v-1)s$.
-% 
-% For a surface $f_{u,v}$ the cumulative sum $F_{u,v}(i,j)$ is calculated as follows
-% \begin{align*}
-%     F_{u,v}(i,j) = \sum_{m=1}^i\sum_{n=1}^j f_{u,v}(m,n),
-% \end{align*}
-% where $i,j = 1,\dots,s$. Note that F_{u,v}(i,j) itself is a surface.
-% 
-% The trend of the constructed surface $F_{u,v}$ can be determined by fitting it with a polynomial $\tilde F$
-
-
+where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cref{eq:carbone_average_rewritten}. This modification \hl{can give/gives} better results, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
 
 \todo[inline]{implemented in Matlab/Octave}
 
-\section{How well does diamondSquare and DMA work?}
+\subsection{Testing DMA}
+%
+\begin{figure}[htpb]%
+    \centering%
+    {
+        \newcommand{\f}{\footnotesize}%
+        \newcommand{\x}{\text}%
+        \newcommand{\thislabelaaaaaa}{{\f $H_\x{in}=H_\x{out}$}}%
+        \includesvg[width=1.0\textwidth, svgpath=./images/diamond_square_Hurst/test_HDDMA/]{fig03}%
+    }
+    \caption{%
+        HDDMA. \hl{FINISH CAPTION}. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
 \orangebox{
     \begin{itemize}
         \item 1D: Plot of H from DMA vs. input H for wfbm (Matlab built in), and perhaps a FracLab variant?
