@@ -1,8 +1,8 @@
-\chapter{ChapterName}
+\chapter{Re}
 \section{Density}
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.95\textwidth, svgpath=./images/density/]{density_water}%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water02}%
     \caption{%
         Density of water. \hl{FINISH CAPTION}. %
 %         \label{fig:cell_lists}%
@@ -10,13 +10,14 @@
 \end{figure}%
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.95\textwidth, svgpath=./images/density/]{number_of_molecules}%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{number_of_molecules02}%
     \caption{%
         Number of molecules. Bin width = 0.2 \AA?. \hl{FINISH CAPTION}. %
 %         \label{fig:cell_lists}%
     }%
 \end{figure}%
 
+\FloatBarrier
 \section{Diffusion/mean square displacement}
 \begin{figure}[htpb]%
     \centering%
@@ -32,9 +33,12 @@
 
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.5\textwidth, svgpath=./images/diffusion/]{diffusion_constant}%
+    {
+        \newcommand{\f}{\footnotesize}%
+        \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion_constant02}%
+    }
     \caption{%
-        Diffusion. \hl{FINISH CAPTION}. %
+        Diffusion. \hl{Consider fixing label background...} \hl{FINISH CAPTION}. %
 %         \label{fig:cell_lists}%
     }%
 \end{figure}%
@@ -140,6 +144,7 @@ Not very useful. Much of the same as distance to atom, only worse (but faster).
 %     \label{fig:distance_to_atom_r20}%
 \end{figure}%
 
+\FloatBarrier
 \section{Area}
 \section{Volume?}
 

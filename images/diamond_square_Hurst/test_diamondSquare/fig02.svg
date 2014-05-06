@@ -563,8 +563,18 @@ L45.4331 23.1417" style="fill:none;stroke:#000000;"/>
    <g id="text_18">
     <text style="font-family:DejaVu Sans;font-size:14.4px;font-style:normal;text-anchor:middle;" transform="rotate(-0.000000, 204.861696, 18.141750)" x="204.861696429" y="18.14175">Successive random additions</text>
    </g>
+   <g id="patch_7">
+    <path clip-path="url(#pc22f96eb0a)" d="
+M246.313 260.125
+L357.913 260.125
+L357.913 153.976
+L246.313 153.976
+L246.313 260.125
+z
+" style="fill:#ffffff;stroke:#000000;"/>
+   </g>
    <g id="legend_1">
-    <g id="patch_7">
+    <g id="patch_8">
      <path d="
 M249.832 254.843
 L344.873 254.843

@@ -4,7 +4,7 @@ import math
 default_backend = 'Qt4Agg'
 backend = 'SVG'
 # backend = 'AGG'
-backend = default_backend
+# backend = default_backend
 
 if backend == "SVG":
     import matplotlib
@@ -71,9 +71,10 @@ def average_over_timesteps(results, n, n_timesteps_between_states):
     return average_density, average_n_tagged_atoms, r_vector, timestep_vector
 
 def find_indices_in_range(vector, min_distance, max_distance):
-    n_min, n_max = indices = np.where((vector >= min_distance) & (vector <= max_distance))[0][[0,-1]]
-
-    return n_min, n_max
+    indices = np.where((vector >= min_distance) & (vector <= max_distance))[0]
+    n_min, n_max = indices[[0,-1]]
+    
+    return n_min, n_max, indices
 
 def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between_states, output_folder, backend, savefig = True):
 
@@ -86,7 +87,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
     print "textwidth = " + str(textwidth) + "mm"
     figwidth = 0.8*textwidth
     reduction_factor = default_fig_size[0]/(figwidth/inchtomm)
-    reduction_factor = 0.9
+    reduction_factor = 1.4
     print "reduction_factor = " + str(reduction_factor)
 
     plt.figure(1, figsize = default_fig_size/reduction_factor)
@@ -119,7 +120,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
 
             average_density_2.append(average_density)
 
-        n_min, n_max = find_indices_in_range(r_vector, 3.0, 25.0);
+        n_min, n_max, indices = find_indices_in_range(r_vector, 3.0, 25.0);
 
         plt.figure(3)
         for i in range(2):
@@ -141,7 +142,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
         
             min_distance = 3.0
             max_distance = 25.0
-            n_min, n_max = find_indices_in_range(r_vector, min_distance, max_distance);
+            n_min, n_max, indices = find_indices_in_range(r_vector, min_distance, max_distance);
             
             for i in range(n_lines_to_plot):
                 plt.figure(1)

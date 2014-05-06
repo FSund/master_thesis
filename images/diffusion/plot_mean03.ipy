@@ -48,7 +48,8 @@ def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_sta
 
     return time, data, r_vector
     
-def find_nan_colums(matrix):
+
+def find_nan_columns(matrix):
 
     # remove columns/data sets with nan in them
     to_delete = []
@@ -58,28 +59,21 @@ def find_nan_colums(matrix):
 
     return to_delete
 
-def remove_nan(datasets, r_vectors):
+def remove_nan(data, r_vector):
 
-    for i in range(len(datasets)):
-        print "Old shape: " + str(np.shape(datasets[i]))
-        print "Old shape: " + str(np.shape(r_vectors[i]))
+    print "Old shape: " + str(np.shape(data))
+    print "Old shape: " + str(np.shape(r_vector))
 
-    columns_to_delete = []
-    for data in datasets:
-        columns_to_delete += find_nan_colums(data)
+    columns_to_delete = find_nan_columns(data)
 
-    columns_to_delete = np.unique(columns_to_delete)
-
-    for i in range(len(datasets)):
-        datasets[i] = np.delete(datasets[i], (columns_to_delete), axis=1)
-        r_vectors[i] = np.delete(r_vectors[i], columns_to_delete)
+    data = np.delete(data, (columns_to_delete), axis=1)
+    r_vector = np.delete(r_vector, columns_to_delete)
 
     print "Removed columns: " + str(columns_to_delete)
-    for i in range(len(datasets)):
-        print "New shape: " + str(np.shape(datasets[i]))
-        print "New shape: " + str(np.shape(r_vectors[i]))
+    print "New shape: " + str(np.shape(data))
+    print "New shape: " + str(np.shape(r_vector))
 
-    return datasets, r_vectors
+    return data, r_vector
 
 ## Load data
 
@@ -107,7 +101,7 @@ print results_file
 
 time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
                              r_start = r_start, r_step = r_step, n_steps = n_steps)
-
+data, r_vector = remove_nan(data, r_vector)
 datasets.append(data)
 r_vectors.append(r_vector)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -124,58 +118,93 @@ print results_file
 
 time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
                              r_start = r_start, r_step = r_step, n_steps = n_steps)
-
+data, r_vector = remove_nan(data, r_vector)
 datasets.append(data)
 r_vectors.append(r_vector)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 
-datasets, r_vectors = remove_nan(datasets, r_vectors)
 os.chdir(initial_cwd)
 
 # Fig size
 default_fig_size = np.array([8.0, 6.0]) # inches
-reduction_factor = 2
+reduction_factor = 1.6
 fig = plt.figure(1, figsize = default_fig_size/reduction_factor)
 
 ax = fig.add_subplot(111)
 
+colors = ('b', 'g')
+legends = ["{\\f Flat fracture}", "{\\f Rough fracture}"]
+
 timesteps_to_average_over = 25
 for data_idx, data in enumerate(datasets):
 
-    # Only plot 5 lines, but include last column of data, which is bulk
-    n = np.shape(data)[1]
-    n_max = 5
-    if n >= 10:
-        indices = np.arange(0, n, n/float(n_max), dtype = int)
-        indices = list(indices)
-    else:
-        indices = range(0, n)
-    if (indices[-1] != (n-1)):
-        indices.append(n-1)
-    
-    print "Columns = " + str(indices)
+    diffusion = np.zeros(data.shape)
+    for i in range(np.shape(data)[1]):
+        diffusion[:,i] = data[:,i]/(6.0*time)
+    mean_diff = np.mean(diffusion[timesteps_to_average_over:], axis=0)
 
-    mean_diff = np.zeros(len(indices))
-    for idx, idx_to_use in enumerate(indices):
-        diffusion = data[:, idx_to_use]/(6*time)
-        mean_diff[idx] = np.mean(diffusion[timesteps_to_average_over:-1])
+    print "data shape: " + str(np.shape(data))
+    print np.shape(diffusion)
+    print np.shape(mean_diff)
+    print np.shape(r_vectors[data_idx])
 
-    ax.plot(r_vectors[data_idx][indices], mean_diff, '-o')
+    ax.plot(
+        r_vectors[data_idx][:-2], # r_vectors is one longer than data, and last one is bulk
+        mean_diff[:-1],
+        color = colors[data_idx], 
+        label = legends[data_idx]
+    )
 
-ax.legend(["Flat fracture", "Rough fracture"], loc = "best", framealpha = 0.0)
+    # Bulk
+    ax.plot(r_vectors[data_idx][-3], mean_diff[-1], 'o', markeredgecolor='none', label = "{\\f Bulk}", color = colors[data_idx])
+
+leg = ax.legend(
+    # loc = "best", 
+    bbox_to_anchor = [0.5, 0.97],
+    framealpha = 0., 
+    handlelength = 1.0,
+    numpoints = 1,
+    fontsize = "small"
+)
+leg.set_zorder(1001)
+
 ax.set_xlabel("\$r\\text{ [\AA]}\$")
 ax.set_ylabel("\$D\\text{ [\AA\$^2\$/ps]}\$")
 ax.set_title("Diffusion constant")
+
+from matplotlib.ticker import MultipleLocator
+minorLocator = MultipleLocator(1.25)
+ax.xaxis.set_minor_locator(minorLocator)
+minorLocator = MultipleLocator(0.025)
+ax.yaxis.set_minor_locator(minorLocator)
 
 # Add grid
 ax.xaxis.grid(True)
 ax.yaxis.grid(True)
 
+ax.set_xlim([0.0, 15.0])
+
 from matplotlib.ticker import MaxNLocator
 ax.xaxis.set_major_locator(MaxNLocator(6))
 # ax.yaxis.set_major_locator(MaxNLocator(6))
 
+## Make box below legend
+import matplotlib.transforms as mtransforms
+bb = mtransforms.Bbox([[0.03, 0.65], [0.45, 0.97]])
+
+from matplotlib.patches import FancyBboxPatch
+p_bbox = FancyBboxPatch(
+    (bb.x0, bb.y0),
+    abs(bb.width), abs(bb.height),
+    transform = ax.transAxes, # default ?
+    boxstyle = "square,pad=0",
+    ec="k", fc="w",
+    zorder = 1000
+)
+ax.add_patch(p_bbox)
+plt.draw()
+
 if backend == default_backend:
     plt.show()
 elif backend == "SVG":
-    fig.savefig("diffusion_constant.svg", bbox_inches = "tight")
+    fig.savefig("diffusion_constant02.svg", bbox_inches = "tight")

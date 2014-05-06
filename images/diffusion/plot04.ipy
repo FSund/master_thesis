@@ -1,0 +1,237 @@
+import numpy as np
+import math
+import os.path
+
+default_backend = 'Qt4Agg'
+
+renderer = 'SVG'
+renderer = default_backend
+
+import matplotlib
+matplotlib.use(renderer)
+matplotlib.rcParams['svg.fonttype'] = 'none' # To make text in the resulting svg actual text, instead of a path. 
+matplotlib.rcParams['savefig.dpi'] = 150
+
+import matplotlib.pyplot as plt
+if renderer == default_backend:
+    plt.ion()
+
+def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_statefiles = 100):
+    dt = 20.67 # atomic unit of time
+    atomic_unit_of_time = 2.418884326505e-17 # seconds
+    timestep = dt*atomic_unit_of_time
+    time_between_statefiles = timestep*n_timesteps_between_statefiles/(1.0e-12) # picoseconds
+    
+    results = np.genfromtxt( # makes np.ndarray
+        results_file,
+        comments = '#', # Skip characters after #
+    )
+    results = results[1:-1] # Skip first line, since t and msd = 0 (divide by 6t goes bad)
+
+    timestep = results[:,0]
+    time = timestep*time_between_statefiles
+    data  = results[:,1:]
+    
+    r_vector = np.arange(r_start, r_step*n_steps+1, r_step) # +1 to get the end values of the range for legends
+
+    return time, data, r_vector
+    
+def remove_nan(data, r_vector):
+
+    if (type(data) is list):
+        # remove columns/data sets with nan in them
+        to_delete = []
+        for dataset in data:
+            for i in range(np.shape(dataset)[1]): # loop over columns
+                if np.any(np.isnan(dataset[:,i])):
+                    to_delete.append(i)
+
+        to_delete = np.unique(to_delete) # Since we check for nan in all datasets
+
+        for idx in range(len(data)):
+            data[idx] = np.delete(data[idx], (to_delete), axis=1)
+            r_vector[idx] = np.delete(r_vector[idx], to_delete)
+
+        print "Deleted columns = " + str(to_delete)
+        print "New shape = " + str(np.shape(data[0]))
+        print "New shape = " + str(np.shape(data[1]))
+
+    else:
+        print "Wrong data type"
+
+    return data, r_vector
+
+def plot_diffusion(time, datasets, r_vectors, renderer):
+
+    def mysavefig(filename):  
+        if renderer == 'AGG':  
+            plt.savefig(filename + ".png", bbox_inches='tight')
+            
+        elif renderer == 'SVG':
+            plt.savefig(filename + ".svg", bbox_inches='tight')
+            
+        elif renderer == default_backend:
+            plt.show()
+        else:
+            print "Error in mysavefig!"
+
+    #set linestyles (for-loop method)
+    colors = ('k','y','m','c','b','g','r','#aaaaaa')
+    linestyles = ('-','--','-.',':')
+    # markers = ('.', ',', 'o', 'v', '^', '<', '>', '1', '2', '3', '4', '8', 's', 'p', '*', 'h', 'H', '+', 'x', 'D', 'd', '|', '_', 'TICKLEFT', 'TICKRIGHT', 'TICKUP', 'TICKDOWN', 'CARETLEFT', 'CARETRIGHT', 'CARETUP', 'CARETDOWN')
+    markers = ('o', 'v', '^', '<', '>', '1', '2', '3', '4', '8', 's', 'p', '*', 'h', 'H', '+', 'x', 'D', 'd', '|', '_', 'TICKLEFT', 'TICKRIGHT', 'TICKUP', 'TICKDOWN', 'CARETLEFT', 'CARETRIGHT', 'CARETUP', 'CARETDOWN')
+    # styles = [(color,linestyle) for linestyle in linestyles for color in colors]
+    # styles = [(color,marker) for color in colors for marker in markers]
+    
+    default_fig_size = np.array([8.0, 6.0]) # inches
+    inchtomm = 25.4 # mm per inch
+    a4width = 210   # mm
+    left = 28       # mm, margin
+    right = 37.5    # mm, margin
+    textwidth = a4width - (left+right)
+    print "textwidth = " + str(textwidth) + "mm"
+    figwidth = 0.95*textwidth
+    reduction_factor = default_fig_size[0]/(figwidth/inchtomm)
+    reduction_factor = 1.6
+    print "reduction_factor = " + str(reduction_factor)
+
+    fig = plt.figure(figsize = default_fig_size/reduction_factor)
+
+    ax = fig.add_subplot(111)
+    
+    for data_idx, data in enumerate(datasets):
+        # Only plot 5 lines, but include last column of data, which is bulk
+        n = np.shape(data)[1]
+        n_max = 5
+        if n >= 10:
+            indices = np.arange(0, n, n/float(n_max), dtype = int)
+            indices = list(indices)
+        else:
+            indices = range(0, n)
+        if (indices[-1] != (n-1)):
+            indices.append(n-1)
+
+            
+        print "Columns to be printed = " + str(indices)
+        print indices
+        
+        legends = []
+        for idx, idx_to_use in enumerate(indices):
+            y = data[:,idx_to_use]
+            y = y/(6*time)
+            # plt.plot(x, y, color = colors[i], marker = markers[i])
+            ax.plot(time, y, color = colors[idx], linestyle = linestyles[data_idx])
+            #legends.append('Range #%d'%i)
+            legendstring = "{\\f \$r = [%.1f, %.1f)\$}" %(r_vector[idx_to_use], r_vector[idx_to_use+1])
+            # legendstring = "{\\footnotesize test $r = {}}$".format(r_vector[i])
+            legends.append(legendstring)
+            # print legendstring
+        
+        legends[-1] = "{\\f Bulk}"
+
+    # leg = plt.legend(legends, loc='best', prop={'size':'small'})
+    leg = ax.legend(legends, prop={'size':'small'}, bbox_to_anchor = [1.05, 1.0])
+    frame = leg.get_frame()
+    # frame.set_facecolor('0.90')
+    # frame.set_edgecolor('1.00') # White edge
+    frame.set_visible(False) # remove box completely
+    # leg.draw_frame(False)
+    #plt.setp(plt.gca().get_legend().get_texts(), fontsize='small')
+
+    plt.title("Diffusion \$r^2(t)/6t\$")
+    ax.set_xlabel("\$t\$ [ps]")
+    ax.set_ylabel("\$r^2/6t\$ [\AA\$^2\$/ps]")
+
+    from matplotlib.ticker import MultipleLocator
+    majorLocator = MultipleLocator(0.1)
+    ax.yaxis.set_major_locator(majorLocator)
+
+    from matplotlib.ticker import AutoMinorLocator
+    minorLocator = MultipleLocator(0.05)
+    # minorLocator = AutoMinorLocator()
+    ax.yaxis.set_minor_locator(minorLocator)
+
+    minorLocator = MultipleLocator(1)
+    ax.xaxis.set_minor_locator(minorLocator)
+
+    # Add grid
+    ax.xaxis.grid(True)
+    ax.yaxis.grid(True)
+
+    ## Make box below legend
+    leg.set_zorder(1001)
+
+    import matplotlib.transforms as mtransforms
+    bb = mtransforms.Bbox([[0.5, 0.56], [0.9, 0.98]])
+
+    from matplotlib.patches import FancyBboxPatch
+    p_bbox = FancyBboxPatch(
+        (bb.x0, bb.y0),
+        abs(bb.width), abs(bb.height),
+        transform = ax.transAxes, # default ?
+        boxstyle = "square,pad=0",
+        ec="k", fc="w",
+        zorder = 1000
+    )
+    ax.add_patch(p_bbox)
+    plt.draw()
+
+    mysavefig("diffusion")
+
+
+# Load data
+
+# top_cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks"
+initial_cwd = os.getcwd()
+cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/diffusion"
+os.chdir(cwd)
+print os.getcwd()
+
+datasets = []
+r_vectors = []
+
+# # # # # # # # # # # # # # # # 
+project_name = "flat_square_fracture02"
+states_folder = "10_05_measuring_every_100th_timestep_200steps"
+partial_output_folder = os.path.join(project_name, states_folder)
+
+r_start = 0.0
+r_step = 0.50
+n_steps = 30
+partial_output_folder = os.path.join(partial_output_folder, "r0_%.2f_dr%.2f_n%d" %(r_start,r_step, n_steps))
+
+i = 0
+output_path = "%s__%03d/" %(partial_output_folder, i)
+results_file = "%s_%03d/results.txt" %(partial_output_folder, i)
+print results_file
+
+time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+                             r_start = r_start, r_step = r_step, n_steps = n_steps)
+datasets.append(data)
+r_vectors.append(r_vector)
+# # # # # # # # # # # # # # # # 
+project_name = "rough_fracture01_abel"
+states_folder = "12_04_measuring_every_100th_timestep_200steps"
+partial_output_folder = os.path.join(project_name, states_folder)
+
+r_start = 0.0
+r_step = 0.50
+n_steps = 30
+partial_output_folder = os.path.join(partial_output_folder, "r0_%.2f_dr%.2f_n%d" %(r_start,r_step, n_steps))
+
+i = 0
+output_path = "%s__%03d/" %(partial_output_folder, i)
+results_file = "%s_%03d/results.txt" %(partial_output_folder, i)
+print results_file
+
+time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+                             r_start = r_start, r_step = r_step, n_steps = n_steps)
+
+datasets.append(data)
+r_vectors.append(r_vector)
+# # # # # # # # # # # # # # # # 
+
+datasets, r_vectors = remove_nan(datasets, r_vectors)
+os.chdir(initial_cwd)
+
+plot_diffusion(time = time, datasets = datasets, r_vectors = r_vectors, renderer = renderer)

@@ -1,41 +1,58 @@
 \section{Detrending moving average}
-To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) first described by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. We use this method because ??? 
+To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) first described by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
+
+After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is \hl{easy} to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in\cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.
 
 \todo[inline]{good results, easy to implement? }
 \todo[inline]{everything below is for 2/3 D, not always obvious}
 
-We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. We divide the surface into square \hl{OVERLAPPING!} \hl{subsurfaces} of size $n \times n$, and find the average $\tilde f_n$ of each subsurface by\footnote{\Cref{eq:carbone_average} is how the average $\tilde f_n$ is stated in the article\cite{carbone2007algorithm}, but we rewrite it to \cref{eq:carbone_average_rewritten} so it's easier to understand. The two forms are equivalent.} \todo{unclear what $i$ and $j$ is in $\tilde f_n(i,j)$?}
-\begin{align}
-    \tilde f_n(i,j) 
-    &= \frac{1}{n^2}\sum_{k=-m}^{n-1-m} ~ \sum_{l=-m}^{n-1-m} f(i-k, j-l) \label{eq:carbone_average}\\
-%     &= \frac{1}{n^2}\sum_{k=i-m}^{i-n+1+m}\sum_{l=j-m}^{j-n+1+m} f(i-k, j-l) \\
-    &= \frac{1}{n^2} \sum_{k=(i+m)-n+1}^{i+m} ~ \sum_{l=(i+m)-n+1}^{i+m} f(k, l), \label{eq:carbone_average_rewritten}
-\end{align}
-where
+\subsection{Detrending moving average in 2 dimensions}
+We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. For all points
 \begin{align*}
-    &m = \left \lfloor n\theta \right \rfloor &\text{for }0 \leq \theta < 1,
+%     n-m \leq i,j \leq N-m,
+    &(i,j)\in [n-m, N-m] &\text{where}& &m\in [0, n),
 \end{align*}
-which means that $0 \leq m \leq (n-1)$. If we study the equation above we see that $\theta$ is a parameter that controls the position of the \hl{subsurface/square} relative to the point $(i,j)$%
-%in $\tilde f_n(i,j)$
-. There are three \hl{extreme} cases for $\theta$, which are listed below and illustrated in \cref{fig:DMA_theta}.%
+in this surface we define a subsurface of size $n \times n$, consisting of the points
+\[
+%     (i+m)-n+1 \leq k,l \leq i+m,
+    (k,l) \in [(i+m)-n+1, i+m].
+\]
+The parameter $m$ is calculated using a parameter $\theta$ as
+\begin{align*}
+    &m = \left \lfloor n\theta \right \rfloor &\text{for }
+    %0 \leq \theta < 1,
+    \theta \in [0,1).
+\end{align*}
+This means that $\theta$ controls the position of the subsurface relative to the point $(i,j)$ in the main surface. There are three \hl{extreme} cases for $\theta$, which are listed below and illustrated in \cref{fig:DMA_theta}.%
 %
-% \begin{itemize}
-%     \item For $\theta = 0$ we have $m=0$ and we average over a square with the point $(i,j)$ in the square's upper right corner (($i-n+1) \leq k,l \leq i$). See \cref{fig:DMA_theta_a}.
-%     \item For $\theta = 1/2$ we average over a square centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
-%     \item For $\theta = (n-1)/n$ we have the maximum value for $m$, $m=n-1$, and average over a square with the point $(i,j)$ in the square's lower left corner \todo{THESE LIMITS ARE WRONG??}($i \leq k,l \leq (i+n-1)$). See \cref{fig:DMA_theta_c}.
-% \end{itemize}
-%
-\begin{description}
-    \item[$\bm{\theta = 0}$:] \hfill\\ 
-        We have $m=0$ and we average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s upper right corner \hl{(($i-n+1) \leq k,l \leq i$)}. See \cref{fig:DMA_theta_a}.
-    \item[$\bm{\theta = 1/2}$:] \hfill\\ 
-        We average over a \hl{subsurface/square} centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
-    \item[$\bm{\theta = (n-1)/n}$:] \hfill\\ 
-        {\sloppy 
-        We have the maximum value for $m$, $m=n-1$, and average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s lower left corner \todo{\st{THESE LIMITS ARE WRONG??} fixed} \hl{(${i \leq k,l \leq (i+n-1)}$)}. See \cref{fig:DMA_theta_c}.
-        }
+\begin{description}%
+    \item[$\bm{\theta = 0}$:] \hfill\\%
+        We have $m=0$, and the subsurface is positioned so that the point $(i,j)$ in the main surface is in the upper right corner of the subsurface. %
+%         \hl{(($i-n+1) \leq k,l \leq i$)}.%
+        \hl{The subsurface consists of the points $(k,l) \in (i-n, i]$}. %
+        See \cref{fig:DMA_theta_a} for an illustration \hl{of what?}.%
+    \item[$\bm{\theta = 1/2}$:] \hfill\\%
+        The subsurface is positioned so that the point $(i,j)$ in the main surface is in the center of the subsurface. %
+%         The subsurface consists of the points $(k,l) \in [(i+\lfloor n/2 \rfloor)-n+1, i+(i+\lfloor n/2 \rfloor)]$
+        See \cref{fig:DMA_theta_b} for an illustration \hl{of what?}.%
+    \item[$\bm{\theta = (n-1)/n}$:] \hfill\\%
+        {\sloppy%
+        We have the maximum value for $m$, $m=n-1$, and the subsurface is positioned so that the point $(i,j)$ in the main surface is positioned in the lower left corner of the subsurface. %
+        The subsurface consists of the points $(k,l) \in [i, i+n)$. %
+        See \cref{fig:DMA_theta_c} for an illustration \hl{of what?}.%
+        }%
 \end{description}%
-%
+% \begin{description}
+%     \item[$\bm{\theta = 0}$:] \hfill\\ 
+%         We have $m=0$ and we average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s upper right corner \hl{(($i-n+1) \leq k,l \leq i$)}. See \cref{fig:DMA_theta_a}.
+%     \item[$\bm{\theta = 1/2}$:] \hfill\\ 
+%         We average over a \hl{subsurface/square} centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
+%     \item[$\bm{\theta = (n-1)/n}$:] \hfill\\ 
+%         {\sloppy 
+%         We have the maximum value for $m$, $m=n-1$, and average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s lower left corner \todo{\st{THESE LIMITS ARE WRONG??} fixed} \hl{(${i \leq k,l \leq (i+n-1)}$)}. See \cref{fig:DMA_theta_c}.
+%         }
+% \end{description}%
+
 \begin{figure}[htpb]%
     \centering%
     \begin{subfigure}[b]{0.25\textwidth}%
@@ -66,6 +83,17 @@ which means that $0 \leq m \leq (n-1)$. If we study the equation above we see th
     }%
 \end{figure}%
 
+We find the average $\tilde f_n$ of each subsurface by\footnotemark%
+%
+\footnotetext{\Cref{eq:carbone_average} is how the average $\tilde f_n$ is written in\cite{carbone2007algorithm}, but we rewrite it to the form in \cref{eq:carbone_average_rewritten} to ease understanding of what this average actually is. The two forms are equivalent.}%
+%
+\begin{align}
+    \tilde f_n(i,j) 
+    &= \frac{1}{n^2}\sum_{k=-m}^{n-1-m} ~ \sum_{l=-m}^{n-1-m} f(i-k, j-l) \label{eq:carbone_average}\\
+%     &= \frac{1}{n^2}\sum_{k=i-m}^{i-n+1+m}\sum_{l=j-m}^{j-n+1+m} f(i-k, j-l) \\
+    &= \frac{1}{n^2} \sum_{k=(i+m)-n+1}^{i+m} ~ \sum_{l=(i+m)-n+1}^{i+m} f(k, l), \label{eq:carbone_average_rewritten}
+\end{align}
+
 We then define the generalized variance $\sigma_\text{DMA}^2$
 \begin{align}
     \sigma_\text{DMA}^2 
@@ -84,17 +112,28 @@ The generalized variance goes as \hl{source?}
 \end{align*}
 which we can use to find the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the squares, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
 
-In the paper that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
+In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
 A modification of the method mentioned in \cite{carbone2007algorithm} is replacing $\tilde f_n(i,j)$ in \cref{eq:dma_variance} with
 \begin{align*}
     \tilde f_n^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \tilde f_n(i-1,j-1),
 \end{align*}
-where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cref{eq:carbone_average_rewritten}. This modification \hl{can give/gives} better results, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
+where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cref{eq:carbone_average_rewritten}. This modification \hl{can give/gives} better results \hl{source?}, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
 
-\todo[inline]{implemented in Matlab/Octave}
+\orangebox{The method is implemented in Matlab/Octave, and ???}
 
-\subsection{Testing DMA}
+\subsection{The performance of detrending moving average}
+To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic (1D) time series and (2D) surfaces \hl{of fractional Brownian motion} with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it's both hard to accurately measure the exponent, and it's hard to synthesize data with a given exponent. \hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
+
+To reduce the sources of errors we used a lot of different ready-made methods for synthesizing data with a given Hurst exponent, and measured the exponent using the detrending moving average method for each of these methods. For synthesizing 1D data we used the built-in Matlab-function \hl{cite matlab?} \Verb!wfbm! which uses the algorithm proposed by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method propoesed in\cite{wood1994simulation}, and \Verb!fbmlevinson! which uses a method from\cite{levinson1947wiener}. \hl{Readymade} programs for generating 2D data with a given Hurst exponent is hard to find \hl{(which is part of the reason why we implemented the SRA method)}, but we used another function from FracLab called \Verb!synth2!, which, according to the documentation of the function:%
+\begin{quote}
+    ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
+\end{quote}
+% ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
+
+See \cref{fig:dma_performace} for a plot of Hurst exponent measured using \hl{DMA} as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$.
+
+From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the best and most consistent results, as also noted by Gao-Feng Gu and Wei-Xing Zhou in\cite{gu2010detrending}, where they further develop the \hl{DMA} method to analyse multifractals. \hl{We would liked to have more 2D data references.}
 %
 \begin{figure}[htpb]%
     \centering%
@@ -104,9 +143,15 @@ where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cre
         \newcommand{\thislabelaaaaaa}{{\f $H_\x{in}=H_\x{out}$}}%
         \includesvg[width=1.0\textwidth, svgpath=./images/diamond_square_Hurst/test_HDDMA/]{fig03}%
     }
+%     \caption[
+%         Plot of the Hurst exponent as estimated by the detrending moving average method, used on data from four different synthetic signals, against the exponent used as input when generating the signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. All methods except synth2 generate 1-dimensional signals, while synth2 generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
+%     ]{%
+%         Plot of the Hurst exponent as estimated by the detrending moving average method, used on data from four different synthetic signals, against the exponent used as input when generating the signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. All methods except \Verb!synth2! generate 1-dimensional signals, while \texttt{synth2} generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
+%         \label{fig:dma_performace}%
+%     }%
     \caption{%
-        HDDMA. \hl{FINISH CAPTION}. %
-%         \label{fig:cell_lists}%
+        Plot of the Hurst exponent as estimated by the detrending moving average method, used on data from four different synthetic signals, against the exponent used as input when generating the signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. All methods except \texttt{synth2} generate 1-dimensional signals, while \texttt{synth2} generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
+        \label{fig:dma_performace}%
     }%
 \end{figure}%
 

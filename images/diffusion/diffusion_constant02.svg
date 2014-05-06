@@ -744,8 +744,18 @@ L52.9444 23.1418" style="fill:none;stroke:#000000;"/>
    <g id="text_16">
     <text style="font-family:DejaVu Sans;font-size:14.4px;font-style:normal;text-anchor:middle;" transform="rotate(-0.000000, 192.444375, 18.141750)" x="192.444375" y="18.14175">Diffusion constant</text>
    </g>
+   <g id="patch_7">
+    <path clip-path="url(#pdae2aeca91)" d="
+M61.3144 98.7417
+L178.494 98.7417
+L178.494 29.6218
+L61.3144 29.6218
+L61.3144 98.7417
+z
+" style="fill:#ffffff;stroke:#000000;"/>
+   </g>
    <g id="legend_1">
-    <g id="patch_7">
+    <g id="patch_8">
      <path d="
 M65.5795 96.3076
 L187.446 96.3076

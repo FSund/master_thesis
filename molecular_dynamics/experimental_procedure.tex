@@ -61,18 +61,28 @@ Since we are going to inject water into the pore later on, we want to use the co
 \begin{align*}
     \text{H}_2\text{O} \rightleftharpoons \text{H}^{+} + \text{OH}^{-},
 \end{align*}
-meaning that hydrogen (H) and hydroxide (OH) will be freely available in the system after injecting water. On this background we choose to passivate the system using hydrogen and hydroxide. To avoid getting an \hl{acidic or alkaline / charged?} system after the passivation procedure we should make sure to use equal parts hydrogen and hydroxide when passivating.\todo{we don't whink of this when cutting though...}
+meaning that hydrogen (H) and hydroxide (OH) will be freely available in the system after filling the pore with water. On this background we choose to passivate the system using hydrogen and hydroxide. To avoid getting an \hl{acidic or alkaline / charged?} system after the passivation procedure we should make sure to use equal parts hydrogen and hydroxide when passivating.\todo{we don't whink of this when cutting though...}
 
 \subsection{Passivating using hydrogen and hydroxide}
-After thermalizing our silica system we end up with a system consisting almost exclusively of SiO$_2$ tetrahedra\todo{source? what is the rest?}. These tetrahedra each consist of a central silicon atom, with four oxygen atoms in the four corners of the tetrahedra. Each of these tetrahedra are then bonded to four other equal tetrahedra, by sharing the oxygen atoms. This way each oxygen atom is bonded to two silicon atoms, and each silicon atom to four oxygen atoms, giving an average chemical \hl{formula} of SiO$_2$. 
+After thermalizing our silica system we end up with a system consisting almost exclusively of SiO$_2$ tetrahedra\todo{source? what is the rest?}. These tetrahedra are each formed by four oxygen atoms, one in each corner, and a silicon atom in the center. Each of these tetrahedra are then bonded to four other tetrahedra, by sharing the oxygen atoms in the corners. This way each oxygen atom is bonded to two silicon atoms, and each silicon atom to four oxygen atoms, giving an average chemical \hl{formula} of SiO$_2$. 
 
-Since we don't take \hl{chemical bonds (we have no bonds...)} into consideration when removing atoms to create a fracture, we end up with some incomplete tetrahedra (see \cref{fig:passivation}), with some silicon atoms bonded to less than four oxygen atoms, and some oxygen atoms bonded to less than two silicon atoms. To rectify this we use the following procedure:
+Since we don't take \hl{chemical bonds (we have no bonds...)} into consideration when removing atoms to create a fracture, we end up with some incomplete tetrahedra, with some silicon atoms bonded to less than four oxygen atoms, and some oxygen atoms bonded to less than two silicon atoms. See \cref{fig:passivation} for an illustration of three different incomplete tetrahedra. This creates what we call dangling ends/unsaturated bonds, which we want to \hl{remove/passivate}.
+
+% When inserting hydrogen and hydroxide we want to insert them in positions that are close to their equilibrium positions, so we don't have to do a lot of simulating to get a stabilized system after passivating. It's possible to calculate the optimal positions based on the potential and the positions of the existing atoms, but this is a complicated computation, that we can avoid, by instead realizing that the optimal positions for the oxygen atoms we insert will most likely \hl{(source?)} be close to the positions that complete the SiO$_2$ tetrahedra. These positions can be calculated, using simple geometry, from the positions of the oxygen atoms each silicon atom is bonded to.
+
+To passivate the silicon atoms that are \hl{bonded} to less than four oxygen atoms, we see that we need to complete the incomplete SiO$_4$ tetrahedra that have been created in the system. But if we only insert oxygen atoms in the positions of the missing oxygen atoms, we end up with new dangling \hl{ends/bonds}, since the inserted oxygen atoms will only be bonded to one silicon atom. But, as we just saw, we will have hydroxide (OH) groups available in the system after filling the fracture with water. So instead of inserting oxygen atoms and creating new unsaturated bonds, we insert hydroxide groups and create saturated Si-O-H \hl{bonds}. \hl{ SiO$_n$(OH)$_{4-n}$ tetrahedra.} We put the hydrogen atom so that the Si-O-H angle is close to the angle in water molecules, 107.5 degrees. \hl{The hydrogen atoms moves very rapidly compared to the rest of the species in the system, so they will quicly find the equilibrium position.}
+
+To passivate the oxygen atoms that are bonded to only one silicon atom, we can use the hydrogen atoms that are avilable after filling the fracture with water, turning unsaturated SiO-groups into the same saturated Si-O-H-groups as before. We here too insert the hydrogen atoms with the Si-O-H angle close to 107.5 degrees.
+
+In total we use the following procedure to passivate a system after creating a fracture:
 \begin{itemize}
-    \item Remove silicon and oxygen atoms that aren't bonded to any atoms, since they are \hl{essentially} not part of the silica crystal.
-    \item Add one hydrogen atom to all oxygen atoms bonded to only one silicon atom. The hydrogen atoms are inserted approximately $0.95\text{ \AA}$ from the oxygen atoms.
-    \item Add ($n-1$) hydroxide molecules per missing oxygen to silicon atoms bonded to $n$ (with $n < 4$) oxygen atoms. See \cref{fig:pass_tet01,fig:pass_tet02,fig:pass_tet03} for the three different cases. The hydroxide groups are inserted approximately $1.65\text{ \AA}$ from the silicon atoms, measured from the position of the silicon atom to the oxygen atom in the hydroxide groups.
+    \item Remove all silicon and oxygen atoms that aren't bonded to any atoms, since they are \hl{essentially} not part of the silica \hl{crystal/matrix}.
+    \item Add one hydrogen atom to all oxygen atoms bonded to only one silicon atom. The hydrogen atoms are inserted approximately $0.95\text{ \AA}$ from the oxygen atoms, with the hydrogen atom pointing away from the silicon atom, and with the Si-O-H angle close to 107.5 degrees.
+    \item Add ($4-n$) hydroxide \hl{molecules/groups} to silicon atoms bonded to $(1\leq n<4)$ oxygen atoms. We assume that the most stable position for the oxygen in the hydroxide groups are close to the tetrahedral positions of the missing oxygen atoms, and insert the hydroxide groups in these positions. %
+    %See \cref{fig:pass_tet01,fig:pass_tet02,fig:pass_tet03} for the three different cases. 
+    The hydroxide groups are inserted approximately $1.65\text{ \AA}$ from the silicon atoms, measured from the position of the silicon atom to the oxygen atom in the hydroxide groups, with the hydrogen atom pointing away from the silicon atom, and with the Si-O-H angle close to 107.5 degrees.
 \end{itemize}
-The lengths used are approximate experimental lengths found in naturally occuring silanols and water (see \cite{lickiss1995synthesis} for the Si-O length in silanol, and \cite{csaszar2005equilibrium} for the O-H length in water). This procedure turns all dangling ends into \hl{stable, passive} silanol groups. The hydroxide groups are inserted with the hydrogen atom pointing away from the silicon atom, making a straight line through \hl{Si-O-H}.
+The lengths used are approximate experimental lengths found in naturally occuring silanols and water (see \cite{lickiss1995synthesis} for the Si-O length in silanol, and \cite{csaszar2005equilibrium} for the O-H length in water). This procedure turns all dangling ends into \hl{stable, passive} silanol groups.
 %
 \begin{figure}[htpb]%
     \centering%
@@ -104,7 +114,7 @@ The lengths used are approximate experimental lengths found in naturally occurin
 %         \label{fig:fracture_model}\caption{}%
     \end{subfigure}%
     \caption{%
-        Illustration of four different incomplete silica tetrahedra, with respectively one, two, and three missing oxygen atoms.
+        Illustration of four different incomplete silica tetrahedra, with respectively one, two, and three missing oxygen atoms. \hl{UNNECESSARY FIGURE?}
     }%
     \label{fig:passivation}%
 \end{figure}%
@@ -140,7 +150,7 @@ The lengths used are approximate experimental lengths found in naturally occurin
 % All silicon and oxygen atoms with no neighbors we remove, since they aren't really part of the silica.
 
 \subsection{Counting number of bonds}
-Since we don't have actual bonds in molecular dynamics simulations, we don't know what the actual bonds look like. So to find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom. To create these lists we use the procedure detailed in \cref{sec:neighbor_lists}. Since we only have silicon and oxygen atoms in our system, we only need to use the Si-O-distance to find the bonded atoms. If we choose this radius properly, we should be able find a good approximation to how many atoms each atom is bonded to.
+Since we don't have actual bonds in molecular dynamics simulations, we don't know what the actual bonds look like. So to find the number of \hl{neighbors/bonds/bonded atoms} for each silicon and oxygen atom, we create what we call \emph{neigbor lists}, which is a list of atoms within a chosen radius, for each atom. To create these lists we use the procedure detailed in \cref{sec:neighbor_lists}. Since we only have silicon and oxygen atoms in our system, we only need to specify a maximum the Si-O-distance to find which atoms are bonded. If we choose this distance properly, we should be able find a good approximation to how many atoms each atom is bonded to.
 
 \orangebox{
 \begin{itemize}
@@ -173,20 +183,32 @@ Since we don't have actual bonds in molecular dynamics simulations, we don't kno
 \subsection{Only passivating surface atoms}
 When implementing the passivation method detailed above, we soon ran into problems with silica and oxygen atoms that were bonded to too few atoms according to our rules above, while counting the number of bonds using a fixed radius. Some improvements were made by fine-tuning the radius used for each atom type, but we still often ended up passivating atoms that were inside the silica matrix, where we shouldn't have any dangling \hl{bonds/ends}. To avoid this we came up with a method to only passivate the atoms \hl{at or near} the surface of the fracture.
 
-To do this we \hl{again (not used it yet?)} use the voxelation method from \ref{sec:voxelation}, but this time we use a voxel size of around $6\text{ \AA}$. We then mark all voxels with atoms in them as occupied. We now see that if we find all \emph{occupied} voxels with a \hl{unoccupied} neighbor voxel \hl{(using 26-connected)}, we should have a list of voxels that contain all atoms at or near the surface of the fracture. We then use this list of atoms as input to the passivation program, and only passivate atoms in that list. See \cref{fig:find_surface_atoms} for an illustration of the method that finds the voxels and atoms at the surface of the fracture.
+To do this we \hl{yet again} use the voxelation method from \ref{sec:voxelation}, but this time we use a voxel size of around $6\text{ \AA}$. We then mark all voxels with atoms in them as occupied. We now see that if we find all \emph{occupied} voxels with at least one \emph{unoccupied} neighbor voxel \hl{(using 26-neighbor connectivity)}, we should have a list of the voxels that make up the surface of the fracture, and these voxels then contain all atoms at or near the surface of the fracture. We then use this list of atoms as input to the passivation program, and only passivate atoms in that list. See \cref{fig:find_surface_atoms} for an illustration of the method that finds the voxels and atoms at the surface of the fracture.
 %
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.5\textwidth, svgpath = ./images/passivation/]{select_surface_voxels02}%
+    \includesvg[width=0.5\textwidth, svgpath = ./images/passivation/]{select_surface_voxels05}%
     \caption{
-        Illustration of a method for finding atoms and voxels at the surface of a fracture. All gray voxels are occupied voxels (with at least one atom in them), and the dark gray voxels are the voxels with at least one unoccupied neighbor voxel. \hl{FINISH} \hl{change to v1 of illustration?} \hl{what size shoud fig be?}
+        Illustration of a method for finding atoms and voxels at the surface of a fracture. All gray voxels are occupied voxels (with at least one atom in them), and the dark gray voxels are the voxels with at least one unoccupied neighbor voxel. \hl{FINISH} \hl{change to v1 of illustration?} \hl{what size shoud fig be? 0.4 maybe a bit small?}
     }%
     \label{fig:find_surface_atoms}%
 \end{figure}%
 
+\subsection{Results/examples}
+An example of a system after passivation can be seen in \cref{fig:passivation_example}. Here we see hydrogen and ???
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includegraphics[width=0.7\textwidth]{images/passivation/passivation_example04.png}%
+    \caption{
+        Passivation example.png.\hl{FINISH CAPTION}%
+    }%
+    \label{fig:passivation_example}%
+\end{figure}%
+
 \FloatBarrier
 \section{Injecting water}
-After removing atoms to create a fracture, and passivating the system, we are now ready to inject water into the fracture. To do this we use the technique of \emph{voxelation} (see \cref{sec:voxelation}), divide the system into voxels, and put one water molecule in each unoccupied voxel. The water density is controlled by the size of the voxels.
+After removing atoms to create a fracture, and passivating the system, we are now ready to inject water into the fracture. To do this we use the technique of \emph{voxelation} (see \cref{sec:voxelation}). We first divide the system into voxels, find the empty voxels, and then put one water molecule in each unoccupied voxel. The water density can then be controlled by the size of the voxels we use.\todo{Not filling all voxels}
 
 \subsection[Finding correct voxel size/water density?]{Finding correct voxel size/\hl{water density?}}
 If we want to inject water with density $\rho$% [kg/m$^3$]
@@ -223,7 +245,7 @@ We then divide the system into voxels of length $l$, and put one water molecule 
 \subsection{Finding empty voxels}
 The naive way of finding the empty voxels is to just find which voxel each silicon and oxygen atom is in, and mark those as occupied. Using this method we found that we often got some empty voxels inside the silica matrix, which meant we got single water atoms trapped inside what was supposed to be the silica matrix. 
 
-This can be explained if we compare the voxel size of $3.1 \text{ \AA}$ in water with a density of $\rho = 1000\text{ kg/m$^3$}$, as we found above, to the typical Si-O bond length in silica. When we take into account the amorphous structure of silica we see that it's likely that we get some small pores with room for a water atom in between some of the silica tetrahedra.
+This can be explained if we compare the voxel size of $3.1 \text{ \AA}$ in water with a density of $\rho = 1000\text{ kg/m$^3$}$, as we found above, to the typical Si-O bond length in silica. \todo{better explanation}When we take into account the amorphous structure of silica we see that it's likely that we get some small pores with room for a water atom in between some of the silica tetrahedra.
 
 To solve this we assign a radius to each atom type\todo{which is hard, Si-O, ???}, and mark all voxels with the center of the voxel within this radius from an atom as occupied. See \cref{fig:inject_empty_voxel} for an illustration of this procedure. 
 %
@@ -252,10 +274,12 @@ To solve this we assign a radius to each atom type\todo{which is hard, Si-O, ???
 
 A different solution to the problem of tiny pores inside the silica matrix is to \hl{just} remove all small clusters of voxels (where a ``small cluster of voxels'' would need to be defined)\hl{, which sometimes can be a better solution, since we introduce new lone voxels when making radius? Maybe implement both methods, a small radius and remove small clusters?}.
 
+\orangebox{
 \begin{itemize}
     \item Remove tiny pores?
     \item Mark all voxels within distance from other atoms as occupied
     \item Fill other voxels with H2O with random O-H orientation, but correct angle
     \item Improvement: Use one voxel size in the beginning (to avoid one-voxel pores), and then use a smaller voxel size when injecting water
 \end{itemize}
+}
 

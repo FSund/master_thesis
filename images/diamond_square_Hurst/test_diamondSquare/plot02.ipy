@@ -4,7 +4,7 @@ default_backend = "Qt4Agg"
 default_fig_size = np.array([8.0, 6.0]) # inches
 
 backend = default_backend
-backend = "SVG"
+# backend = "SVG"
 
 import matplotlib
 matplotlib.use(backend)
@@ -68,6 +68,7 @@ for addition in [0,1]:
 
 ax.set_xlabel('Input \$H\$')
 ax.set_ylabel('Measured \$H\$')
+ax.set_title("Successive random additions")
 # leg = ax.legend(loc = 'best', 
 #     framealpha = 0.0, 
 #     bbox_to_anchor = (1.0, 0.45), 
@@ -87,16 +88,62 @@ leg = ax.legend(
     borderpad = 0.0,    # reduce size of .svg
     handlelength = 5.0
 )
+# bb = leg.legendPatch.get_bbox().inverse_transformed(ax.transAxes)
 
 ax.set_xlim([0.0, 1.2])
 ax.set_ylim([0.15, 0.95])
+# plt.draw()
+# plt.show()
+# plt.draw()
+# plt.show()
 
-bb = fig.get_window_extent()
+# from matplotlib.ticker import MultipleLocator
+
+# majorLocator = MultipleLocator(0.2)
+# majorLocator.tick_values(-0.2, 1.4)
+# majorLocator.view_limits(-0.2, 1.4)
+# ax.xaxis.set_major_locator(majorLocator)
+# ax.yaxis.set_major_locator(majorLocator)
+
+# minorLocator = MultipleLocator(0.1)
+# ax.xaxis.set_minor_locator(minorLocator)
+# ax.yaxis.set_minor_locator(minorLocator)
+
+from matplotlib.ticker import AutoMinorLocator
+minorLocator = AutoMinorLocator(n=2)
+minorLocator.view_limits(-0.1, 1.4)
+ax.xaxis.set_minor_locator(minorLocator)
+
+ax.xaxis.grid(True)
+ax.yaxis.grid(True)
+ax.xaxis.grid(True, which='minor')
+# ax.yaxis.grid(True, which='minor')
+
+return
+
+if True:
+    ## Make custom legend frame
+    import matplotlib.transforms as mtransforms
+    bb = mtransforms.Bbox([[0.63, 0.04], [0.98, 0.47]])
+
+    from matplotlib.patches import FancyBboxPatch
+    p_bbox = FancyBboxPatch(
+        (bb.x0, bb.y0),
+        abs(bb.width), abs(bb.height),
+        transform = ax.transAxes, # default ?
+        boxstyle = "square,pad=0",
+        ec="k", fc="w",
+        zorder = 1000
+    )
+    ax.add_patch(p_bbox)
+
+    # Box above legend
+    leg.set_zorder(1001)
 
 if backend == default_backend:
     plt.show()
 else:
-    fig.savefig("fig.svg", 
+    fig.savefig("fig02.svg", 
         bbox_inches='tight', 
         # bbox_inches = [8.0, 6.0]
     )
