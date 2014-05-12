@@ -5,7 +5,7 @@ import os.path
 default_backend = 'Qt4Agg'
 
 renderer = 'SVG'
-renderer = default_backend
+# renderer = default_backend
 
 import matplotlib
 matplotlib.use(renderer)
@@ -176,7 +176,7 @@ def plot_diffusion(time, datasets, r_vectors, renderer):
     ax.add_patch(p_bbox)
     plt.draw()
 
-    mysavefig("diffusion")
+    mysavefig("diffusion01")
 
 
 # Load data

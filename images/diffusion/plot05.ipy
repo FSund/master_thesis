@@ -233,4 +233,4 @@ ax.yaxis.grid(True)
 if backend == default_backend:
     plt.show()
 elif backend == "SVG":
-    fig.savefig("diffusion.svg", bbox_inches='tight')
+    fig.savefig("diffusion02.svg", bbox_inches='tight')

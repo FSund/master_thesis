@@ -1,0 +1,173 @@
+import os.path
+import numpy as np
+
+def find_statistics_files(path_to_statistics_folder, statistics_folder_numbers):
+
+    statistics_folders = []
+    for folder_number in statistics_folder_numbers:
+        statistics_folders.append(os.path.join(path_to_statistics_folder, "%03d_stat" %folder_number))
+
+    eng_files = []
+    msd_files = []
+    for statistics_folder in statistics_folders:
+        eng_files.append(os.path.join(statistics_folder, "eng.d"))
+        msd_files.append(os.path.join(statistics_folder, "msd.d"))
+
+    return eng_files, msd_files #, statistics_folders
+
+def find_remd22_version(eng_file):
+    # Find if we have v1 or v2 output files
+
+    f = open(eng_file)
+    lines = f.readlines()
+
+    v1_line_number = 11
+    v2_line_number = v1_line_number + 2
+    header = " Step Pot_energy Tot_energy Temperature\n"
+    if lines[v1_line_number] == header:
+        # print "v1"
+        return 1
+    elif lines[v2_line_number] == header:
+        # print "v2"
+        return 2
+    else:
+        # print "unknown version"
+        return 0
+
+def short_eng_file_name(path_to_eng_file):
+    return os.path.split(os.path.split(path_to_eng_file)[0])[-1] + "/" + os.path.split(path_to_eng_file)[-1]
+
+def fix_time_vector(time, dt):
+
+    for i in range(0, time.size-1):
+
+        if (time[i+1] - time[i]) > dt:
+            print "! Fixed too large step between {} and {}".format(time[i],time[i+1])
+            time[i+1:] = time[i+1:] + (dt - (time[i+1] - time[i]))
+
+        elif (time[i+1] - time[i]) < dt and time[i+1] >= time[i]: # fix differences smaller than dt
+            print "! Fixed too small step between {} and {}".format(time[i],time[i+1])
+            time[i+1:] = time[i+1:] + (dt - (time[i+1] - time[i]))
+
+        elif time[i+1] < time[i]:   # fix if time-vector decreases
+            print "! Fixed decrease in time between {} and {}".format(time[i],time[i+1])
+            time[i+1:] = time[i+1:] + (time[i] - time[i+1]) + dt
+            # print time[i]
+            # print time[i+1]
+
+    return time
+
+def load_eng(eng_file):
+
+    version = find_remd22_version(eng_file)
+
+    # assert (version > 0), "Couldn't read eng.d-file, wrong version!"
+
+    if version > 0:
+        n_header_lines = [12, 14][version-1]
+        # n_footer_lines = 29
+        n_footer_lines = 20 # Doesn't count empty lines?
+        timestep, potential_energy, total_energy, temperature = np.genfromtxt(
+            fname = eng_file, 
+            skip_header = n_header_lines, 
+            skip_footer = n_footer_lines,
+            unpack = True,
+            # dtype = "i16,f64,f64,f64"
+            # dtype="i8,f8,S5" # dtype doesn't work well with unpack = True, maybe since unpack transposes
+        )
+        # timestep = np.array(timestep, dtype = int)
+        # timestep = timestep.astype(np.int)
+        timestep = timestep.astype(int)
+
+    else:
+        print "Skipping eng.d-file \"" + short_eng_file_name(eng_file) + "\", because we couldn't figure out the remd22-version"
+        return np.array([], dtype = int), np.array([]), np.array([]), np.array([])
+
+    return timestep, potential_energy, total_energy, temperature
+
+def load_data(path_to_statistics_folder, statistics_folder_numbers):
+
+    eng_files, msd_files = find_statistics_files(path_to_statistics_folder, statistics_folder_numbers)
+
+    timestep = np.array([], dtype = int)
+    potential_energy = np.array([])
+    total_energy = np.array([])
+    temperature = np.array([])
+    for eng_file in eng_files:
+
+        print "\"" + short_eng_file_name(eng_file) + "\""
+
+        newtime, newpot, newtot, newtemp = load_eng(eng_file)
+
+        # print newtime.size
+        # print newtime
+        if newtime.size > 0:
+            if newtime.size == 1:
+                print "Timesteps loaded: [{}]".format(newtime)
+            else:
+                print "Timesteps loaded: [{}, {}]".format(newtime[0], newtime[-1])
+            # print type(newtime)
+            # print "Timesteps loaded: [{}, {}]".format(newtime[0], newtime[-1])
+
+        timestep = np.append(timestep, newtime)
+        potential_energy = np.append(potential_energy, newpot)
+        total_energy = np.append(total_energy, newtot)
+        temperature = np.append(temperature, newtemp)
+
+    return timestep, potential_energy, total_energy, temperature
+
+## RUN PROGRAM ##
+
+# Set up variables
+system_nr = 1
+
+if system_nr == 0:
+    project_location = '/home/fsund/Projects/'
+    project_name = 'rough_fracture03'
+    statistics_folder = 'statistics'
+
+    # statistics_folder_numbers = range(0,54)
+    statistics_folder_numbers = (
+        range(0,15)     # 14 and 15 are the same files (saved statistics without doing anything)
+        + range(16,28)  # 27 and 28 are the same files (saved statistics without doing anything)
+        + range(29,54)
+    )
+
+    n_cpus = [4]*3
+
+elif system_nr == 1:
+    project_location = '/home/fsund/Projects/'
+    project_name = 'flat_square_fracture03'
+    statistics_folder = 'statistics'
+    
+    # file 34 and out have wrong timestep?
+    # 02_cooled_crystal: last timestep is 162501
+    # 07_steepest_after_inject: last timestep is 151637
+    # --> fix this by adding (162501 - 151637 + 100 = 10964) to all timesteps after 027_stat
+    statistics_folder_numbers = (
+        range(0,15)     # 14 and 15 are the same files (saved statistics without doing anything)
+        + range(16,28)  # 27 and 28 are the same files (saved statistics without doing anything)
+        + range(29,54)
+    )
+    n_cpus = [4]*3
+
+path_to_statistics_folder = os.path.join(project_location, project_name, statistics_folder)
+
+## Load data
+timestep, potential_energy, total_energy, temperature = load_data(path_to_statistics_folder, statistics_folder_numbers)
+timestep = fix_time_vector(timestep, dt = 100)
+
+print
+print timestep.dtype
+print np.shape(timestep)
+
+## Plot
+import matplotlib.pyplot as plt
+plt.ion()
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+# ax.plot(timestep, temperature, 'o')
+ax.plot(timestep, temperature)
+plt.show()
