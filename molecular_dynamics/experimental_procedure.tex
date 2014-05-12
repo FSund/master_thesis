@@ -46,12 +46,46 @@ To generate silica in the glass form we first create a perfect silica crystal in
         \label{fig:cristobalite}%
     }%
 \end{figure}%
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includegraphics[width=0.6\textwidth]{images/beta_cristobalite/unit_cell03_cropped.png}%
+    \caption{
+        \hl{FINISH CAPTION}%
+    }%
+    \label{fig:beta_cristobalite-unit_cell}%
+\end{figure}%
 
 We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse.
 
 We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
 
 We are now ready to do measurements.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \begin{subfigure}[c]{0.45\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includegraphics[width=\textwidth]{images/melt_glass/perfect_crystal02_cropped}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite01}}%
+        \caption{}%
+%         \label{fig:cristobalite01}%
+    \end{subfigure}%
+    \hspace{0.07\textwidth}%
+    \begin{subfigure}[c]{0.45\textwidth}%
+%         \begin{minipage}[c]{\textwidth}%
+        \includegraphics[width=\textwidth]{images/melt_glass/melted02_cropped}%
+%         \end{minipage}%
+%         \caption{\cite{wikiCristobalite02}}%
+        \caption{}%+
+%         \label{fig:cristobalite02}%
+    \end{subfigure}%
+    \caption{%
+        Fig%
+        \label{fig:melted_glass}%
+    }%
+\end{figure}%
 
 \section{Passivation}
 In most silicates the silicon atoms have tetrahedral coordination, with four oxygen atoms surronding each silicon atom. When we remove silica- and oxygen-atoms to create a fracture, we don't take this into consideration. This means that we get dangling unsaturated bonds in the system, located near the surface of the pore. To rectify this we use a method called passivation, where we saturate \hl{and passivate} the dangling bonds by inserting new atoms. 
