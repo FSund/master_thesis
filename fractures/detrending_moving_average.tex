@@ -7,52 +7,41 @@ After trying out some different methods for estimating the Hurst exponent, we en
 \todo[inline]{everything below is for 2/3 D, not always obvious}
 
 \subsection{Detrending moving average in 2 dimensions}
-We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. For all points
-\begin{align*}
-%     n-m \leq i,j \leq N-m,
-    &(i,j)\in [n-m, N-m] &\text{where}& &m\in [0, n),
-\end{align*}
-in this surface we define a subsurface of size $n \times n$, consisting of the points
-\[
-%     (i+m)-n+1 \leq k,l \leq i+m,
-    (k,l) \in [(i+m)-n+1, i+m].
-\]
-The parameter $m$ is calculated using a parameter $\theta$ as
-\begin{align*}
-    &m = \left \lfloor n\theta \right \rfloor &\text{for }
-    %0 \leq \theta < 1,
-    \theta \in [0,1).
-\end{align*}
-This means that $\theta$ controls the position of the subsurface relative to the point $(i,j)$ in the main surface. There are three \hl{extreme} cases for $\theta$, which are listed below and illustrated in \cref{fig:DMA_theta}.%
-%
-\begin{description}%
-    \item[$\bm{\theta = 0}$:] \hfill\\%
-        We have $m=0$, and the subsurface is positioned so that the point $(i,j)$ in the main surface is in the upper right corner of the subsurface. %
-%         \hl{(($i-n+1) \leq k,l \leq i$)}.%
-        \hl{The subsurface consists of the points $(k,l) \in (i-n, i]$}. %
-        See \cref{fig:DMA_theta_a} for an illustration \hl{of what?}.%
-    \item[$\bm{\theta = 1/2}$:] \hfill\\%
-        The subsurface is positioned so that the point $(i,j)$ in the main surface is in the center of the subsurface. %
-%         The subsurface consists of the points $(k,l) \in [(i+\lfloor n/2 \rfloor)-n+1, i+(i+\lfloor n/2 \rfloor)]$
-        See \cref{fig:DMA_theta_b} for an illustration \hl{of what?}.%
-    \item[$\bm{\theta = (n-1)/n}$:] \hfill\\%
-        {\sloppy%
-        We have the maximum value for $m$, $m=n-1$, and the subsurface is positioned so that the point $(i,j)$ in the main surface is positioned in the lower left corner of the subsurface. %
-        The subsurface consists of the points $(k,l) \in [i, i+n)$. %
-        See \cref{fig:DMA_theta_c} for an illustration \hl{of what?}.%
-        }%
-\end{description}%
-% \begin{description}
-%     \item[$\bm{\theta = 0}$:] \hfill\\ 
-%         We have $m=0$ and we average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s upper right corner \hl{(($i-n+1) \leq k,l \leq i$)}. See \cref{fig:DMA_theta_a}.
-%     \item[$\bm{\theta = 1/2}$:] \hfill\\ 
-%         We average over a \hl{subsurface/square} centered on the point $(i,j)$. See \cref{fig:DMA_theta_b}.
-%     \item[$\bm{\theta = (n-1)/n}$:] \hfill\\ 
-%         {\sloppy 
-%         We have the maximum value for $m$, $m=n-1$, and average over a \hl{subsurface/square} with the point $(i,j)$ in the \hl{subsurface/square}'s lower left corner \todo{\st{THESE LIMITS ARE WRONG??} fixed} \hl{(${i \leq k,l \leq (i+n-1)}$)}. See \cref{fig:DMA_theta_c}.
-%         }
-% \end{description}%
+% We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. We divide this surface into \emph{overlapping} subsurfaces of size $n \times n$, spanning the whole surface. The \hl{lower left} corners of the surfaces are located in the points $(i,j)$ for $i,j = 1,\dots, N-n+1$ (the limits are set so that the subsurfaces stay within the domain of the surface). In each surface we find a point $(k,l) = (n-m,n-m)$ (relative to lower bottom corner of subsurface)
 
+We define a \hl{(self-affine)} surface $f(i,j)$ of size $N,N$, with $i,j = 1,\dots,N$. For all points $i,j = 1,\dots,N-n+1$ in this surface we define a subsurface of size $n\times n$ consisting of the points
+\begin{align*}
+%     (k,l) = \left([i, \dots, i+n], [j, \dots, j+n]\right)%
+%     (k,l) = (i,j) + ([1\dots,n], [1,\dots,n])%
+    (k,l) = (i,j) + \left([1\dots,n], [1,\dots,n]\right)%
+\end{align*}
+in the main surface. This means that the point $(i,j)$ is located in the \hl{``lower left''} corner of the subsurface. The limits $i,j \in [1,N-n+1]$ are set so that the subsurfaces span the whole main surface.
+
+For each subsurface located at $(i,j)$ we find a point $(k_m, l_m)$ in the subsurface, at
+\begin{align*}
+%     (k^*, l^*) = (i,j) + (n-m, n-m) %
+%     (k_0, l_0) = (i,j) + (n-m, n-m) %
+    (k_m, l_m) = (i,j) + (n-m, n-m), %
+%     \\
+%     \big(i+(n-m), j+(n-m)\big)
+\end{align*}
+where $m$ is defined as
+\begin{align*}
+    &m = \lfloor n\theta \rfloor &\text{for } \theta \in [0,1).
+\end{align*}
+% With $\theta = 0$ the point is in the upper right corner of the subsurfaces, at $(i+n,i+n)$, for $\theta = 1/2$ the point is in the center, at $(i+n/2, i+n/2)$, and for $\theta \rightarrow 1 \rightarrow (n-1)/n$ the point is in the lower left corner, at $(i,j)$.
+The parameter $\theta$ controls the position of this point inside the subsurface, and we have three extreme cases, listed below, and illustrated in \cref{fig:DMA_theta}.%
+% \begin{description}%
+%     \item[$\bm{\theta = 0}$:] \\ the point $(k_m, l_m)$ is in the upper right corner of the subsurface, at $(i+n,i+n)$
+%     \item[$\bm{\theta = 1/2}$:] the point $(k_m, l_m)$ is in the center, at $(i+n/2, i+n/2)$
+%     \item[$\bm{\theta \rightarrow 1 \rightarrow (n-1)/n}$:] the point $(k_m, l_m)$ is in the lower left corner, at $(i,j)$
+% \end{description}%
+\begin{itemize}[label={}]
+    \item $\bm{\theta = 0:}$ the point is in the upper right corner of the subsurface, at $(i+n,j+n)$
+    \item $\bm{\theta = 1/2:}$ the point is in the center, at $(i+n/2, j+n/2)$
+    \item $\bm{\theta \rightarrow 1 \rightarrow (n-1)/n:}$ the point is in the lower left corner, at $(i,j)$
+\end{itemize}
+%
 \begin{figure}[htpb]%
     \centering%
     \begin{subfigure}[b]{0.25\textwidth}%
@@ -78,49 +67,45 @@ This means that $\theta$ controls the position of the subsurface relative to the
         \label{fig:DMA_theta_c}%
     \end{subfigure}%
         \caption{%
-        Illustration of what the parameter $\theta$ controls in the detrending moving average method in \hl{2/3} dimensions. The circles are points where the surface is defined, the red star is the point $(i,j)$, and the black square encompasses the points averaged over to calculate $\tilde f_n(i,j)$ in \cref{eq:carbone_average_rewritten}. The illustration uses $n = 3$.%
+        Illustration of three extreme cases for the parameter $\theta$ in \hl{2/3} dimensions. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustration uses $n = 3$.%
         \label{fig:DMA_theta}%
     }%
 \end{figure}%
 
-We find the average $\tilde f_n$ of each subsurface by\footnotemark%
-%
-\footnotetext{\Cref{eq:carbone_average} is how the average $\tilde f_n$ is written in\cite{carbone2007algorithm}, but we rewrite it to the form in \cref{eq:carbone_average_rewritten} to ease understanding of what this average actually is. The two forms are equivalent.}%
-%
+We find the average $\bar {f_n}$ of each subsurface \hl{as/using/via}
 \begin{align}
-    \tilde f_n(i,j) 
-    &= \frac{1}{n^2}\sum_{k=-m}^{n-1-m} ~ \sum_{l=-m}^{n-1-m} f(i-k, j-l) \label{eq:carbone_average}\\
-%     &= \frac{1}{n^2}\sum_{k=i-m}^{i-n+1+m}\sum_{l=j-m}^{j-n+1+m} f(i-k, j-l) \\
-    &= \frac{1}{n^2} \sum_{k=(i+m)-n+1}^{i+m} ~ \sum_{l=(i+m)-n+1}^{i+m} f(k, l), \label{eq:carbone_average_rewritten}
+    \bar {f_n}(i,j) = \frac{1}{n^2} \sum_{k = i}^{i+n} \sum_{l = j}^{j+n} f(k,l),
+    \label{eq:carbone_average}
 \end{align}
-
-We then define the generalized variance $\sigma_\text{DMA}^2$
+and we define the \emph{generalized variance}, $\sigma_\text{DMA}^2$, as \hl{the sum of the squared differences between} the value in the point $f(k_m,l_m)$ minus the average $\bar {f_n}(i,j)$, for each subsurface. This can be written as
 \begin{align}
     \sigma_\text{DMA}^2 
-    = \frac{1}{(N-n)^2}\sum_{i=n-m}^{N-m} ~ \sum_{j=n-m}^{N-m} 
+%     &= \frac{1}{(N-n)^2}\sum_{i=n-m}^{N-m} ~ \sum_{j=n-m}^{N-m} 
+%     \big(
+%         f(i,j) - \tilde f_n(i,j)
+%     \big)^2,% \label{eq:dma_variance}
+%     \\
+    &= \frac{1}{(N-n)^2}\sum_{i=1}^{N-n+1} ~ \sum_{j=1}^{N-n+1} 
     \big(
-        f(i,j) - \tilde f_n(i,j)
-    \big)^2, \label{eq:dma_variance}
+        f(i+n-m,j+n-m) - \bar f_n(i,j)
+    \big)^2.\label{eq:dma_variance}
 \end{align}
-where we see that $f(i,j) - f_n(i,j)$ is the difference between the point $(i,j)$ and the average of a \hl{subsurface/square} of points (including the point itself) of size $n \times n$, as explained above (see also \cref{fig:DMA_theta}).
-% (the position of the \hl{subsurface/square} is controlled by the parameter $\theta$, as explained above, and illustrated \cref{fig:DMA_theta}). 
-The summation limits $(n-m) \leq i,j \leq N-m$ are set so that the averages $f_n(i,j)$ don't exceed the domain with size $N \times N$.
 
-The generalized variance goes as \hl{source?}
+It can be shown that this generalized variance goes as \hl{SOURCE}
 \begin{align*}
     \sigma_\text{DMA}^2 \sim \left(2n^2\right)^H,
 \end{align*}
-which we can use to find the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the squares, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
+which we can use to estimate the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the subsurfaces, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
 
 In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
-A modification of the method mentioned in \cite{carbone2007algorithm} is replacing $\tilde f_n(i,j)$ in \cref{eq:dma_variance} with
+A modification of the method mentioned in \cite{carbone2007algorithm} is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todo{not correct, fix this}
 \begin{align*}
     \tilde f_n^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \tilde f_n(i-1,j-1),
 \end{align*}
-where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as in \cref{eq:carbone_average_rewritten}. This modification \hl{can give/gives} better results \hl{source?}, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
+where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). This modification \hl{can give/gives} better results \hl{source?}, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
 
-\orangebox{The method is implemented in Matlab/Octave, and ???}
+\orangebox{The method is implemented in Matlab/Octave}
 
 \subsection{The performance of detrending moving average}
 To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic (1D) time series and (2D) surfaces \hl{of fractional Brownian motion} with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it's both hard to accurately measure the exponent, and it's hard to synthesize data with a given exponent. \hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
