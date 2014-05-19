@@ -1,0 +1,74 @@
+import numpy as np
+
+default_fig_size = np.array([8.0, 6.0]) # inches
+default_backend = 'Qt4Agg'
+backend = default_backend
+backend = 'SVG'
+
+import matplotlib
+matplotlib.use(backend)
+matplotlib.rcParams['svg.fonttype'] = 'none' # To make text in the resulting svg actual text, instead of a path. 
+matplotlib.rcParams['savefig.dpi'] = 150 # Doesn't apply when using svg backend?
+
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+
+if backend == default_backend:
+    plt.ion()
+
+Hvec = np.linspace(0, 1, 5)
+Hvec = [0.0, 0.25, 0.5, 1.0]
+
+gs = GridSpec(1, len(Hvec), wspace = 0.3)
+# gs.update(wspace=0.03, hspace=0.05) # remove spacing
+# gs.update(hspace = 20)
+# gs.update(h_pad = 20)
+
+axes = []
+
+fig = plt.figure(figsize = default_fig_size/(np.array([0.75, 3.0])*1.5))
+# plt.suptitle("fBm, Hurst exponent",
+#     x = 0.5, y = 1.05
+# )
+for idx, H in enumerate(Hvec):
+    if False:
+        if idx == 0:
+            axes.append(fig.add_subplot(gs[0,idx]))
+        else:
+            axes.append(fig.add_subplot(gs[0,idx],
+                sharey = axes[0],
+            ))
+
+    axes.append(fig.add_subplot(gs[0,idx]))
+    
+    fBm = np.genfromtxt("fBm_1D_H%1.2f.txt" % H)
+    axes[idx].plot(fBm[1:100, :4])
+    axes[idx].set_title("H = %1.2f" % H)
+
+# Axis ticks and labels
+from matplotlib.ticker import MultipleLocator, MaxNLocator
+xMajorLocator = MultipleLocator(25)
+
+for ax in axes:
+    ax.xaxis.set_major_locator(xMajorLocator)
+    ax.set_xticks([25, 50,75])
+
+axes[0].yaxis.set_major_locator(MultipleLocator(4))
+axes[1].yaxis.set_major_locator(MultipleLocator(3))
+axes[2].yaxis.set_major_locator(MultipleLocator(3))
+axes[3].yaxis.set_major_locator(MultipleLocator(20))
+
+axes[1].set_ylim([-7,7])
+axes[2].set_ylim([-7,7])
+
+
+# Axis labels
+# fig.text(s = "n", x=0.5, y=0.06, transform = fig.transFigure, ha = "center", va = "center")
+fig.text(s = "n", x=0.5, y=-0.1, transform = axes[0].transAxes, ha = "center", va = "center")
+# fig.text(s = "fBm", x=0.04, y=0.5, rotation = "vertical", transform = fig.transFigure, ha = "center", va = "center")
+# fig.text(s = "fBm", x=0.085, y=0.5, rotation = "vertical", transform = axes[0].transScale, ha = "center", va = "center")
+
+if backend == default_backend:
+    plt.show()
+else:
+    fig.savefig("fbm_1d_examples.svg", bbox_inches='tight')
