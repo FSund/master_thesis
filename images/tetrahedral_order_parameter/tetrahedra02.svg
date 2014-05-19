@@ -14,7 +14,7 @@
    id="svg156694"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="tetrahedra.svg">
+   sodipodi:docname="tetrahedra02.svg">
   <defs
      id="defs156696" />
   <sodipodi:namedview
@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6568543"
-     inkscape:cx="275.2117"
-     inkscape:cy="820.22585"
+     inkscape:cx="296.4249"
+     inkscape:cy="841.43905"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -61,7 +61,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -136,14 +136,14 @@
     <text
        xml:space="preserve"
        style="font-size:36px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Andale Mono;-inkscape-font-specification:Andale Mono"
-       x="343"
-       y="217.36218"
+       x="330"
+       y="192.36218"
        id="text159210"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan159212"
-         x="343"
-         y="217.36218"
+         x="330"
+         y="192.36218"
          style="font-size:20px">$k$</tspan></text>
     <text
        xml:space="preserve"
@@ -160,14 +160,14 @@
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Andale Mono;-inkscape-font-specification:Andale Mono"
-       x="240"
-       y="237.36218"
+       x="365"
+       y="242.36218"
        id="text159238"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan159240"
-         x="240"
-         y="237.36218">$\theta_{ikj}$</tspan></text>
+         x="365"
+         y="242.36218">$\theta_{ikj}$</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:36px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Andale Mono;-inkscape-font-specification:Andale Mono"

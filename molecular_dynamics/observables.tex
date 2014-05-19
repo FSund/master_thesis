@@ -30,18 +30,21 @@
 
 
 \section{Temperature}
-\todo[inline]{derivation of temperature? See Anderhaf}
+\todo[inline]{derivation of temperature?}
 According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
 \begin{align*}
     \Braket{E_k} = \frac{3}{2}Nk_\text{B}T,
 \end{align*}
-where $T$ is the temperature of the system. We calculate the average kinetic energy using
+where $T$ is the temperature of the system. We calculate the average kinetic energy of a system using
 \begin{align*}
-    \Braket{E_k} = \frac{1}{2N}\sum_{i=1}^N m_i v_i^2,
+    \Braket{E_k} = \frac{1}{N}\sum_{i=1}^N \frac{1}{2} m_i v_i^2,
 \end{align*}
-where $m_i$ and $v_i = |\vec v_i|$ is respectively the mass and speed of atom $i$. 
+where $m_i$ and $v_i = |\vec v_i|$ is respectively the mass and speed of atom $i$. From this we find the temperature of the system as
+\begin{align*}
+    T = \frac{2}{3} \frac{\Braket{E_k}}{Nk_B} = \frac{1}{3N^2k_B} \sum_{i=1}^N m_i v_i^2.
+\end{align*}
 
-See \cref{list:temperatureSample} for an example of how to calculate the temperature in a molecular dynamics simulation.
+See \cref{list:temperatureSample} for an example of how to calculate the temperature in a molecular dynamics \hl{simulation/program?} similar to the one we have outlined in \cref{chap:simple_md_program}.
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -69,6 +72,7 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
 
 \section{Pressure\label{subsec:pressure}}
 \todo[inline]{derivation of pressure? See Anderhaf}
+\todo[inline]{we haven't measured pressure, so maybe remove this section?}
 To measure the pressure when using potentials with pairwise additive interactions, like the case is for our example program with the Lennard-Jones potential, we can use a method derived from the virial equation for the pressure\cite[Section~4.4]{frenkel2001understanding}. In a volume $V$ with particle density $\rho = N/V$, the average pressure is
 % For pairwise additive interactions we can write\cite[Section~4.4]{frenkel2001understanding}
 \begin{align}
@@ -79,7 +83,7 @@ where $\vec F(\rvec_{ij})$ is the force between particle $i$ and $j$, and $\rvec
 
 We see that we need the force from each atom $j$ on atom $i$, $\vec F(\rvec_{ij})$ to calculate the pressure, so for efficiency we should calculate the contribution to the pressure, $\vec F(\rvecij)\cdot\rvecij$, while doing the force calculations. The contribution to the pressure should then be stored so we can calculate the average in \cref{eq:measure_pressure} later.
 
-An example of how to calculate the pressure in a molecular dynamics simulation can be seen in \cref{list:pressureSample}.
+An example of how to calculate the pressure in a molecular dynamics \hl{simulation/program} as outlined in \cref{chap:simple_md_program} can be seen in \cref{list:pressureSample}.
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -104,17 +108,21 @@ An example of how to calculate the pressure in a molecular dynamics simulation c
 
 \section{Diffusion}
 \todo[inline]{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
-We can measure the diffusion constant $D$ by measuring the square displacement $r_i^2(t)$ of each atom as a function of time, and averaging over all atoms. We measure the mean square displacement as
+When we talk about diffusion in \hl{the context of} this thesis we mean the process of \emph{self-diffusion}, which is different from \hl{``normal''} diffusion which is the net movement of a substance in the presence of a gradient, which can be for example a concentration gradient, a temperature gradient, or a pressure gradient. With \emph{self-diffusion} we mean the \hl{random?} movement in a substance that has no gradients.
+
+Diffusion can be characterized by a constant $D$, which is related to the displacement of each atom relative to a initial position. We can measure this constant by measuring the mean square displacement $r_i^2(t)$ of each atom as a function of time, and average over all atoms. The mean square displacement is measured as
 \begin{align*}
     \Braket{r^2(t)} = \frac{1}{N} \sum_{i=1}^N \left( \rvec_i(t) - \rvec_i(t=0) \right)^2,
 \end{align*}
 where $\rvec_i(t=0)$ is the initial position of atom $i$. From theoretical considerations of the diffusion process we can relate the diffusion constant to the mean square displacement through\cite[Section~4.4.1]{frenkel2001understanding}
 \begin{align*}
-    &\Braket{r^2(t)} = 2dDt &\text{when }t\rightarrow \infty,
+    \lim_{t\rightarrow \infty}\dpd{}{t}\Braket{r^2(t)} = 2dD
 \end{align*}
-where $d$ is the \hl{spatial} dimensionality. This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and plotting $\Braket{r^2(t)}/(2dt)$ as a function of time. The diffusion constant will then be the value this expression approaches when simulating for enough timesteps.
+where $d$ is the \hl{spatial} \hl{dimensionality/dimension?}. \hl{This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and find the slope of this data as the diffusion constant in the limit} $t\rightarrow \infty$. \hl{We are limited in that we can't actually simulate infinite number of timesteps, but have to find a reasonable number of timesteps to measure over.}
 
-An example of how to measure the mean square displacement in a molecular dynamics simulation can be seen in \cref{list:diffusionSample}.
+% This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and plotting $\Braket{r^2(t)}/(2dt)$ as a function of time. The diffusion constant will then be the value this expression approaches when simulating for enough timesteps.
+
+An example of how to measure the mean square displacement in a molecular dynamics \hl{simulation/program} as outlined in \cref{chap:simple_md_program} can be seen in \cref{list:diffusionSample}.
 % Fick's law relates flux $\bvec j$ of diffusing species to the concentration gradient $\bvec \nabla c$ of the species
 % \begin{align*}
 %     \bvec j = -D\bvec \nabla c,

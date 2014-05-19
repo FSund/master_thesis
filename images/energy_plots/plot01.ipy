@@ -157,10 +157,6 @@ path_to_statistics_folder = os.path.join(project_location, project_name, statist
 timestep, potential_energy, total_energy, temperature = load_data(path_to_statistics_folder, statistics_folder_numbers)
 timestep = fix_time_vector(timestep, dt = 100)
 
-print
-print timestep.dtype
-print np.shape(timestep)
-
 ## Plot
 import matplotlib.pyplot as plt
 plt.ion()

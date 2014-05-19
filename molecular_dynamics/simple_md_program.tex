@@ -1,4 +1,4 @@
-\chapter{A simple molecular dynamics model}
+\chapter{A simple molecular dynamics model\label{chap:simple_md_program}}
 Intro
 
 From old stat mec chapter:
@@ -44,15 +44,15 @@ An example of a program that implements the above procedure can be seen in \cref
 When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces\todo{not defined yet... move this section?}, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
 \section{Calculation of forces\label{sec:program:lj}}
-The forces are calculated from the derivatives of interatomic potentials, that depend on the positions of the atoms, and generally are of the form
+The forces are calculated from the derivatives of interatomic potentials, that usually only depend on the positions of the atoms. The potentials are generally of the form
 \begin{align*}
     U(\rvec) = \sum_{i<j} U_{ij}(r_{ij}) + \sum_{i<j<k} U_{ijk}(\rvec_i, \rvec_i, \rvec_k) + \dots,
 \end{align*}
 where $\rvec_i$ is the position of atom $i$, $r_{ij}$ is the distance between atom $i$ and $j$, $U_{ij}$ is a two-particle potential depending only on the distance between two atoms, and $U_{ijk}$ is a three-particle potential that usually also depends on the angle between three atoms. Higher-order contributions are also often used\todo{ReaxFF}, but they are very demanding to evaluate numerically.
 
-When developing potentials from quantum mechanical calculations one has to weigh the benefits of having a complex potential that models the interactions accurately, against having a less comples potential that will be easier to implement, and faster to evaluate. The limiting factor in any molecular dynamics calculation is the cost of doing simulations on high-performance computing clusters\hl{like abel}, but luckily it seems like the progress in \hl{CPU} development still seems to follow Moore's Law\hl{source?}, that states that the number of transistors on integrated circuits double approximately every two years\cite{moore1965cramming}, effectively halving the price of doing a computation\hl{source?}.
+The potentials are often developed from quantum mechanical calculations, and when doing this one has to weigh the benefits of having a complex potential that models the interactions accurately, against having a less complex potential that will be easier to implement, and faster to evaluate. The limiting factor in any molecular dynamics calculation is the cost of doing simulations on high-performance computing clusters\hl{like abel}, but luckily it seems like the progress in \hl{CPU} development still seems to follow Moore's Law\hl{source?}, which states that the number of transistors on integrated circuits double approximately every two years\cite{moore1965cramming}, effectively halving the price of doing \hl{the same computation}\hl{(source?)} every two years.
 
-In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential, \hl{after its creator}. The potential is a simple two-particle potential with the following form
+In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential, \hl{after its creator(s)}, who used to to study the \hl{noble gas} Argon \hl{(among other stuff?)}. The potential is a simple two-particle potential with the following form
 % To model a simple mono-atomic system we use the well-known Lennard-Jones potential\cite{jones1924potential}, which when applied on the noble gas \hl{(inert)} Argon gives results that are in good agreement with experimental results. The potential is usually written as follows
 \begin{align}
 %     U(r) = 4\varepsilon \Big[
@@ -68,9 +68,9 @@ In this example we will be using a potential first seen as early as 1924\cite{jo
     = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right],
     \label{eq:lennard-jones_potential}
 \end{align}
-where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$ term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$ term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
+where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$-term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$-term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
 
-The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and has been used by many others\todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+Even though the potential is simple, it describes many properties noble gases like Argon well, and has been used by many \todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
 %
 \begin{figure}[htpb]%
     \centering%
@@ -83,9 +83,9 @@ The potential was used by Lennard-Jones to study the \hl{noble gas} Argon, and h
 \end{figure}%
 
 \subsection{Newton's third law}
-When calculating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
+When calculating two-particle forces like the Lennard-Jones potential\todo{only for 2-particle forces???} there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
 
-See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization from Newton's third law.
+See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using the optimization \hl{of} Newton's third law.
 %
 \begin{listing}[!htb]%
 % \begin{cppcode*}{gobble=4}
@@ -150,6 +150,9 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 \section{Integration scheme}
 To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
 
+\subsection{Verlet integration}
+\todo[inline]{Something general about Verlet methods before specific?}
+
 It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3, or derive self in appendix}., and numerically cheap \hl{(compared to other methods)} \hl{requiring on the order of $N$?? flops}. The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
 \begin{align}
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
@@ -193,6 +196,7 @@ See \cref{list:regular_verlet} for an example of how to implement the Verlet int
 }%
 \end{listing}%
 
+\subsection{Velocity Verlet}
 The most used form of the Velocity integration scheme is called the velocity Verlet method\cite{swope1982computer}, and it has the form
 \begin{align}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\

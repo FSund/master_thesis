@@ -9,41 +9,48 @@ After trying out some different methods for estimating the Hurst exponent, we en
 \subsection{Detrending moving average in 2 dimensions}
 % We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. We divide this surface into \emph{overlapping} subsurfaces of size $n \times n$, spanning the whole surface. The \hl{lower left} corners of the surfaces are located in the points $(i,j)$ for $i,j = 1,\dots, N-n+1$ (the limits are set so that the subsurfaces stay within the domain of the surface). In each surface we find a point $(k,l) = (n-m,n-m)$ (relative to lower bottom corner of subsurface)
 
-We define a \hl{(self-affine)} surface $f(i,j)$ of size $N,N$, with $i,j = 1,\dots,N$. For all points $i,j = 1,\dots,N-n+1$ in this surface we define a subsurface of size $n\times n$ consisting of the points
+We define a \hl{(self-affine)} surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. For each point $i,j \in [1,N-n+1]$ in this surface we define a subsurface of size $n\times n$, where each subsurface consists if the points
 \begin{align*}
 %     (k,l) = \left([i, \dots, i+n], [j, \dots, j+n]\right)%
 %     (k,l) = (i,j) + ([1\dots,n], [1,\dots,n])%
     (k,l) = (i,j) + \left([1\dots,n], [1,\dots,n]\right)%
 \end{align*}
-in the main surface. This means that the point $(i,j)$ is located in the \hl{``lower left''} corner of the subsurface. The limits $i,j \in [1,N-n+1]$ are set so that the subsurfaces span the whole main surface.
+in the main surface. This means that the point $(i,j)$ is located in the \hl{``lower left''} corner of the subsurface, that the subsurfaces overlap, and that they together span the whole main surface. The limits $i,j \in [1,N-n+1]$ are set so that all subsurfaces are in the main surface.
 
-For each subsurface located at $(i,j)$ we find a point $(k_m, l_m)$ in the subsurface, at
-\begin{align*}
+For each subsurface located at $(i,j)$ we find a point $(k_m, l_m)$ in the subsurface, which can be written as
+\begin{align}
 %     (k^*, l^*) = (i,j) + (n-m, n-m) %
 %     (k_0, l_0) = (i,j) + (n-m, n-m) %
     (k_m, l_m) = (i,j) + (n-m, n-m), %
 %     \\
 %     \big(i+(n-m), j+(n-m)\big)
-\end{align*}
+    \label{eq:dma_point_in_subsurface}
+\end{align}
 where $m$ is defined as
 \begin{align*}
     &m = \lfloor n\theta \rfloor &\text{for } \theta \in [0,1).
 \end{align*}
 % With $\theta = 0$ the point is in the upper right corner of the subsurfaces, at $(i+n,i+n)$, for $\theta = 1/2$ the point is in the center, at $(i+n/2, i+n/2)$, and for $\theta \rightarrow 1 \rightarrow (n-1)/n$ the point is in the lower left corner, at $(i,j)$.
 The parameter $\theta$ controls the position of this point inside the subsurface, and we have three extreme cases, listed below, and illustrated in \cref{fig:DMA_theta}.%
-% \begin{description}%
-%     \item[$\bm{\theta = 0}$:] \\ the point $(k_m, l_m)$ is in the upper right corner of the subsurface, at $(i+n,i+n)$
-%     \item[$\bm{\theta = 1/2}$:] the point $(k_m, l_m)$ is in the center, at $(i+n/2, i+n/2)$
-%     \item[$\bm{\theta \rightarrow 1 \rightarrow (n-1)/n}$:] the point $(k_m, l_m)$ is in the lower left corner, at $(i,j)$
-% \end{description}%
-\begin{itemize}[label={}]
-    \item $\bm{\theta = 0:}$ the point is in the upper right corner of the subsurface, at $(i+n,j+n)$
-    \item $\bm{\theta = 1/2:}$ the point is in the center, at $(i+n/2, j+n/2)$
-    \item $\bm{\theta \rightarrow 1 \rightarrow (n-1)/n:}$ the point is in the lower left corner, at $(i,j)$
-\end{itemize}
+%
+\begin{description}[%
+    labelindent=\oldparindent,%
+%     leftmargin=12em%
+    leftmargin=2.0\oldparindent%
+]%
+    \item[$\bm{\theta = 0}$:] the point $(k_m, l_m)$ is in the upper right corner of the subsurface, \\at ${(k_m, l_m) = (i+n,i+n)}$
+    \item[$\bm{\theta = 1/2}$:] the point $(k_m, l_m)$ is in the center of the subsurface, \\at ${(k_m, l_m) = (i+n/2, i+n/2)}$
+    \item[$\bm{\theta \rightarrow 1 \rightarrow (n-1)/n}$:] the point $(k_m, l_m)$ is in the lower left corner of the subsurface, at ${(k_m, l_m) = (i,j)}$
+\end{description}%
+% \begin{itemize}[label={}]
+%     \item $\bm{\theta = 0:}$ the point $(k_m, l_m)$ is in the upper right corner of the subsurface, at $(i+n,j+n)$
+%     \item $\bm{\theta = 1/2:}$ the point $(k_m, l_m)$ is in the center, at $(i+n/2, j+n/2)$
+%     \item $\bm{\theta \rightarrow 1 \rightarrow (n-1)/n:}$ the point $(k_m, l_m)$ is in the lower left corner, at $(i,j)$
+% \end{itemize}
 %
 \begin{figure}[htpb]%
     \centering%
+    \vspace{1em}% Add some space so the figure isn't as close to the content above
     \begin{subfigure}[b]{0.25\textwidth}%
         \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_a}%
 %         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
@@ -67,12 +74,12 @@ The parameter $\theta$ controls the position of this point inside the subsurface
         \label{fig:DMA_theta_c}%
     \end{subfigure}%
         \caption{%
-        Illustration of three extreme cases for the parameter $\theta$ in \hl{2/3} dimensions. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustration uses $n = 3$.%
+        Illustration of three extreme cases for the parameter $\theta$ in \hl{2/3} dimensions. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustrations use $n = 3$.%
         \label{fig:DMA_theta}%
     }%
 \end{figure}%
 
-We find the average $\bar {f_n}$ of each subsurface \hl{as/using/via}
+We find the average $\bar {f_n}$ of each subsurface \hl{using}
 \begin{align}
     \bar {f_n}(i,j) = \frac{1}{n^2} \sum_{k = i}^{i+n} \sum_{l = j}^{j+n} f(k,l),
     \label{eq:carbone_average}
@@ -87,23 +94,34 @@ and we define the \emph{generalized variance}, $\sigma_\text{DMA}^2$, as \hl{the
 %     \\
     &= \frac{1}{(N-n)^2}\sum_{i=1}^{N-n+1} ~ \sum_{j=1}^{N-n+1} 
     \big(
+        f(k_m,j_m) - \bar f_n(i,j)
+    \big)^2%
+%     \qquad\text{for } k_m, j_m \text{as in \cref{eq:dma_point_in_subsurface}}%
+    \nonumber\\%
+    &= \frac{1}{(N-n)^2}\sum_{i=1}^{N-n+1} ~ \sum_{j=1}^{N-n+1} 
+    \big(
         f(i+n-m,j+n-m) - \bar f_n(i,j)
-    \big)^2.\label{eq:dma_variance}
+    \big)^2.
+    \label{eq:dma_variance}
 \end{align}
 
-It can be shown that this generalized variance goes as \hl{SOURCE}
+It can be shown that this generalized variance has a power-law dependence on $n$ \cite{alessio2002dma,carbone2007algorithm}, which goes as
 \begin{align*}
-    \sigma_\text{DMA}^2 \sim \left(2n^2\right)^H,
+    \sigma_\text{DMA}^2 \sim \left(2n^2\right)^H.
 \end{align*}
-which we can use to estimate the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the subsurfaces, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
+We can use this dependence to estimate the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the subsurfaces, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
 
 In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
-A modification of the method mentioned in \cite{carbone2007algorithm} is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todo{not correct, fix this}
+A modification of the method mentioned is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todo{not correct, fix this}
 \begin{align*}
-    \tilde f_n^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \tilde f_n(i-1,j-1),
+    \bar {f_n}^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \bar {f_n}(i-1,j-1),
 \end{align*}
-where $\alpha = n^2/(n+1)^2$, and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). This modification \hl{can give/gives} better results \hl{source?}, so we have  implemented both the regular, and the modified method.\todo{not true, only have $\tilde f^*$}
+where
+\[
+    \alpha = n^2/(n+1)^2,
+\]
+and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). To use this modification we also have to change the limits in \cref{eq:dma_variance} from ${i,j\in [1,N-n+1]}$ to $i,j\in [2,N-n+1]$. This modification has been shown to give better results for small systems\cite{carbone2007algorithm}\todo{why?}, and since we are usually generating surfaces with a \hl{resolution/$N$ of 100-200}, we use this modified method in our implementation of the method. \todo{maybe implement both methods?}
 
 \orangebox{The method is implemented in Matlab/Octave}
 

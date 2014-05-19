@@ -15,7 +15,7 @@
    id="svg3126"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="select_surface_voxels0.svg">
+   sodipodi:docname="select_surface_voxels06.svg">
   <defs
      id="defs3128" />
   <sodipodi:namedview
@@ -26,10 +26,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="200.22596"
-     inkscape:cy="834.79223"
+     inkscape:cx="279.70903"
+     inkscape:cy="835.6246"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer2"
      showgrid="false"
      inkscape:snap-bbox="false"
      inkscape:snap-bbox-midpoints="true"
@@ -64,7 +64,7 @@
        transform="translate(-445.27017,-40.805087)"
        id="g145218">
       <rect
-         style="fill:#dee2e2;stroke:#073642;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:8;fill-opacity:1"
+         style="fill:#d5dada;stroke:#073642;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:8;fill-opacity:1"
          id="rect4780"
          width="20"
          height="20"
@@ -2813,7 +2813,7 @@
        y="0"
        inkscape:tiled-clone-of="#path4057-8"
        xlink:href="#path4057-8"
-       transform="translate(262.97285,33.563536)"
+       transform="translate(262.26574,39.22039)"
        id="use143629"
        width="744.09448"
        height="1052.3622" />

@@ -12,24 +12,46 @@
 \title{\uppercase{Water confined in nanoporous media}}
 \date{June 2014}
 
-% TODO:
+% TODO: Sometime
 % Fix verbatim in listing captions making too long lines
 % MD units in example programs? (especially sampling parts)
 % Replace \bvec with \vec? (they are defined as the same, but...)
 % Decide on caption skips (see preamble)
 % Decide on listing font size (\small or \footnotesize?)
+% Space before \cite{}??
+% ``timestep'' vs ``time step'' ?
 
 % TODO: Before handing in
 % Replace \include with \input 
 % Check all listings for linewidth (after deciding on listing font size)
 
-% \includeonly{molecular_dynamics/measurements}
-% \includeonly{molecular_dynamics/simulations}
-% \includeonly{fractures/fractures}
-% \includeonly{fractures/generating_surfaces}
-% \includeonly{results/results}
-% \includeonly{fractures/detrending_moving_average,fractures/hurst_exponent}
+% \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent}
+
+% \includeonly{molecular_dynamics/introduction}
+% \includeonly{molecular_dynamics/simple_md_program}
+% \includeonly{molecular_dynamics/optimizations}
+% \includeonly{molecular_dynamics/observables}
+% \includeonly{molecular_dynamics/ensembles}
+% \includeonly{molecular_dynamics/usc_program}
 % \includeonly{molecular_dynamics/experimental_procedure}
+% \includeonly{molecular_dynamics/measurements}
+% 
+% \includeonly{fractures/fractures}
+% \includeonly{fractures/hurst_exponent}
+% \includeonly{fractures/detrending_moving_average}
+% \includeonly{fractures/generating_surfaces}
+% \includeonly{fractures/generating_fractures}
+% 
+% \includeonly{results/results}
+% 
+% \includeonly{discussion/discussion}
+% 
+% \includeonly{appendices/md_units}
+\includeonly{appendices/integrators}
+% \includeonly{appendices/pressure}
+% 
+% \includeonly{appendices/integrators}
+
 \begin{document}
 
 \pagenumbering{roman}
@@ -55,8 +77,8 @@
     \include{molecular_dynamics/optimizations}
     \include{molecular_dynamics/observables}
     \include{molecular_dynamics/ensembles}
-    \include{molecular_dynamics/experimental_procedure}
     \include{molecular_dynamics/usc_program}
+    \include{molecular_dynamics/experimental_procedure}
     \include{molecular_dynamics/measurements}
 
 \part{Fractures}

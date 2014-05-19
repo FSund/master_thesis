@@ -73,7 +73,7 @@ In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should
 The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
 
 \section{Nos\'e-Hoover thermostat}
-The Nos\'e-Hoover thermostat\cite{nose1984unified,hoover1985canonical} is the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} This thermostat is in widespread use because of it's \hl{excellent properties}, although it is a lot harder to implement than the Berendsen and Andersen thermostat.
+The Nos\'e-Hoover thermostat is the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} This thermostat is in widespread use because of it's \hl{excellent properties}, although it is a lot harder to implement than the Berendsen and Andersen thermostat.
 
 % To show how the thermostat works we need to formulate statistical mechanics in the language of quantum mechanics. In classical mechanics the momentum $\vec p$ of a particle is defined in terms of its velocity $\vec v$ by
 % \begin{align*}
@@ -97,6 +97,8 @@ The Nos\'e-Hoover thermostat\cite{nose1984unified,hoover1985canonical} is the ba
 % \begin{align*}
 %     &\vec r_i = \vec r,&  &\vec p_i = \frac{\tilde{\vec p}_i}{s},&  &\text{and}&  &t = \int^{\tilde t} \frac{\dif \tau}{s}&
 % \end{align*}
+
+We follow the derivation in Frenkel and Smit's \emph{Understanding Molecular Simulation}\cite{frenkel2001understanding}. See also \cite{nose1984unified,hoover1985canonical} for more information.
 
 To show how the thermostat works we need to use the Lagrangian and Hamiltonian formulation of classical mechanics\todo{see where for more info?}. 
 % In classical mechanics the momentum $\vec p_i$ of a particle is defined in terms of its velocity $\dot{\vec r}_i$ by
@@ -146,7 +148,7 @@ From \cref{eq:nose_time_scale} we see that $s$ can be interpreted as a scaling f
 %     \tau' = \int_0^\tau \dif \frac{1}{s(t)}
 % \end{align*}
 
-From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of motion for the virtual variables $\vec r$, $\vec p$, and $t$, and the real variables $\vec r'$, $\vec p'$, and $t'$ \hl{hoover1985canonical}
+From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of motion for the virtual variables $\vec r$, $\vec p$, and $t$, and the real variables $\vec r'$, $\vec p'$, and $t'$ \cite{hoover1985canonical}
 \begin{align*}
     \dod{\vec r_i'}{t'}     &= s\dod{\vec r_i}{t} = \frac{\vec p_i}{m_is} = \frac{\vec p_i'}{m_i} \\
     \dod{\vec p_i'}{t'}     &= s\dod{\vec (p_i/s)}{t} = \dod{\vec p_i}{t} - \frac{1}{s}\vec p_i\dod{s}{t} = -\frac{\partial U(\vec r')}{\partial \vec r_i'} - \frac{s'p_s'}{Q}\vec p_i' \\
