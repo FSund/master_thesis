@@ -174,3 +174,190 @@ where $\theta_{ikj}$ is the angle between two vectors from the main molecule, $k
 \FloatBarrier
 \section{Surface area of pores}
     Only one large pore in my system, so not useful?
+
+\section{Density}
+To measure the density in a uniform system consisting of just one atom type, we can use
+\[
+    \rho = \frac{Nm}{V},
+\]
+where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of the whole system. But if we have a more complicated system, like in our case where we have three different atom types, liquid water in some parts of the system, and solid silica in other parts, we can't use that simple relation. What we do instead is to assiociate a volume $V_i^j$ with each atom of type $j$, and calculate the density of atom type $j$ using
+\[
+    \rho_j = \dfrac{m_jM}{\sum_{i=0}^M V_i^j},
+\]
+where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. We identify as the $\rho_j/m_j$ number density. To find the volumes $V_i^j$ of each atom we use somethind called \hl{Voronoi cells/Voronoi tesselation}\hl{cite}. Voronoi tesselation is done by dividing the system into convex polyhedra (or convex polygons in 2 dimensions), where the volume inside the polyhedron surrounding each point (atom in our case) consists of all points in space closer to that point than any other point. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig} for a rendering of a 3D Voronoi diagram.
+%
+\begin{figure}[htpb]%
+\centering%
+\includesvg[width=0.4\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+\caption{%
+    \hl{Caption}. %
+    \label{fig:2d_voronoi_diagram}%
+}%
+\end{figure}%
+which have been implemented using the \cpp-library \Verb!Voro++!\hl{cite}. This library is used both for finding the Voronoi cells and for calculating the volumes of the cells.
+%
+\begin{figure}[htpb]%
+\centering%
+\begin{minipage}[t]{0.48\textwidth}%
+\centering%
+    \includegraphics[width=0.7\textwidth]{images/voronoi/import_AM2_A001.png}%
+    \subcaption{Caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption }%
+%     \label{fig:sample_figure}%
+\end{minipage}%
+\hspace{0.03999\textwidth}%
+\begin{minipage}[t]{0.48\textwidth}%
+\centering%
+    \includegraphics[width=0.7\textwidth]{images/voronoi/import_AM2_A001.png}%
+    \subcaption{Caption for image caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption caption }%
+%     \label{fig:sample_figure}%
+\end{minipage}%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+\centering%
+    \begin{subfigure}[b]{0.35\textwidth}%
+    \includegraphics[width=\textwidth]{images/voronoi/import_AM2_A001.png}%
+    \caption{%
+        \hl{Caption}. %
+%         \label{fig:top_tetrahedra}%
+    }%
+    \end{subfigure}%+
+    \hspace{1em}%
+    \begin{subfigure}[b]{0.35\textwidth}%
+    \includegraphics[width=\textwidth]{images/voronoi/import_AM2_A001.png}%
+    \caption{%
+        \hl{Caption}. %
+%         \label{fig:top_tetrahedra}%
+    }%
+    \end{subfigure}
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+\centering%
+\includegraphics[width=0.4\textwidth]{images/voronoi/import_AM2_A001.png}%
+\caption{%
+    \hl{Caption}. %
+%     \label{fig:top_tetrahedra}%
+}%
+\end{figure}%
+%
+\begin{figure}[htpb]%
+\centering%
+\includegraphics[width=0.4\textwidth]{images/voronoi/import_AM2_A001.png}%
+\caption{%
+    \hl{Caption}. %
+%     \label{fig:top_tetrahedra}%
+}%
+\end{figure}%
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{images/voronoi/import_AM2_A001.png}
+  \caption{A subfigure}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{images/voronoi/import_AM2_A001.png}
+  \caption{A subfigure}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{images/voronoi/import_AM2_A001.png}
+  \captionof{figure}{A figure}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{images/voronoi/import_AM2_A001.png}
+  \captionof{figure}{aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa aaaaaaaaaaa aaaa aaaaa }
+  \label{fig:test2}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{minipage}[b]{.45\linewidth}
+        \centering
+        \fbox{\rule{.9\linewidth}{0pt}\rule{0pt}{3cm}}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b]{.45\linewidth}
+    \centering
+        \centering
+        \fbox{\rule{.9\linewidth}{0pt}\rule{0pt}{2cm}}
+    \end{minipage}\\[-7pt]
+    \begin{minipage}[t]{.45\linewidth}
+        \caption{Box with a very very long caption a very very long captiona very very long captiona very very long captiona very very long captiona very very long captiona very very long caption}
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{.45\linewidth}
+        \caption{Short caption}
+    \end{minipage}%
+\end{figure}
+
+%
+\begin{figure}%
+% \centering%
+    \begin{minipage}[b]{0.4999\textwidth}% % change "b" to "t" to anchor top instead of bottom
+    \captionsetup{width=.9\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \centering%
+        \includegraphics[width=\textwidth]{images/voronoi/import_AM2_A001.png}%
+        \caption{%
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna.%
+            \label{fig:a}%
+        }%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[b]{0.4999\textwidth}%
+        \captionsetup{width=.9\textwidth}%
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+        \caption{%
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna.%
+            \label{fig:b}%
+        }%
+    \end{minipage}%
+\end{figure}%
+
+% \begin{figure}[htpb]%
+%     \centering%
+%     \vspace{1em}% Add some space so the figure isn't as close to the content above
+%     \begin{subfigure}[b]{0.25\textwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_a}%
+% %         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
+%         \caption{$\theta = 0$}%
+%         \label{fig:DMA_theta_a}%
+%     \end{subfigure}%
+%     \hspace{0.1\textwidth}%
+%     \begin{subfigure}[b]{0.25\textwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_b}%
+% %         \caption{A random fracture made from two periodic heightmaps.}%
+%         \caption{$\theta = 1/2$}%
+%         \label{fig:DMA_theta_b}%
+%     \end{subfigure}%
+%     \hspace{0.1\textwidth}%
+%     \begin{subfigure}[b]{0.25\textwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/Hurst/]{2DDMA_theta04_c}%
+% %         \caption{A random fracture made from two periodic heightmaps.}%
+% %         \caption{$\theta \rightarrow 1$ \\ ($\theta = (n-1)/n$)}%
+% %         \caption{$\theta \rightarrow 1$}%
+%         \caption{$\theta = (n-1)/n$}%
+%         \label{fig:DMA_theta_c}%
+%     \end{subfigure}%
+%         \caption{%
+%         Illustration of three extreme cases for the parameter $\theta$ in \hl{2/3} dimensions. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustrations use $n = 3$.%
+%         \label{fig:DMA_theta}%
+%     }%
+% \end{figure}%
