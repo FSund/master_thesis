@@ -2,7 +2,9 @@
 \usepackage[english]{babel}
 \usepackage{csquotes} % required by {babel} (or biblatex?)
 \usepackage[backend=biber, sorting=none, style=numeric]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
-\bibliography{JabRef_database,Mendeley_database}
+% About DATES:
+% The date fields date, origdate, eventdate, and urldate require a date specification in yyyy-mm-dd format. Date ranges are given as yyyy-mm-dd/yyyy-mm-dd. Partial dates are valid provided that date components are omitted at the end only. You may specify an open ended date range by giving the range separator and omitting the end date (e. g., yyyy/).
+\bibliography{bibliography/JabRef_database,bibliography/Master}
 
 % ---- Code syntax highlighting ---- %
 % \usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^

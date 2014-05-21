@@ -135,6 +135,7 @@ for idx, distance in enumerate(distances_to_plot):
 ax = axes[-1][0]
 ax.set_ylim([-0.002, 0.022])
 ax.set_yticks(np.linspace(0.0, 0.020, 9))
+
 # Reduce decimals in yticklabels
 ll = ax.get_yticklabels()
 xx = ax.get_yticks()
