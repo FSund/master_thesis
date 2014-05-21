@@ -1,0 +1,102 @@
+
+\section{Integration scheme}
+To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
+
+\todo[inline]{a bit more intro about integration}
+
+
+\todo[inline]{Something general about Verlet methods before specific?}
+
+It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$ \hl{(as shown in???)} \todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3, or derive self in appendix}., and numerically cheap \hl{(compared to other methods)} \st{requiring on the order of $N$?? flops}.
+
+\todo[inline]{Discuss that global error has been hard to find sources for?}
+
+\orangebox{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}
+
+\orangebox{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}
+
+\subsection{Regular Verlet integration}
+The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
+\begin{align}
+    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
+    \label{eq:regular_verlet}
+\end{align}
+where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$, as shown in \hl{???}.
+
+The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
+
+We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion around $\rvec(t\pm\Delta t)$, which gives
+\begin{align*}
+    \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t},
+\end{align*}
+which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}. 
+
+The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually \hl{simply} approximated using the initial velocity, as follows\todo{is this bad?}
+\begin{align*}
+    \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
+\end{align*}
+See \cref{list:regular_verlet} for an example of how to implement the Verlet integration scheme.
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    void integrateEquationsOfMotion(System &system, double dt)
+    {
+        for (Atom *atom : system.atoms())
+        {
+            vec3 newPosition = 2.0*atom->position() - atom->oldPosition() 
+                               + atom->force()*dt*dt;
+            atom->oldPosition() = atom->position();
+            atom->position() = newPosition;
+            atom->velocity() = (atom->position() - atom->oldPosition())
+                               /(2.0*dt);
+        }
+    }
+\end{cppcode*}
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Implentation of \texttt{integrateEquationsOfMotion} from \cref{list:simple_md_program}.%
+    \label{list:regular_verlet}%
+}%
+\end{listing}%
+
+\subsection{Velocity Verlet}
+The most used form of the Velocity integration scheme is called the velocity Verlet method\cite{swope1982computer}, and it has the form
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
+    \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}, \label{eq:velocity_verlet_velocity}
+\end{align}
+with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the \hl{global/accumulated} error being of the order $\mathcal{O}(\Delta t^2)$\hl{cite/show equivalent to regular Verlet} \hl{already said that regular verlet has this error}. 
+
+One advantage of this form is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
+
+\hl{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
+
+The velocity Verlet algorithm is usually rewritten in the following way, \hl{to optimize the implementation on a computer}. We see that the new velocities can be written as
+\begin{align}
+    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2}, \label{eq:verlet_velocity_with_halfstep}
+\end{align}
+where
+\begin{align}
+    \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \avec(t)\frac{\Delta t}{2}.\label{eq:verlet_halfstep}
+\end{align}
+We see that \cref{eq:verlet_halfstep} can be used in updating the positions, so we rewrite \cref{eq:velocity_verlet_position} to
+\begin{align}
+    \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.\label{eq:velocity_verlet_positions_halfstep}
+\end{align}
+Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
+\begin{itemize}
+    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
+    \end{align*}
+    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_positions_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.
+    \end{align*}
+    \item Calculate the new forces $\Fvec(t+\Delta t)$/\hl{accelerations $\avec(t+\Delta t)$}.
+    \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
+    \begin{align*}
+        \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
+    \end{align*}
+\end{itemize}
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 

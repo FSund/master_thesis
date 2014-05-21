@@ -184,27 +184,31 @@ where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of
 \[
     \rho_j = \dfrac{m_jM}{\sum_{i=0}^M V_i^j},
 \]
-where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. We identify as the $\rho_j/m_j$ number density. To find the volumes $V_i^j$ of each atom we use somethind called \hl{Voronoi cells/Voronoi tesselation}\hl{cite}. Voronoi tesselation is done by dividing the system into convex polyhedra (or convex polygons in 2 dimensions), where the volume inside the polyhedron surrounding each point (atom in our case) consists of all points in space closer to that point than any other point. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig} for a rendering of a 3D Voronoi diagram.
+where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. \hl{We identify as the $\rho_j/m_j$ number density.} We can find the mass of an atom type from standard tables of molar masses, but we still need to find the volumes $V_i^j$ associated with each atom. To do this we use something called \hl{Voronoi cells/Voronoi tesselation}\todo{citation? Dirchlet 1850 and Voronoi 1908, so very old...}. Voronoi tesselation is done by dividing the system into non-overlapping convex polyhedra (or convex polygons in 2 dimensions), with one atom in each polyhedra. The volume inside the polyhedron surrounding each atom consists of all points in space closer to that atom than any other atom. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig:3d_voronoi_diagram} for a rendering of a 3D Voronoi diagram.
 %
 \begin{figure}%
 % \centering%
-    \begin{minipage}[b]{0.4999\textwidth}%
-        \captionsetup{width=.9\textwidth}%
+    \begin{minipage}[t]{0.485\textwidth}%
+        \captionsetup{width=\textwidth}%
         \centering%
-        \includesvg[width=0.8\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+%         \includesvg[width=0.8\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+        \includesvg[height=0.7\textwidth, svgpath=./images/voronoi/]{2d_diagram04}%
         \caption{%
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna.%
+            Illustration of Voronoi cells in 2 dimensions. Freely after Wikipedia Commons\cite{wikiVoronoiImage}.%
             \label{fig:2d_voronoi_diagram}%
         }%
     \end{minipage}%
     \hfill%
-    \begin{minipage}[b]{0.4999\textwidth}% % change "b" to "t" to anchor top instead of bottom
-    \captionsetup{width=.9\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+    \begin{minipage}[t]{0.485\textwidth}% % change "b" to "t" to anchor top instead of bottom
+    \captionsetup{width=\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
         \centering%
-        \includegraphics[width=0.8\textwidth]{images/voronoi/import_AM2_A001.png}%
+%         \includegraphics[width=0.8\textwidth]{images/voronoi/3d_diagram04_crop.png}%
+        \includegraphics[height=0.7\textwidth]{images/voronoi/3d_diagram04_crop.png}%
         \caption{%
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis. Curabitur dictum gravida mauris. Nam arcu libero, nonummy eget, consectetuer id, vulputate a, magna.%
-            \label{fig:a}%
+            Rendering of Voronoi cells in 3 dimensions, in a system of 27 particles. Voronoi cells created using the \cpp-library \texttt{Voro++}\cite{rycroft2009voro,webvoro++}, and rendered using the program \texttt{povray}\cite{webpovray}. %
+            \label{fig:3d_voronoi_diagram}%
         }%
     \end{minipage}%
 \end{figure}%
+
+\todo[inline]{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}

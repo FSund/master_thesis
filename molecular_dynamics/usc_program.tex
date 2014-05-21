@@ -5,7 +5,7 @@ The potential implemented in the program we use in this thesis has been develope
 
 The potential is implemented in a FORTRAN 77 program which has been parallellized an highly optimized \hl{source?}. \hl{The program is unfortunately closed-source}.
 
-The program implements a Nos\'e-Hoover chain to sample the microcanonical \hl{(or the canonical?)} ensemble, using reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit}. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
+The program implements a \hl{Nos\'e-Hoover chain thermostat} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
 \orangebox{
     \begin{itemize}
@@ -152,3 +152,11 @@ The parameters used in our simulations were chosen by first determing good param
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
 \todo[inline]{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
+\section{Integrator}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=.7\textwidth, svgpath = ./images/energy_plots/]{total_energy01}%
+    \caption{Plot of total energy as function of timesteps in a thermalized nanoporous system filled with water.}%
+%     \label{fig:distance_to_atom_r20}%
+\end{figure}%

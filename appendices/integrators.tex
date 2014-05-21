@@ -1,15 +1,36 @@
-\chapter{Integrators}
-\orangebox{
-    Liouville operator, velocity Verlet, global error
+\chapter{Verlet integrators}
 
-    \begin{itemize}
-        \item See Understanding Molecular. section 4.3.3., p. 77(97) for Luouville stuff
-    \end{itemize}
+\fcolorbox{black}{orange}{
+\begin{minipage}{\textwidth}
+{\bf TODO:}
+\begin{itemize}
+    \item Truncation error Verlet/velociy Verlet
+    \item Numerical stability?
+    \item Memory?
+    \item Self starting, symplectic, reversible
+\end{itemize}
+\end{minipage}
 }
+\todo{why do we use velocity Verlet}
 
+The Verlet algorithm\cite{verlet1967computer} is a simple method for \hl{numerically?} integrating second order differential equations of the form 
+\begin{align*}
+    \dod[2]{\rvec(t)}{t} = \Fvec\big[\rvec(t), t\big] = \Fvec(t).
+\end{align*}
+The algorithm has several \hl{(equivalent?)} forms, and the form \hl{used/developed?} by Verlet is
+\begin{align*}
+    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
+\end{align*}
+where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. An equivalent formulation, usually called the velocity Verlet algorithm, has the form
+\begin{align*}
+    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
+    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t.
+\end{align*}
+The velocity Verlet algorithm is the most used form \hl{why?}, and \hl{something about errors, references to below}.
 
+This algorithm has a \hl{glocal/accumulated} error of $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}.
 
-\section{Integration}
+% \section{Verlet integrators}
 % \begin{align*}
 %     \rvec(t) = r_n \\
 %     \vvec(t) = v_n \\
@@ -27,399 +48,7 @@
 %     \vvec(t + \Delta t)   &= \vvec(t + \Delta t) + \frac{1}{2}\bvec a(t + \Delta t) \Delta t
 % \end{align*}
 
-\fcolorbox{black}{orange}{
-\begin{minipage}{\textwidth}
-{\bf TODO:}
-\begin{itemize}
-    \item Truncation error Verlet/velociy Verlet
-    \item Numerical stability?
-    \item Memory?
-    \item Self starting, symplectic, reversible
-\end{itemize}
-\end{minipage}
-}
+We will now first derive the regular Verlet and the velocity Verlet algorithms using Taylor expansions, and then using the Liouville formulation of classical mechanics. \todo{why use two methods? what do we learn from them?} \todo{mention what errors we find?}
 
-The equations of motion are integrated using the velocity Verlet algorithm:
-\begin{align*}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
-    \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t.
-\end{align*}
-This algorithm has a \hl{glocal/accumulated} error of $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}.
-
-\section{Derivation of the Verlet algorithm using Taylor expansions}
-\todo{why do we use velocity Verlet}
-The Verlet algorithm\cite{verlet1967computer} is a simple method for integrating second order differential equations of the form 
-\begin{align*}
-    \dod[2]{\rvec(t)}{t} = \Fvec\big[\rvec(t), t\big] = \Fvec(t).
-\end{align*}
-We first let
-\begin{align*}
-    \dod{\rvec(t)}{t} &= \vvec(t),
-\end{align*}
-and
-\begin{align*}
-    \dod{\vvec(t)}{t} &= \avec(t) = \frac{\Fvec(t)}{m}.
-\end{align*}
-
-We then do a Taylor expansion of $\rvec(t \pm \Delta t)$ around time $t$
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4), \label{eq:verlet_plus}\\
-    \rvec(t - \Delta t) &= \rvec(t) - \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} - \dod[3]{\rvec(0)}{t}\frac{\Delta t^3}{6} + \mathcal{O}(\Delta t^4).\label{eq:verlet_minus}
-\end{align}
-By summing these two equations we get
-\begin{align*}
-    \rvec(t + \Delta t) + \rvec(t - \Delta t) = 2\rvec(t) + \avec(t)\Delta t^2 + \mathcal{O}(\Delta t^4),
-\end{align*}
-which by rearranging can be written as
-\begin{align*}
-    \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
-\end{align*}
-Which is the equation used to update the positions in the regular Verlet algorithm. We see that the estimate of the new position contains an truncation error for one timestep $\Delta t$ of the order $\mathcal{O}(\Delta t^4)$.
-
-The Verlet algorithm does not use the velocity to compute the new position, but we can find an estimate of the velocity by taking the difference between \cref{eq:verlet_plus,eq:verlet_minus}
-\begin{align*}
-    \rvec(t + \Delta t) - \rvec(t - \Delta t) = 2\vvec(t)\Delta t + \mathcal{O}(\Delta t^3),
-\end{align*}
-which by rearranging can be written as
-\begin{align*}
-    \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t} + \mathcal{O}(\Delta t^2).
-\end{align*}
-We see that this estimate of the velocity has a truncation error of the order $\mathcal{O}(\Delta t^2)$, compared to the error in the position $\mathcal{O}(\Delta t^4)$.
-\todo{Something about lower precision}
-
-A modification of the Verlet algorithm usually called the velocity Verlet algorithm\cite{swope1982computer} \todo{something about why velocity Verlet is good} can be derived in a similar way. We have the same Taylor expansion of $\rvec(t+\Delta t)$ around $t$ as before
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \label{eq:position_taylor}
-\end{align}
-and now we also expand $\vvec(t + \Delta t)$ around $t$
-\begin{align}
-    \vvec(t + \Delta t) 
-%     &= \vvec(t) + \dod{\vvec(t)}{t}\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{t} + \mathcal{O}(\Delta t^3) \\
-    &= \vvec(t) + \avec(t)\Delta t + \dod[2]{\vvec(t)}{t}\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3). \label{eq:velocity_taylor}
-\end{align}
-We now need an expression for $\od[2]{\vvec(t)}{t}$, which can be found by a Taylor expansion of $\od{\vvec(t+\Delta t)}{t}$
-\begin{align*}
-    \dod{\vvec(t+\Delta t)}{t} = \dod{\vvec(t)}{t} + \dod[2]{\vvec(t)}{t}\Delta t + \mathcal{O}(\Delta t^2),
-\end{align*}
-which by rearranging and multiplying with $\frac{\Delta t}{2}$ gives
-\begin{align*}
-    \dod[2]{\vvec}{t}\frac{\Delta t^2}{2} 
-    &= \left( \dod{\vvec(t+\Delta t)}{t} - \dod{\vvec(t)}{t}\right)\frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \\
-    &= \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3).
-\end{align*}
-Inserting this into \cref{eq:velocity_taylor} we get
-\begin{align}
-    \vvec(t + \Delta t) 
-    &= \vvec(t) + \avec(t)\Delta t + \big[\avec(t + \Delta t) - \avec(t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3) \nonumber\\
-    &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2} + \mathcal{O}(\Delta t^3). \label{eq:verlet_velocity_taylor_insertion}
-\end{align}
-So the total velocity Verlet algorithm with truncation of the higher-order terms is
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, %\label{eq:velocity_verlet_position}\\
-    \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}, %\label{eq:velocity_verlet_velocity}
-\end{align}
-with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity. 
-
-The algorithm is usually rewritten in the following way, to optimize the implementation on a computer. We see that the new velocities can be written as
-\begin{align}
-    \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2}, %\label{eq:verlet_velocity_with_halfstep}
-\end{align}
-where
-\begin{align}
-    \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \avec(t)\frac{\Delta t}{2}. %\label{eq:verlet_halfstep}
-\end{align}
-We see that \cref{eq:verlet_halfstep} can be used in updating the positions, so we rewrite \cref{eq:velocity_verlet_position} to
-\begin{align}
-    \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t. %\label{eq:velocity_verlet_positions_halfstep}
-\end{align}
-Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
-\begin{itemize}
-    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} \hl{(repeated here)}
-    \begin{align*}
-        \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
-    \end{align*}
-    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_positions_halfstep} \hl{(repeated here)}
-    \begin{align*}
-        \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.
-    \end{align*}
-    \item Calculate the new forces $\Fvec(t+\Delta t)$.
-    \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
-    \begin{align*}
-        \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
-    \end{align*}
-\end{itemize}
-This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. 
-
-Pseudocode: \todo{do we want this?}
-\begin{verbatim}
-    v += F*dt/(2*m);
-    r += v*dt;
-    F = calculate_forces(r, v);
-    v += F*dt/(2*m);
-\end{verbatim}
-
-
-
-% The velocity Verlet algorithm can be implemented as follows\cite{allen1989computer}
-% \begin{samepage}
-% \begin{itemize}
-%     \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_position}.
-%     \item Calculate the velocities at $t + \frac{1}{2}\Delta t$ using
-%     \begin{align*}
-%         \vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
-%     \end{align*}
-%     \item Calculate the new forces $\Fvec(t + \Delta t)$.
-%     \item Finally, calculate the new velocities at $t + \Delta t$ using
-%     \begin{align*}
-%         \vvec(t + \Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}
-%     \end{align*}
-% \end{itemize}
-% \end{samepage}
-% But 
-% This implementation uses $9N$ units of memory, 
-
-\section{Global error in the Verlet algorithm - BAD}
-Sources:
-\begin{itemize}
-    \item \url{http://math.stackexchange.com/questions/668707/verlet-method-global-error}
-    \item \url{http://www.saylor.org/site/wp-content/uploads/2011/06/MA221-6.1.pdf} (same as Wikipedia)
-\end{itemize}
-
-\todo{I don't know if the calculations below are correct} 
-The global error in position can be derived from the local error for one timestep $\Delta t$. We see from \cref{eq:position_taylor} that
-\begin{align*}
-    \text{error}\big(\rvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3),
-\end{align*}
-and from \cref{eq:verlet_velocity_taylor_insertion}
-\begin{align*}
-    \text{error}\big(\vvec(t_0+\Delta t)\big) = \mathcal{O}(\Delta t^3).
-\end{align*}
-The error for two timesteps is
-\begin{align*}
-    \rvec(t_0+2\Delta t) 
-    &= \rvec(t_0+\Delta t) + \vvec(t_0+\Delta t)\Delta t + \avec(t_0+\Delta t)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3), \\
-\end{align*}
-which gives \todo{Error in $\avec(t_0 + \Delta t) = \mathcal{O}(\Delta t^3)$ ??}
-\begin{align*}
-    &\text{error}\big(\rvec(t_0+2\Delta t)\big) \\
-    &~= \text{error}\big(\rvec(t_0+\Delta t)\big) + \text{error}\big(\vvec(t_0+\Delta t)\big)\Delta t + \text{error}\big(\avec(t_0+\Delta t)\big)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
-    &~= \mathcal{O}(\Delta t^3) + \mathcal{O}(\Delta t^3)\Delta t + \mathcal{O}(\Delta t^3)\frac{\Delta t^2}{2} + \mathcal{O}(\Delta t^3)\\
-    &~= 2\mathcal{O}(\Delta t^3).
-\end{align*}
-Similarly we find
-\begin{align*}
-    &\text{error}\big(\rvec(t_0+3\Delta t)\big) = 3\mathcal{O}(\Delta t^3) \\
-    &\text{error}\big(\rvec(t_0+4\Delta t)\big) = 4\mathcal{O}(\Delta t^3) \\
-    &\text{error}\big(\rvec(t_0+5\Delta t)\big) = 5\mathcal{O}(\Delta t^3),
-\end{align*}
-\begin{align*}
-    \text{error}\big(\rvec(t_0 + n\Delta t)\big) = n\mathcal{O}(\Delta t^3) = \mathcal{O}(\Delta t^2)
-\end{align*}
-
-\section{Deriving velocity Verlet using Liouville operator}
-\newcommand{\Liou}{i\hat{\vec L}}
-\newcommand{\Lop}{\hat{\mathcal{U}}}
-\hl{This derivation closely follows }\cite[section 4.3.3]{frenkel2001understanding}
-% TODO: Upright \Liou?
-
-% % We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
-% % %(the derivative is denoted by a dot)
-% % (denoted by a dot)
-% % \begin{align}
-% %     \dot f(t) = \dot \rvec \dpd{f(t)}{\rvec} + \dot {\vec p} \dpd{f(t)}{\vec p} = \Liou f(t).\label{eq:liou_f}
-% % \end{align}
-% % where we have defined the \emph{Liouville operator}, $\Liou$, as
-% % \begin{align*}
-% %     \Liou = \dot \rvec \dpd{}{\rvec} + \dot {\vec p} \dpd{}{\vec p} = \Liou_r + \Liou_p
-% % \end{align*}
-% % where $\Liou_r$ and $\Liou_p$ denotes the left and right part if this operator, respectively. %
-% % To try and find $f(t)$ from $\dot f(t)$ we can formally integrate \cref{eq:liou_f} to obtain
-% % \begin{align*}
-% %     f(t) = e^{\Liou t} f(0),
-% % \end{align*}
-% % but this doesn't get us any closer to a solution, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. But if we replace $\Liou$ with $\Liou_r$ we and use a Taylor expansion of the exponential on the right-hand side, we get
-% % \begin{align*}
-% %     f(t)
-% %     &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
-% %     &= \exp\left( \dot\rvec (0) t \dpd{}{\rvec} \right) f(0) \\
-% %     &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
-% %     &= f\big[\rvec(0) + \dot\rvec(0), \vec p(0)\big]
-% % \end{align*}
-
-
-
-
-\subsection{Liouville operator}
-
-
-We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
-%(the derivative is denoted by a dot)
-(denoted by a dot)
-\begin{align}
-    \dot f(t) = \dot \rvec \dpd{f(t)}{\rvec} + \dot {\vec p} \dpd{f(t)}{\vec p} = \Liou f(t).
-    \label{eq:liou_f}
-\end{align}
-where we have defined the \emph{Liouville operator}, $\Liou$, as
-\begin{align*}
-    \Liou = \dot \rvec \dpd{}{\rvec} + \dot {\vec p} \dpd{}{\vec p} = \Liou_r + \Liou_p
-\end{align*}
-where $\Liou_r$ and $\Liou_p$ denotes the left and right part if this operator, respectively. %
-We can formally integrate \cref{eq:liou_f} to obtain
-\begin{align}
-    f(t) = e^{\Liou t} f(0),
-    \label{eq:liou_integrate}
-\end{align}
-which allows us to define the time evolution operator $\Lop = \exp(\Liou t)$. We see that this doesn't get us any closer to finding $f(t)$\todo{why do we want to find $f(t)$?}, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. To get around this we define the \hl{position} time evolution operator $\Lop_r(t) = \exp(\Liou_r t)$, and try applying just this operator. If we do a Taylor expansion of the exponential we get
-\begin{align*}
-    \Lop_r(t)f(0)
-    &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
-    &= \exp\left( \dot\rvec (0) t \dpd{}{\rvec} \right) f(0) \\
-    &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
-    &= f\left\{ \left[ \rvec(0) + \dot\rvec(0)t \right], \vec p(0) \right\},
-\end{align*}
-where $\rvec(0)$ and $\vec p(0)$ \hl{are} the positions and momenta at $t = 0$. We see that this has the effect of moving the positions $\rvec$ a step $t$ forward in time according to their derivative. It's easy to see that the equivalent \hl{momenta} time evolution operator $\Lop_p(t) = \exp(\Liou_p t)$ has a similar effect on the momenta. 
-
-\subsection[Velocity Verlet]{\hl{Velocity Verlet}}
-In a molecular dynamics simulation we would like to be able to apply these operators independently, since
-\begin{align*}
-    \Lop = e^{\Liou} = e^{\Liou_r + \Liou_p},
-\end{align*}
-but unfortunately, for two noncommuting operators $\vec A$ and $\vec B$ we have
-\begin{align*}
-    e^{\vec A + \vec B} \neq e^{\vec A} e^{\vec B}.
-\end{align*}
-To solve this we can use the following \emph{Trotter identity}
-\begin{align*}
-    e^{\vec A + \vec B} = \lim_{P\rightarrow \infty} \left( e^{\vec A/2P} e^{\vec B/P} e^{\vec A/2P} \right)^P.
-\end{align*}
-Applying the operators an infinite number of times is \hl{unpractical}, but fortunately the expression can be truncated for \hl{large}\todo{how large?} but finite $P$ as
-\begin{align}
-    e^{\vec A + \vec B} = \left( e^{\vec A/2P} e^{\vec B/P} e^{\vec A/2P} \right)^P e^{\mathcal{O}(1/P^2)}.
-    \label{eq:liou_time_exact}
-\end{align}
-
-To derive the velocity Verlet scheme using this truncation we first identify the operators $\vec A$ and $\vec B$ as
-\begin{align*}
-    \frac{\vec A}{P} &\equiv \frac{\Liou_p t}{P} \equiv \Delta t \dot {\vec p}(0) \dpd{}{\vec p} \\
-    \frac{\vec B}{P} &\equiv \frac{\Liou_r t}{P} \equiv \Delta t \dot \rvec (0) \dpd{}{\rvec}
-\end{align*}
-where $\Delta t = t/P$. We can now identify the \hl{\emph{truncated/approximated}} time evolution operator $\Lop^*(t)$ as follows
-\begin{align}
-    \Lop(t) 
-    &= \left( e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} \right)^P e^{\mathcal{O}(1/P^2)} \nonumber\\
-    &\approx \left( e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} \right) = \Lop^*(t),
-    \label{eq:liou_time_trunc}
-\end{align}
-% \begin{align*}
-%     \Lop^*(t) &= \left( e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} \right)^P,
-%     \label{eq:liou_time_trunc}
-% \end{align*}
-and the the \hl{\emph{truncated/approximate}} operator for moving one timestep forward as
-\begin{align}
-    \Lop^*(\Delta t) = e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2}.
-    \label{eq:liou_onetime_trunc}
-\end{align}
-
-To see the effect of the operator $\Lop^*(\Delta t)$ on the coordinates and momenta of the particles we first apply $\exp(\Liou_p\Delta t/2)$ to $f(0)$, and get
-\begin{align*}
-    e^{\Liou_p \Delta t/2} f(0) = f \left\{ \rvec(0), \left[ \vec p(0) + \frac{\Delta t}{2} \dot{\vec p}(0) \right] \right\}.
-\end{align*}
-We then apply $\exp(\Liou_r\Delta t)$ \st{to the result of the previous step} and get
-\begin{align*}
-     e^{\Liou_r \Delta t} f \left\{ \rvec(0), \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) \right] \right\}
-     &= f \left\{ \left[ \rvec(0) + \Delta t \dot\rvec\left(\frac{\Delta t}{2}\right) \right], \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) \right] \right\},
-\end{align*}
-and finally we apply $\exp(\Liou_p\Delta t/2)$ once more, and get
-\begin{align*}
-    f \left\{ 
-        \left[ \rvec(0) + \Delta t \dot\rvec\left(\frac{\Delta t}{2}\right) \right], 
-        \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) + \frac{\Delta t}{2}\dot{\vec p}(\Delta t) \right] 
-    \right\}
-\end{align*}
-
-\todo[inline]{something about why algorithm is area preserving? see Frenkel p. 80/100}
-
-If we look at the total effect of applying the operator we see that
-\begin{align*}
-    \vec p(0) 
-    &\rightarrow \vec p(0) + \frac{\Delta t}{2} \big(\dot{\vec p}(0) + \dot{\vec p}(\Delta t) \big) \\
-    &= \vec p(0) + \frac{\Delta t}{2} \left( \Fvec(0) + \Fvec(\Delta t) \right) \\
-    \rvec(0)
-    &\rightarrow \rvec(0) + \Delta t \dot\rvec\left(\frac{\Delta t}{2}\right) \\
-    &= \rvec(0) + \Delta t \dot \rvec(0) + \frac{\Delta t^2}{2m}\Fvec(0),
-\end{align*}
-which can be rewritten using $\vec p = m\vvec$, $\dot {\vec p} = \Fvec/m$ and $\dot \rvec = \vvec$ to the form
-\begin{align*}
-    \rvec(\Delta t) &= \rvec(0) + \vvec(0)\Delta t + \frac{\Fvec(0)}{m}\frac{\Delta t^2}{2} \\
-    \vvec(\Delta t) &= \vvec(0) + \left[\frac{\Fvec(0)}{m} + \frac{\Fvec(\Delta t)}{m}\right] \frac{\Delta t}{2},
-\end{align*}
-which is exactly the velocity Verlet algorithm, as we saw in \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity}.
-
-\subsection[Error in velocity Verlet]{\hl{Error in velocity Verlet}}
-\newcommand{\errop}{\hat{\epsilon}}
-When we approximate the exact \hl{timestep} operator $\Lop (\Delta t)$ with $\Lop^*(\Delta t)$ going from \cref{eq:liou_time_exact} to \cref{eq:liou_time_trunc,eq:liou_onetime_trunc} we do a truncation 
-\begin{align*}
-    \Lop(\Delta t) = \Lop^*(\Delta t) e^{\mathcal{O}(1/P^2)} \approx \Lop^*(\Delta t).
-\end{align*}
-To investigate this error we express it as an error operator $\errop$
-\begin{align*}
-    e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} e^{\mathcal{O}(1/P^2)}
-    = e^{\Liou \Delta t + \errop},
-\end{align*}
-which can be expressed in terms of the commutators of $\vec L_p$ and $\vec L_r$:
-\begin{align*}
-    \errop = \sum_{n=1}^\infty (\Delta t)^{2n+1} c_{2n+1},
-\end{align*}
-where $c_m$ denotes a combination of mth-order commutators. The leading term is
-\begin{align*}
-    -(\Delta t)^3 \left( \frac{1}{24} \left[ \Liou_r, \left[ \Liou_r, \Liou_p \right] \right] + \frac{1}{12} \left[ \Liou_p, \left[ \Liou_r, \Liou_p \right] \right] \right)
-\end{align*}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
-% %(the derivative is denoted by a dot)
-% (denoted by a dot)
-% \begin{align*}
-%     \dot f(t) = \dot \rvec \dpd{f(t)}{\rvec} + \dot {\vec p} \dpd{f(t)}{\vec p} = \Liou f(t).\label{eq:liou_f}
-% \end{align*}
-% where we have defined the \emph{Liouville operator}, $\Liou$, as
-% \begin{align*}
-%     \Liou = \dot \rvec \dpd{}{\rvec} + \dot {\vec p} \dpd{}{\vec p} = \Liou_r + \Liou_p
-% \end{align*}
-% where $\Liou_r$ and $\Liou_p$ denotes the left and right part if this operator, respectively. %
-% From this we can define the time evolution operator $\Lop(t)$
-% \begin{align*}
-%     f(t) = \hat U(t) f(0) = e^{\Liou t}f(0),
-% \end{align*}
-% which we can verify \hl{using???}
-% \begin{align*}
-%     \dot f(t) = \Liou \left[ e^{\Liou t}f(0) \right] = \Liou f(t)
-% \end{align*}
-% 
-% To try and find $f(t)$ from $\dot f(t)$ we can formally integrate \cref{eq:liou_f} to obtain
-% \begin{align*}
-%     f(t) = e^{\Liou t} f(0),
-% \end{align*}
-% but this doesn't get us any closer to a solution, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. But if we replace $\Liou$ with $\Liou_r$ we and use a Taylor expansion of the exponential on the right-hand side, we get
-% \begin{align*}
-%     f(t)
-%     &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
-%     &= \exp\left( \dot\rvec (0) t \dpd{}{\rvec} \right) f(0) \\
-%     &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
-%     &= f\big[\rvec(0) + \dot\rvec(0), \vec p(0)\big]
-% \end{align*}
-
-
-
+\input{appendices/velocity_verlet_taylor.tex}
+\input{appendices/velocity_verlet_liouville.tex}

@@ -186,7 +186,7 @@ We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v
 
 It can be shown that the Nosé-Hoover scheme only generates a correct canonical distribution for molecular systems in which \hl{there is only one conserved quantity or if} there are no external forces and the center of mass remains fixed \cite{frenkel2001understanding}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocit, which we usually do in our simulations, \hl{to avoid drift/flow}.
 
-\section{Nos\'e-Hoover chains}
+\section[Nos\'e-Hoover chains]{\hl{Nos\'e-Hoover chains}}
 
 \todo[inline]{Why use chains? What is wrong with the regular Nosé-Hoover?} 
 
@@ -195,7 +195,8 @@ It can be shown that the Nosé-Hoover scheme only generates a correct canonical 
 %     &\vec r_i = \vec r,&  &\vec p_i = \frac{\tilde{\vec p}_i}{s},&  &\text{and}&  &t = \int^{\tilde t} \frac{\dif \tau}{s}&
 % \end{align*}
 
-
+Proposed by Martyna et al. \todo{[136] in Frenkel's Understanding Mol.Sim.}
+A Nos\"e-Hoover thermostat is coupled to another thermostat, or to a whole chain of thermostats. 
 
 \orangebox{
     \begin{itemize}
