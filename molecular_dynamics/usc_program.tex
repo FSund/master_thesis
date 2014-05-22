@@ -7,6 +7,8 @@ The potential is implemented in a FORTRAN 77 program which has been parallellize
 
 The program implements a \hl{Nos\'e-Hoover chain thermostat} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
+\todo[inline]{Timestep set according to vibrational frequency of water?}
+
 \orangebox{
     \begin{itemize}
         \item Variable time step integrator (hydrogen vibrations/oscillations much faster than Si-O movement/vibration)

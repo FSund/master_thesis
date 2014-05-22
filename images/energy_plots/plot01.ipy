@@ -139,7 +139,7 @@ def load_data(path_to_statistics_folder, statistics_folder_numbers, used_statist
 ## RUN PROGRAM ##
 
 # Set up variables
-system_nr = 2
+system_nr = 0
 
 if system_nr == 0:
     project_location = '/home/fsund/Projects/'
@@ -191,9 +191,10 @@ timestep, potential_energy, total_energy, temperature = load_data(path_to_statis
 timestep = fix_time_vector(timestep, dt = 100)
 
 ## Plot
+default_fig_size = np.array([8.0, 6.0]) # inches
 default_backend = 'Qt4Agg'
 backend = default_backend
-# backend = 'SVG'
+backend = 'SVG'
 
 if backend == "SVG":
     import matplotlib
@@ -207,34 +208,91 @@ import matplotlib.pyplot as plt
 if backend == default_backend:
     plt.ion()
 
-default_fig_size = np.array([8.0, 6.0]) # inches
+def savefig(filename):
+    if backend == default_backend:
+        plt.show()
+    else:
+        fig.savefig(filename, bbox_inches = "tight")
 
-from matplotlib.ticker import FormatStrFormatter, MultipleLocator
+if system_nr == 2:
+    fig = plt.figure(figsize = default_fig_size/2.5)
+    ax = fig.add_subplot(111)
 
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# # ax.plot(timestep, temperature, 'o')
-# ax.plot(timestep, temperature)
-# plt.show()
+    ax.plot(timestep/1000.0, total_energy)
 
-fig = plt.figure(figsize = default_fig_size/2.0)
-ax = fig.add_subplot(111)
-ax.plot(timestep/1000.0, total_energy)
+    ax.set_ylim(-5.56296 + np.array([-3.2, -0.5])/1e5)
+    ax.set_xlim([485, 590])
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111)
+    # # ax.plot(timestep, temperature, 'o')
+    # ax.plot(timestep, temperature)
+    # plt.show()    
 
-# majorFormatter = FormatStrFormatter('%d')
-# ax.xaxis.set_major_formatter()
-# majorLocator = MultipleLocator(1e-5)
-majorLocator = MultipleLocator(5e-6)
-ax.yaxis.set_major_locator(majorLocator)
+    from matplotlib.ticker import FormatStrFormatter, MultipleLocator
+    # majorFormatter = FormatStrFormatter('%d')
+    # ax.xaxis.set_major_formatter()
+    # majorLocator = MultipleLocator(1e-5)
+    majorLocator = MultipleLocator(5e-6)
+    ax.yaxis.set_major_locator(majorLocator)
 
-ax.set_xlabel("Timesteps [1000]")
-ax.set_ylabel("Energy [MD units]")
+    ax.ticklabel_format(axis='y', style='sci', scilimits=(-2,2))
 
-# print np.array([-3.25, -0.55])/1e5
-ax.set_ylim(-5.56296 + np.array([-3.2, -0.5])/1e5)
+    ax.set_xlabel("Timesteps [1000]")
+    ax.set_ylabel("Energy [MD units]")
+
+    filename = "system%02d_total_energy_thermalized" %system_nr
+    savefig(filename)
+
+    # Percentage version
+    fig = plt.figure(figsize = default_fig_size/2.5)
+    ax = fig.add_subplot(111)
+
+    ax.plot(timestep/1000.0, 1 - np.abs( (total_energy)/(-np.mean(total_energy)) ) )
 
 
-if backend == default_backend:
-    plt.show()
-else:
-    fig.savefig("total_energy01.svg", bbox_inches = "tight")
+    # ax.set_ylim(-5.56296 + np.array([-3.2, -0.5])/1e5)
+    ax.set_xlim([485, 590])
+
+    from matplotlib.ticker import FormatStrFormatter, MultipleLocator
+    # majorFormatter = FormatStrFormatter('%d')
+    # ax.xaxis.set_major_formatter()
+    # majorLocator = MultipleLocator(1e-5)
+    # majorLocator = MultipleLocator(5e-6)
+    # ax.yaxis.set_major_locator(majorLocator)
+
+    ax.ticklabel_format(axis='y', style='sci', scilimits = (-2,2))
+    # from matplotlib.ticker import ScalarFormatter 
+    # ax.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
+
+    ax.set_xlabel("Timesteps [1000]")
+    ax.set_ylabel("Relative energy difference")
+    # ax.set_title("Relative difference in total energy from mean (%1.2f)" %np.mean(total_energy))
+
+    filename = "system%02d_total_energy_thermalized_percentage" %system_nr
+    savefig(filename)
+
+dt = 20.67 # atomic unit of time
+atomic_unit_of_time = 2.418884326505e-17 # seconds
+one_timestep = dt*atomic_unit_of_time
+time_between_statefiles = one_timestep*100/(1.0e-12) # picoseconds
+print "time between statefiles [ps] = " + str(time_between_statefiles)
+
+
+if system_nr == 0:
+    fig = plt.figure(figsize = default_fig_size/2.0)
+    ax = fig.add_subplot(111)
+
+    x = range(1600)
+    ax.plot(timestep[x]/1000.0, temperature[x]/1000.0)
+
+    # from matplotlib.ticker import FormatStrFormatter, MultipleLocator
+    # majorLocator = MultipleLocator(5e-6)
+    # ax.yaxis.set_major_locator(majorLocator)
+
+    ax.set_xlabel("Timesteps [1000]")
+    ax.set_ylabel("Temperature [kK]")
+
+    plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
+
+    filename = "system%02d_temperature_melt_cool" %system_nr
+    savefig(filename)

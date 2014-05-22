@@ -4,8 +4,8 @@ import os.path
 
 default_backend = 'Qt4Agg'
 
-backend = 'SVG'
-# backend = default_backend
+backend = default_backend
+# backend = 'SVG'
 
 import matplotlib
 matplotlib.use(backend)
@@ -79,7 +79,7 @@ def remove_nan(data, r_vector):
 
 # top_cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks"
 initial_cwd = os.getcwd()
-cwd = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/diffusion"
+cwd = "/home/fsund/Dropbox/Masteroppgave/master/analysis/diffusion/results"
 os.chdir(cwd)
 print os.getcwd()
 

@@ -20,43 +20,43 @@ When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{
 %     \end{quote}
 % }
 
-To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, as see in figure \cref{fig:cristobalite} \todo{Why?}, and give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}. The crystal consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms.
+To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, the unit cell of which can be seen in figure \cref{fig:beta_cristobalite-unit_cell}, and a larger crystal in \cref{fig:cristobalite01} \todo{Why?}. This this crystalline form consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms. \hl{transition?} We give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}.
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \begin{subfigure}[c]{0.25\textwidth}%
+% %         \begin{minipage}[c]{\textwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}%
+% %         \end{minipage}%
+% %         \caption{\cite{wikiCristobalite01}}%
+%         \caption{}%
+%         \label{fig:cristobalite01}%
+%     \end{subfigure}%
+%     \hspace{0.07\textwidth}%
+%     \begin{subfigure}[c]{0.45\textwidth}%
+% %         \begin{minipage}[c]{\textwidth}%
+%         \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}%
+% %         \end{minipage}%
+% %         \caption{\cite{wikiCristobalite02}}%
+%     \caption{}%
+%     \label{fig:cristobalite02}%
+%     \end{subfigure}%
+%     \caption{%
+%         Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.%
+%         \label{fig:cristobalite}%
+%     }%
+% \end{figure}%
 %
 \begin{figure}[htpb]%
     \centering%
-    \begin{subfigure}[c]{0.25\textwidth}%
-%         \begin{minipage}[c]{\textwidth}%
-        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_x01}%
-%         \end{minipage}%
-%         \caption{\cite{wikiCristobalite01}}%
-        \caption{}%
-        \label{fig:cristobalite01}%
-    \end{subfigure}%
-    \hspace{0.07\textwidth}%
-    \begin{subfigure}[c]{0.45\textwidth}%
-%         \begin{minipage}[c]{\textwidth}%
-        \includesvg[width=\textwidth, svgpath=./images/beta_cristobalite/]{beta_cristobalite_xyz01}%
-%         \end{minipage}%
-%         \caption{\cite{wikiCristobalite02}}%
-    \caption{}%
-    \label{fig:cristobalite02}%
-    \end{subfigure}%
+    \includegraphics[width=0.5\textwidth]{images/beta_cristobalite/unit_cell05_cropped.png}%
     \caption{%
-        Illustrations of the $\upbeta$-cristobalite structure, from two different views. Images from Wikipedia Commons, released to the public domain\cite{wikiCristobalite01,wikiCristobalite02}.%
-        \label{fig:cristobalite}%
-    }%
-\end{figure}%
-%
-\begin{figure}[htpb]%
-    \centering%
-    \includegraphics[width=0.6\textwidth]{images/beta_cristobalite/unit_cell03_cropped.png}%
-    \caption{
-        \hl{FINISH CAPTION}%
+        $\beta$-cristobalite unit cell, with 8 silicon atoms and 16 oxygen atoms. \hl{FINISH CAPTION}%
     }%
     \label{fig:beta_cristobalite-unit_cell}%
 \end{figure}%
 
-We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse.
+We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse. \todo[inline]{Reference figures below, say something about energy conservation \cref{fig:plot_heat_melt_sio2,fig:plot_energy_conservation}}
 
 We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
 
@@ -69,8 +69,9 @@ We are now ready to do measurements.
         \includegraphics[width=\textwidth]{images/melt_glass/perfect_crystal02_cropped}%
 %         \end{minipage}%
 %         \caption{\cite{wikiCristobalite01}}%
-        \caption{}%
-%         \label{fig:cristobalite01}%
+        \caption{%
+            \label{fig:cristobalite01}%
+        }%
     \end{subfigure}%
     \hspace{0.07\textwidth}%
     \begin{subfigure}[c]{0.45\textwidth}%
@@ -85,6 +86,65 @@ We are now ready to do measurements.
         Fig%
         \label{fig:melted_glass}%
     }%
+\end{figure}%
+
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \begin{subfigure}[c]{0.48\textwidth}%
+%         \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+%         \caption{%
+%             Temperature in kilo-Kelvin.%
+% %             \label{fig:cristobalite02}%
+%         }%
+%     \end{subfigure}%
+%     \hfill%
+%     \begin{subfigure}[c]{0.48\textwidth}%
+%         \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
+%         \caption{%
+%             Relative difference in energy from mean (mean was $-5.56$ in MD units) for simulation over 100k timesteps ($\sim 50$ picoseconds).% 100 timesteps = 0.0499983390289 picoseconds
+% %             \label{fig:cristobalite02}%
+%         }%
+%     \end{subfigure}%
+%     \caption{%
+%         Fig%
+% %         \label{fig:melted_glass}%
+%     }%
+% \end{figure}%
+%
+\begin{figure}%
+% \centering%
+    \begin{minipage}[t]{0.499\textwidth}%
+        \captionsetup{width=0.925\textwidth}%
+        \centering%
+%         \includesvg[width=0.8\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+        \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+        \caption{%
+            Temperature in kilo-Kelvin. Caption Caption Caption Caption Caption Caption Caption Caption %
+            \label{fig:plot_heat_melt_sio2}%
+        }%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
+    \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \centering%
+%         \includegraphics[width=0.8\textwidth]{images/voronoi/3d_diagram04_crop.png}%
+        \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
+        \caption{%
+            Relative difference in energy from mean (mean was $-5.56$ in MD units) for simulation over 100k timesteps ($\sim 50$ picoseconds).%
+            \label{fig:plot_energy_conservation}%
+        }%
+    \end{minipage}%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+    \caption{%
+        4*4*4 cpus, 6*6*6 unit cells $\rightarrow 331776$ atoms, 221184 oxygen and 110592 silicon. \hl{FINISH CAPTION}%
+    }%
+%     \label{fig:beta_cristobalite-unit_cell}%
 \end{figure}%
 
 \section{Passivation}

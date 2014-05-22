@@ -140,6 +140,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
             average_density, average_n_tagged_atoms, r_vector, timestep_vector = \
                 average_over_timesteps(results = results, n = n_lines_to_plot, n_timesteps_between_states = n_timesteps_between_states)
         
+            # min_distance = 0.0
             min_distance = 3.0
             max_distance = 25.0
             n_min, n_max, indices = find_indices_in_range(r_vector, min_distance, max_distance);
@@ -191,13 +192,39 @@ print os.getcwd()
 # Load results
 results = []
 
-input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
-data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
-results.append(load_results(data_files))
+# input_folders = ["/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
+#                 "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
+#                 "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/rough_fracture03/10_01_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
+#                 "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/flat_fracture01/10_03_measuring_every_100th_timestep_441/dr0.25_n50_002/",
+#                 "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/flat_square_fracture03/10_01_measuring_every_100th_timestep/dr0.25_n40_001/",
 
-input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
-data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
-results.append(load_results(data_files))
+input_folders = [ \
+    "flat_fracture01/10_03_measuring_every_100th_timestep_441/dr0.25_n50_002/",
+    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
+    "flat_square_fracture03/10_01_measuring_every_100th_timestep/dr0.25_n40_001/",
+    "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
+    "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/dr0.25_n40_002/",
+]
+
+input_folders = ["/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/" + input_folders[i] for i in range(len(input_folders))]
+
+# # input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+# input_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+# data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+# results.append(load_results(data_files))
+
+# input_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+# data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+# results.append(load_results(data_files))
+
+# # /home/fsund/Projects/rough_fracture03/09_thermostat_finished_T300
+# input_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/rough_fracture03/10_01_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
+# data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+# results.append(load_results(data_files))
+
+for input_folder in input_folders:
+    data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+    results.append(load_results(data_files))
 
 n_timesteps_between_states = 100
 n_lines_to_plot = 1

@@ -5,8 +5,8 @@ import os.path
 default_backend = 'Qt4Agg'
 default_fig_size = np.array([8.0, 6.0]) # inches
 
-backend = 'SVG'
-# backend = default_backend
+backend = default_backend
+# backend = 'SVG'
 
 import matplotlib
 matplotlib.use(backend)
@@ -132,6 +132,9 @@ reduction_factor = 1.6
 fig = plt.figure(figsize = default_fig_size/reduction_factor)
 ax = fig.add_subplot(111)
 
+fig2 = plt.figure(figsize = default_fig_size/reduction_factor)
+ax2 = fig2.add_subplot(111)
+
 # Loop over datasets and plot
 for data_idx, data in enumerate(datasets):
 
@@ -153,6 +156,16 @@ for data_idx, data in enumerate(datasets):
         y = data[:,idx_to_use]
         y = y/(6.0*time)
         ax.plot(time, y, color = colors[idx], linestyle = linestyles[data_idx])
+
+        # Linear fit
+        x = time
+        y = data[:,idx_to_use]
+        ax2.plot(x,y)
+        i0 = len(x)*0.5
+        p = np.polyfit(x[i0:],y[i0:],1)
+        xp = np.array([x[0]*0.9, x[-1]*1.1])
+        ax2.plot(xp, np.polyval(p, xp))
+
         
         legendstring = "r = [%.1f, %.1f)" %(r_vector[idx_to_use], r_vector[idx_to_use+1])
         legends.append(legendstring)
@@ -209,7 +222,7 @@ plt.draw()
 ## LEGENDS DONE
 
 # Title and axis labels
-plt.title("Diffusion \$r^2(t)/6t\$")
+ax.set_title("Diffusion \$r^2(t)/6t\$")
 ax.set_xlabel("\$t\$ [ps]")
 ax.set_ylabel("\$r^2/6t\$ [\AA\$^2\$/ps]")
 
