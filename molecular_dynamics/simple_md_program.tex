@@ -74,7 +74,7 @@ Even though the potential is simple, it describes many properties noble gases li
 %
 \begin{figure}[htpb]%
     \centering%
-    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign}%
+    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign01}%
 %     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}%
     \caption{%
         Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.%
@@ -152,7 +152,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 
 
 \section{Boundary conditions}
-\todo[inline]{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
+\todod{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
 In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center\hl{, and, depending on the potential, will not behave as intended?}. When simulating \hl{bulk} liquids and solids we remedy this by using periodic boundary conditions. This means that we repeat the \hl{simulation box} \hl{virtually} an infinite number of times in each direction, so that all atoms \hl{have a bulk-like environment}. Atom $l$ will then have what we call an \hl{\emph{image}/``image''} in all other neighbor boxes, with position
 \begin{align}
     \rvec_l^{ijk} = \rvec_l + iL_x + jL_y + kL_z,

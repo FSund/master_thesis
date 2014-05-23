@@ -26,7 +26,7 @@
 
 
 % ----  Draft stuff (remove before final version) ---- %
-\usepackage{todonotes}
+\usepackage[colorinlistoftodos,color=black!20]{todonotes}
 \usepackage{xcolor}
 \newcommand{\orangebox}[1]{
     \fcolorbox{black}{orange}{
@@ -43,8 +43,9 @@
 \usepackage{svg}            % To include .svg vector graphics directly using \includesvg (will automatically compile/convert the images to .pdf+.pdf_tex using Inkscape). 
                             % NEEDS ``pdflatex --shell-escape'' !!!
                             
-\setsvg{                    % conversion options for svg package
-    inkscape = inkscape -z -D
+\setsvg{%                   % conversion options for svg package
+    inkscape = inkscape -z -D,%
+    pretex = \footnotesize%
 }
 
 % The subfigure and subfig packages are deprecated and shouldn't be used any more: 

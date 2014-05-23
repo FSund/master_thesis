@@ -1,9 +1,10 @@
 \chapter{Ensembles?}
-
+\orangebox{
 \begin{itemize}
     \item canonical = constant $N$, $V$ and $T$
     \item microcanonical = constant $N$, $V$ and $E$
 \end{itemize}
+}
 
 
 % \section{Ensemble/thermostats}
@@ -11,7 +12,7 @@ We have now developed a molecular dynamics program that simulates simple systems
 
 % \hl{To study the canonical ensemble we can use a thermostat, which is a method for controlling the temperature of the system.} \todo{transition to parts below}
 
-The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todo{small discussion of how heat bath really works? see thijssen p. 203(216)} We measure the temperature via the kinetic energy of the system, so we know we have to \hl{modify} the velocities of the system to control the temperature. 
+The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todoco{small discussion of how heat bath really works? see thijssen p. 203(216)} We measure the temperature via the kinetic energy of the system, so we know we have to \hl{modify} the velocities of the system to control the temperature. 
 
 \orangebox{
     \begin{itemize}
@@ -68,11 +69,12 @@ A more \hl{physically realistic} thermostat is the Andersen thermostat\hl{citati
         \end{align*}
 \end{itemize}
 %
-In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should have about the same value as in the Berendsen thermostat}\todo{we give no number for $\tau$ in Berendsen..}.
+In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should have about the same value as in the Berendsen thermostat}\tododo{we give no number for $\tau$ in Berendsen..}.
 
 The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
 
 \section{Nos\'e-Hoover thermostat}
+\todoa{Move this to appendix (if it isn't there already), just do summary here, and maybe chains?}
 The Nos\'e-Hoover thermostat is the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} This thermostat is in widespread use because of it's \hl{excellent properties}, although it is a lot harder to implement than the Berendsen and Andersen thermostat.
 
 % To show how the thermostat works we need to formulate statistical mechanics in the language of quantum mechanics. In classical mechanics the momentum $\vec p$ of a particle is defined in terms of its velocity $\vec v$ by
@@ -155,7 +157,7 @@ From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of m
     \frac{1}{s}\dod{s'}{t'} &= \frac{s}{s}\dod{s}{t} = \frac{s'p_s'}{Q} \\
     \dod{(s'p_s'/Q)}{t'}    &= \frac{s}{Q}\dod{p_s}{t} = \left( \sum_{i=1}^N \frac{p_i'^2}{m_i} - 3Nk_BT\right) / Q.
 \end{align*}
-\todo{remove this complicated version? we haven't derived it anyway...}
+\tododo{remove this complicated version? we haven't derived it anyway...}
 These equations can further be simplified\hl{cite Hoover [132, 133]?, Frenkel, p. 152/172}. We introduce a thermodynamic friction coefficient $\xi = s'p_s'/Q$ and drop the primes, and we get the following equations of motion
 \begin{align}
     \xi             &= \frac{sp_s}{Q} \label{eq:nose_xi}\\
@@ -182,13 +184,13 @@ Using the Nosé-Hoover equations of motion in \cref{eq:nose_xi,eq:nose_position,
         \Bigg] 
         \frac{\Delta t}{2}.
 \end{align*}
-We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v(t+\Delta t)$ we see that we need to know $\vec v(t+\Delta t)$ itself \hl{($\vec v(t+\Delta t)$ appears on both sides)}, turning the velocity Verlet integrator into an \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. Martyna \emph{et al.}\cite{martyna1996explicit} has developed a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems.\todo{this paragraph is copied from Frenkel p. 535/555..!}
+We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v(t+\Delta t)$ we see that we need to know $\vec v(t+\Delta t)$ itself \hl{($\vec v(t+\Delta t)$ appears on both sides)}, turning the velocity Verlet integrator into an \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. Martyna \emph{et al.}\cite{martyna1996explicit} has developed a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems.\todoa{this paragraph is copied from Frenkel p. 535/555..!}
 
 It can be shown that the Nosé-Hoover scheme only generates a correct canonical distribution for molecular systems in which \hl{there is only one conserved quantity or if} there are no external forces and the center of mass remains fixed \cite{frenkel2001understanding}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocit, which we usually do in our simulations, \hl{to avoid drift/flow}.
 
 \section[Nos\'e-Hoover chains]{\hl{Nos\'e-Hoover chains}}
 
-\todo[inline]{Why use chains? What is wrong with the regular Nosé-Hoover?} 
+\todobo{Why use chains? What is wrong with the regular Nosé-Hoover?} 
 
 % where $Q$ is a parameter \hl{what does it do?} (effective mass associated with $s$ -- Frenkel), $T$ is \hl{??? wanted $T$?}, $p_s$ is \hl{???}. The coordinates in this ``extended'' system, momentum $\tilde{\vec p}_i$, position $\tilde{\vec r}_i$, and time $t$ are virtual, and can be related to the real coordinates via
 % \begin{align*}

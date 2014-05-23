@@ -26,11 +26,11 @@
     \label{list:sampling}%
 }%
 \end{listing}%
-\todo{finish this listing}
+\todoa{finish this listing}
 
 
 \section{Temperature}
-\todo[inline]{derivation of temperature?}
+\todob[inline]{derivation of temperature?}
 According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
 \begin{align*}
     \Braket{E_k} = \frac{3}{2}Nk_\text{B}T,
@@ -68,11 +68,11 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
 }%
 \end{listing}%
 
-\todo[inline]{Something about temperature in system with flow? (not that relevant for me though...)}
+\todod{Something about temperature in system with flow? (not that relevant for me though...)}
 
 \section{Pressure\label{subsec:pressure}}
-\todo[inline]{derivation of pressure? See Anderhaf}
-\todo[inline]{we haven't measured pressure, so maybe remove this section?}
+\todob{derivation of pressure? See Anderhaf}
+\todoc{we haven't measured pressure, so maybe remove this section?}
 To measure the pressure when using potentials with pairwise additive interactions, like the case is for our example program with the Lennard-Jones potential, we can use a method derived from the virial equation for the pressure\cite[Section~4.4]{frenkel2001understanding}. In a volume $V$ with particle density $\rho = N/V$, the average pressure is
 % For pairwise additive interactions we can write\cite[Section~4.4]{frenkel2001understanding}
 \begin{align}
@@ -107,7 +107,7 @@ An example of how to calculate the pressure in a molecular dynamics \hl{simulati
 \end{listing}%
 
 \section{Diffusion}
-\todo[inline]{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
+\todob{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
 When we talk about diffusion in \hl{the context of} this thesis we mean the process of \emph{self-diffusion}, which is different from \hl{``normal''} diffusion which is the net movement of a substance in the presence of a gradient, which can be for example a concentration gradient, a temperature gradient, or a pressure gradient. With \emph{self-diffusion} we mean the \hl{random?} movement in a substance that has no gradients.
 
 Diffusion can be characterized by a constant $D$, which is related to the displacement of each atom relative to a initial position. We can measure this constant by measuring the mean square displacement $r_i^2(t)$ of each atom as a function of time, and average over all atoms. The mean square displacement is measured as
@@ -202,6 +202,6 @@ An example of how to measure the mean square displacement in a molecular dynamic
 \end{listing}%
 
 \section{Measuring as function of distance from matrix}
-
+\todoa{Finish this}
 Mean distance from matrix in range --> if we limit the standard deviation as well, we're effectively limiting temperature, or diffusion??
 

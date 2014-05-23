@@ -7,7 +7,7 @@ The potential is implemented in a FORTRAN 77 program which has been parallellize
 
 The program implements a \hl{Nos\'e-Hoover chain thermostat} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
-\todo[inline]{Timestep set according to vibrational frequency of water?}
+\todob{Timestep set according to vibrational frequency of water?}
 
 \orangebox{
     \begin{itemize}
@@ -53,7 +53,7 @@ The program implements a \hl{Nos\'e-Hoover chain thermostat} to sample the micro
     \end{itemize}
 }
 
-The interatomic potential\cite{vashishta1990interaction} \todo{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
+The interatomic potential\cite{vashishta1990interaction} \todoco{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
 \begin{align*}
     E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
 \end{align*}
@@ -112,7 +112,7 @@ where the parameters of the are as follows%
 \end{itemize}
 % $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
 
-$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds. This term depends on the distances between atom $i$, $j$ and $k$, and also the angle $\theta_{ijk}$ between the atoms. The term has the form\todo{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
+$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds. This term depends on the distances between atom $i$, $j$ and $k$, and also the angle $\theta_{ijk}$ between the atoms. The term has the form\todoco{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
 \begin{align*}
     V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
     B_{ijk} 
@@ -148,17 +148,18 @@ The parameters of the three-body term are as follows
 \end{itemize}
 
 The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then gm
-\todo[inline]{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
+\todob{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
 
 % where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
-\todo[inline]{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
+\todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
 \section{Integrator}
-%
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=.7\textwidth, svgpath = ./images/energy_plots/]{total_energy01}%
-    \caption{Plot of total energy as function of timesteps in a thermalized nanoporous system filled with water.}%
-%     \label{fig:distance_to_atom_r20}%
-\end{figure}%
+\todob{Plot of energy conservation here?}
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=.7\textwidth, svgpath = ./images/energy_plots/]{total_energy01}%
+%     \caption{Plot of total energy as function of timesteps in a thermalized nanoporous system filled with water.}%
+% %     \label{fig:distance_to_atom_r20}%
+% \end{figure}%

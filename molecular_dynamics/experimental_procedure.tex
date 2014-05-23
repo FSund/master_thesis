@@ -56,7 +56,7 @@ To generate silica in the glass form we first create a perfect silica crystal in
     \label{fig:beta_cristobalite-unit_cell}%
 \end{figure}%
 
-We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse. \todo[inline]{Reference figures below, say something about energy conservation \cref{fig:plot_heat_melt_sio2,fig:plot_energy_conservation}}
+We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. We alternate between using a thermostat to adjust the temperature and simulating with the thermostat off to let the system thermalize. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse. \todob{Reference figures below, say something about energy conservation \cref{fig:plot_heat_melt_sio2,fig:plot_energy_conservation}}
 
 We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
 
@@ -137,15 +137,15 @@ We are now ready to do measurements.
     \end{minipage}%
 \end{figure}%
 
-%
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
-    \caption{%
-        4*4*4 cpus, 6*6*6 unit cells $\rightarrow 331776$ atoms, 221184 oxygen and 110592 silicon. \hl{FINISH CAPTION}%
-    }%
-%     \label{fig:beta_cristobalite-unit_cell}%
-\end{figure}%
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+%     \caption{%
+%         4*4*4 cpus, 6*6*6 unit cells $\rightarrow 331776$ atoms, 221184 oxygen and 110592 silicon. \hl{FINISH CAPTION}%
+%     }%
+% %     \label{fig:beta_cristobalite-unit_cell}%
+% \end{figure}%
 
 \section{Passivation}
 In most silicates the silicon atoms have tetrahedral coordination, with four oxygen atoms surronding each silicon atom. When we remove silica- and oxygen-atoms to create a fracture, we don't take this into consideration. This means that we get dangling unsaturated bonds in the system, located near the surface of the pore. To rectify this we use a method called passivation, where we saturate \hl{and passivate} the dangling bonds by inserting new atoms. 
@@ -300,6 +300,7 @@ An example of a system after passivation can be seen in \cref{fig:passivation_ex
     \label{fig:passivation_example}%
 \end{figure}%
 
+\todoa{Decide on whether to include silanol density stuff, and if so, write it}
 \orangebox{
 A good measure of the performance of the passivation method is the surface density of silanol after passivation. This number is often called the \emph{silanol number}, and us considered to be a physico-chemical constant, with a numerical value $\alpha_\text{OH} = 4.6$ (least-squares method) and $\alpha_\text{OH}\text{ nm}^{-2}$ (arithmical mean) \cite{zhuravlev1999silanol}, and is known in literature as the Kiselev-Zhuravlev constant. As we will see, measuring the surface area of porous system isn't trivial, so estimating this density isn't trivial. But by creating a completely flat pore and passivating it, we found that we created a silanol surface density of $\approx 7.05\text{ nm}^{-2}$ (if counting number of inserted hydrogen atoms) or $\approx 3.53\text{ nm}^{-2}$ (if counting number if inserted oxygen atoms). MAYBE MEASURE THIS PROPERLY?
 

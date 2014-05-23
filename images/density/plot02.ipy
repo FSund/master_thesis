@@ -78,6 +78,8 @@ def find_indices_in_range(vector, min_distance, max_distance):
 
 def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between_states, output_folder, backend, savefig = True):
 
+    legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+
     default_fig_size = np.array([8.0, 6.0]) # inches
     inchtomm = 25.4 # mm per inch
     a4width = 210   # mm
@@ -87,7 +89,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
     print "textwidth = " + str(textwidth) + "mm"
     figwidth = 0.8*textwidth
     reduction_factor = default_fig_size[0]/(figwidth/inchtomm)
-    reduction_factor = 1.4
+    reduction_factor = 1.1
     print "reduction_factor = " + str(reduction_factor)
 
     plt.figure(1, figsize = default_fig_size/reduction_factor)
@@ -128,7 +130,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
             plt.plot(r_vector[n_min:n_max], average_density_2[i][0, n_min:n_max] - np.mean(np.mean(average_density_2[i][0, n_max-1])))
             # plt.plot(r_vector[n_min:n_max], average_density_2[i][0, n_min:n_max] - np.mean(np.mean(average_density_2[i][0, n_min])))
         plt.title("Normalized")
-        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.legend(legends, loc = 'best')
         plt.figure(4)
         plt.plot(r_vector[n_min:n_max], np.abs(average_density_2[0][0, n_min:n_max] - average_density_2[1][0, n_min:n_max]))
         plt.title("Difference")
@@ -155,7 +157,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
                 plt.plot(r_vector[n_min:n_max], average_n_tagged_atoms[i, n_min:n_max])
     
         plt.figure(1)
-        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.legend(legends, loc = 'best')
         plt.xlabel(r"Distance from silica matrix [\$\text{\AA}\$]") # use \$ so python/matplotlib doesn't read LaTeX
         plt.ylabel(r"Density of water \$[\text{kg/m}^3]\$") # use r"" to fix \text{}-command
         # title = "Plot of density of water as function of distance from the silica matrix, for different number of timesteps after injection of water"
@@ -166,7 +168,7 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
             mysavefig(output_folder + "/density_water02")
         
         plt.figure(2)
-        plt.legend(["Flat fracture", "Rough fracture"], loc = 'best')
+        plt.legend(legends, loc = 'best')
         plt.xlabel(r"Distance from silica matrix \$\text{\AA}\$")
         plt.ylabel(r"Number of water molecules")
         # title = r"Plot of number of water molecules (in each bin) as function of distance from silica matrix. Bin width = 0.2 \$\AA\$."
@@ -175,8 +177,6 @@ def plot_to_svg_more_datasets(results_list, n_lines_to_plot, n_timesteps_between
         plt.title(title)
         if savefig:
             mysavefig(output_folder + "/number_of_molecules02")
-        else:
-            plt.show()
             
     else:
         print 'Wrong datatype'
@@ -199,14 +199,18 @@ results = []
 #                 "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/flat_square_fracture03/10_01_measuring_every_100th_timestep/dr0.25_n40_001/",
 
 input_folders = [ \
-    "flat_fracture01/10_03_measuring_every_100th_timestep_441/dr0.25_n50_002/",
-    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
-    "flat_square_fracture03/10_01_measuring_every_100th_timestep/dr0.25_n40_001/",
-    "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/",
-    "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/dr0.25_n40_002/",
+    "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    "flat_fracture02/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+    "flat_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    "flat_square_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
 ]
 
-input_folders = ["/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/" + input_folders[i] for i in range(len(input_folders))]
+results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/new_results/"
+input_folders = [results_folder + input_folders[i] for i in range(len(input_folders))]
 
 # # input_folder = "/home/fsund/Dropbox/Masteroppgave/master/notebooks/density/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"
 # input_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/results/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/dr0.25_n40_000/"

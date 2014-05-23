@@ -1,7 +1,12 @@
-% ---- Custom lengths for figures ---- %
+% ---- Figures ---- %
 % (so we can just use \setlength later)
 \newlength{\myfigwidth}
 \newlength{\mycaptionwidth}
+
+% \let\oldincludesvg\includesvg
+% \renewcommand{\includesvg}[1]{\small{\includesvg{#1}}}
+% \renewcommand{\includesvg}[1]{\begin{small}\includesvg{#1}\end{small}}
+
 
 % ---- Custom commands and symbols ---- %
 
@@ -39,3 +44,14 @@
 \newcommand{\Schr}{Schr\"odinger}
 % \newcommand{\cpp}{\Verb!C++!} % Doesn't work in captions... Can be fixed with ``\protect'' before the verb, and ``\SaveVerb'' before list of figures, or the cprotect package. More info here: http://tex.stackexchange.com/questions/8810/how-to-include-verbatim-in-a-figure-caption
 \newcommand{\cpp}{\texttt{C++}}
+
+% ---- Todo colors ---- %
+\newcommand{\todoa}[1]{\todo[inline,color=red!70]{#1}}
+\newcommand{\todob}[1]{\todo[inline,color=blue!50]{#1}}
+\newcommand{\todoc}[1]{\todo[inline,color=green!50]{#1}}
+\newcommand{\todod}[1]{\todo[inline,color=pink]{#1}}
+
+\newcommand{\todoao}[1]{\todo[color=red!70]{#1}}
+\newcommand{\todobo}[1]{\todo[color=blue!50]{#1}}
+\newcommand{\todoco}[1]{\todo[color=green!50]{#1}}
+\newcommand{\tododo}[1]{\todo[color=pink]{#1}}

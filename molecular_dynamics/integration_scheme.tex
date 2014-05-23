@@ -2,18 +2,18 @@
 \section{Integration scheme}
 To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
 
-\todo[inline]{a bit more intro about integration}
+\todob{a bit more intro about integration}
 
 
-\todo[inline]{Something general about Verlet methods before specific?}
+\todob{Something general about Verlet methods before specific?}
 
 It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$ \hl{(as shown in???)} \todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3, or derive self in appendix}., and numerically cheap \hl{(compared to other methods)} \st{requiring on the order of $N$?? flops}.
 
-\todo[inline]{Discuss that global error has been hard to find sources for?}
+\todob{Discuss that global error has been hard to find sources for?}
 
-\orangebox{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}
+\todod{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}
 
-\orangebox{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}
+\todod{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}
 
 \subsection{Regular Verlet integration}
 The Verlet method has many variations, but the simplest form \hl{(the one used/described by Verlet)} has the form
@@ -31,7 +31,7 @@ We see that the velocity isn't explicitly calculated or used in this form of the
 \end{align*}
 which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}. 
 
-The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually \hl{simply} approximated using the initial velocity, as follows\todo{is this bad?}
+The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually \hl{simply} approximated using the initial velocity, as follows
 \begin{align*}
     \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
 \end{align*}

@@ -1,4 +1,8 @@
 \chapter{Other measurements???}
+\todoa{hei}
+\todob{hei}
+\todoc{hei}
+\todod{hei}
 % \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
 \section{Neighbor lists\label{sec:neighbor_lists}}
 When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom. Finding out which atoms are within a certain radius of each atom can take a long time; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). Our problem is a very specific problem: to find all neighbors within a certain radius of a point, for \emph{all} points. We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
