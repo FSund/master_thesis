@@ -27,16 +27,13 @@
 % Replace \include with \input 
 % Check all listings for linewidth (after deciding on listing font size)
 
-% \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent}
-
+% ---- Includeonly stuff ---- %
 % \includeonly{molecular_dynamics/introduction}
 % \includeonly{molecular_dynamics/simple_md_program}
 % \includeonly{molecular_dynamics/optimizations}
 % \includeonly{molecular_dynamics/observables}
 % \includeonly{molecular_dynamics/ensembles}
 % \includeonly{molecular_dynamics/usc_program}
-% \includeonly{molecular_dynamics/experimental_procedure}
-% \includeonly{molecular_dynamics/measurements}
 % 
 % \includeonly{fractures/fractures}
 % \includeonly{fractures/hurst_exponent}
@@ -44,17 +41,19 @@
 % \includeonly{fractures/generating_surfaces}
 % \includeonly{fractures/generating_fractures}
 % 
-\includeonly{results/results}
-% 
-% \includeonly{discussion/discussion}
+% \includeonly{molecular_dynamics/experimental_procedure}
+% \includeonly{molecular_dynamics/measurements}
+% \includeonly{results/results}
 % 
 % \includeonly{appendices/md_units}
 % \includeonly{appendices/integrators}
 % \includeonly{appendices/pressure}
 % 
 % \includeonly{appendices/integrators}
-
+%
+% \includeonly{molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/results}
 % \includeonly{molecular_dynamics/simple_md_program,appendices/integrators}
+% \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent}
 
 \begin{document}
 
@@ -82,8 +81,6 @@
     \include{molecular_dynamics/observables}
     \include{molecular_dynamics/ensembles}
     \include{molecular_dynamics/usc_program}
-    \include{molecular_dynamics/experimental_procedure}
-    \include{molecular_dynamics/measurements}
 
 \part{Fractures}
     \include{fractures/fractures}
@@ -92,11 +89,13 @@
     \include{fractures/generating_surfaces}
     \include{fractures/generating_fractures}
 
-\part{Results}
+\part{Experiments}
+    \include{molecular_dynamics/experimental_procedure}
+    \include{molecular_dynamics/measurements}
     \include{results/results}
 
-\part{Discussion}
-    \include{discussion/discussion}
+% \part{Discussion}
+%     \include{discussion/discussion}
 
 \part{Appendices}
 \begin{appendix}
