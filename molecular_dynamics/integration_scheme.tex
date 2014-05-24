@@ -1,9 +1,28 @@
-
 \section{Integration scheme}
+
+\todoa{Cite appendix \cref{appendix:verlet_integrators,sec:liou,appendix:verlet_taylor}}
+
+\todoa{Write newton's equation of motion}
+
+\todoa{Important to have $\Fvec = m\avec = -\nabla U(\rvec)$ somewhere here, to show how we find forces from potential}
+
+\todoa{Replace $\avec$ with $\Fvec$ in equations below?}
+
+To integrate (time derivative denoted by a dot)
+\begin{align*}
+    \vvec &= \dod{\rvec}{t} \\
+    \vvec &= \dot \rvec \\
+    \avec &= \dod{\vvec}{t} = \dod[2]{\rvec}{t} \\
+    \avec &= \dot\vvec = \ddot\rvec \\
+    \Fvec &= m\avec = -\nabla U(\rvec)
+\end{align*}
+
+
 To integrate the Newton's equations of motion for the intermolecular potential there are a lot of different methods to choose between, ranging from the simple forward Euler method\hl{cite} first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. 
 
 \todob{a bit more intro about integration}
 
+\todoa{Rewrite integration chapter to properly integrate appendix}
 
 \todob{Something general about Verlet methods before specific?}
 

@@ -53,7 +53,7 @@ where $L_i$ is the system size in each direction. We then calculate the size of 
 
 For an atom at position $\rvec$ we can now find the \hl{neighboring} atoms within the radius $dr$ by finding which voxel the atoms belongs to, and checking the distance between the atom and all atoms in that voxel, and between and all atoms in the 26 neighboring boxes\todo{replace all ``box'' with ``voxel'' ?}. See \cref{list:check_neighbor_voxels} for an example of how to find neighbor atoms using this method.
 
-\todo[inline]{Distance between atoms, $r^2$ instead of $r$}
+\todob{Distance between atoms, $r^2$ instead of $r$}
 
 
 
@@ -188,9 +188,9 @@ where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of t
     \end{minipage}%
 \end{figure}%
 
-\todo[inline]{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
+\todob{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
 
-\todo[inline]{Something about removing extreme points/tail in distribution? Caused by vacuum.}
+\todob{Something about removing extreme points/tail in distribution? Caused by vacuum.}
 
 % \FloatBarrier
 \section{Tetrahedral order parameter}
@@ -210,12 +210,16 @@ where $\theta_{ikj}$ is the angle between two vectors from the main molecule, $k
 \end{figure}%
 
 % \FloatBarrier
-\section{``Distance to atom''}
+\section{``Distance to atom''\label{sec:distance_to_atom}}
+To help visualize, and to characterize our nanoporous system we developed a program that creates a 3d map of the distance to the nearest atom, in each point in space on a regular grid. The implementation of this program is almost straighforward, but since we have to do a lot of calculations if we want to have a map with decent resolution, we have also parallellized the program. 
 \todoa{Write about distance to atom}
 \todoc{Distance to atom code example?}
 
 % \FloatBarrier
-\section{``Distance to atom''}
+\section{``Generation matrix''}
+Since the program from \cref{sec:distance_to_atom} takes a long time to run to get decent maps with high resolution, we decided to also develop a similar program that creates a 3d map of the space. To ease calculation we this time used a method inspired by the voxelation technique from \cref{sec:voxelation}. This program first divides the system into $n_x\times n_y\times n_z$ voxels, and give all voxels \hl{\emph{generation}} 0. We then give all atoms with an atom in them \hl{\emph{generation}} 1. 
+
+\orangebox{A system of 347176 atoms (\texttt{rough\_fracture03}), water and SiO2, $256^3$ voxels, $~5$ seconds for ``generation matrix'', 2m27seconds for ``distance to atom'' (on one cpu)}
 \todoa{Write about voxel counter}
 \todoc{Voxel counter code example?}
 

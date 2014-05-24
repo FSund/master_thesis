@@ -19,18 +19,25 @@
 \begin{cppcode*}{gobble=4}
     void sample(System &system)
     {
+        double temperature = temperatureSample(system);
+        double pressure = pressureSample(system, temperature);
+        double rSquared = diffusionSample(system);        
     }
 \end{cppcode*}
 \caption{%
-    \hl{FINISH THIS LISTING}. Implementation of the function \texttt{sample} from \cref{list:simple_md_program}.%
+    Implementation of the function \texttt{sample} from \cref{list:simple_md_program}. See %
+    %\cref{list:temperatureSample}, \cref{list:pressureSample}, \cref{list:diffusionSample} %
+    \crefrange{list:temperatureSample}{list:diffusionSample} %
+    for example implementation of the functions used.%
     \label{list:sampling}%
 }%
 \end{listing}%
-\todoa{finish this listing}
+
+\todoa{Write introduction to observables}
 
 
 \section{Temperature}
-\todob[inline]{derivation of temperature?}
+\todob{derivation of temperature?}
 According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
 \begin{align*}
     \Braket{E_k} = \frac{3}{2}Nk_\text{B}T,

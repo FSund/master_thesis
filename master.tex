@@ -1,4 +1,4 @@
-\documentclass[twoside,english,a4paper,11pt]{uiofysmaster}
+\documentclass[twoside,english,a4paper,12pt]{uiofysmaster}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -22,6 +22,7 @@
 % Space before \cite{}??
 % ``timestep'' vs ``time step'' ?
 % Decide on font size for includesvg (now it's \footnotesize)
+% Decide on main font size (12 or 11 pt)
 
 % TODO: Before handing in
 % Replace \include with \input 
@@ -47,6 +48,7 @@
 % 
 % \includeonly{appendices/md_units}
 % \includeonly{appendices/integrators}
+% \includeonly{appendices/nose_hoover}
 % \includeonly{appendices/pressure}
 % 
 % \includeonly{appendices/integrators}
@@ -54,6 +56,7 @@
 % \includeonly{molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/results}
 % \includeonly{molecular_dynamics/simple_md_program,appendices/integrators}
 % \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent}
+% \includeonly{molecular_dynamics/simple_md_program,molecular_dynamics/ensembles,appendices/nose_hoover}
 
 \begin{document}
 
@@ -101,6 +104,7 @@
 \begin{appendix}
     \include{appendices/md_units}
     \include{appendices/integrators}
+    \include{appendices/nose_hoover}
     \include{appendices/pressure}
 \end{appendix}
 

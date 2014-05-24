@@ -1,4 +1,4 @@
-\section{Deriving velocity Verlet using Liouville operator\label{sec:liou}}
+\section{Deriving velocity Verlet using Liouville operator\label{sec:liou}\label{appendix:liouville_verlet}}
 \newcommand{\Liou}{i\hat{\vec L}}
 \newcommand{\Lop}{\hat{\mathcal{U}}}
 \hl{This derivation closely follows }\cite[section 4.3.3]{frenkel2001understanding}
@@ -121,7 +121,7 @@ and finally we apply $\exp(\Liou_p\Delta t/2)$ once more, and get
     \right\}.
 \end{align*}
 
-\todo[inline]{something about why algorithm is area preserving? see Frenkel p. 80/100}
+\todob{something about why algorithm is area preserving? see Frenkel p. 80/100}
 
 % If we look at the total effect of applying the operator we see that
 % \begin{align*}
@@ -180,7 +180,7 @@ from which we conclude that the \hl{global/accumulated} truncation error after $
 %meaning that the local truncation error \hl{(per timestep)} goes as $\mathcal{O}(\Delta t^4)$, which agrees with \hl{???}.
 
 \subsection{Error in regular Verlet?}
-\todo[inline]{Maybe show that velocity and regular are equivalent, and thus the error is the same?}
+\todob{Maybe show that velocity and regular are equivalent, and thus the error is the same?}
 
 
 

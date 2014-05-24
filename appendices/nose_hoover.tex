@@ -1,0 +1,133 @@
+\chapter{Nosé-Hoover thermostats\label{appendix:nose_hoover}}
+\todoa{Clean up Nosé-Hoover thermostat appendix, relate to ensembles chapter}
+the base for a set of \hl{highly advanced} thermostats called Nos\'e-Hoover chains, that sample the canonical ensemble very well, and give very accurate dynamics. \todo{citations} 
+
+% To show how the thermostat works we need to formulate statistical mechanics in the language of quantum mechanics. In classical mechanics the momentum $\vec p$ of a particle is defined in terms of its velocity $\vec v$ by
+% \begin{align*}
+%     \vec p = m\vec v,
+% \end{align*}
+% where $m$ is the mass of the particle. The kinetic energy is given by
+% \begin{align*}
+%     K = \sum_{i=1}^N \frac{\vec p_i^2}{2m_i}.
+% \end{align*}
+% The Hamiltonian of the system is defined to be the sum of the potential and kinetic energy, is then given by
+% \begin{align*}
+%     \Ham (\vec p, \vec r) = K(\vec p) + U(\vec r) = \sum_{i=1}^N \frac{\vec p_i^2}{2m_i} + U(\vec r_i, \dots, \vec r_N),
+% \end{align*}
+% where $U(\vec r)$ is the potential energy of the system.
+
+% What the Nosé-Hoover thermostat does is to introduce a heatbath in the Hamiltonian, by using an extra degree of freedom $s$. The total Hamiltonian we get is then \hl{source:} \url{http://en.wikipedia.org/wiki/Nos%C3%A9%E2%80%93Hoover_thermostat}
+% \begin{align*}
+%     \Ham (\tilde{\vec p}, \tilde{\vec r}, \vec p_s, s) = \sum_{i=1}^N \frac{\tilde{\vec p}_i^2}{2m_is^2} + U(\tilde{\vec r}) + \frac{p_s^2}{2Q} + 3Nk_BT \ln(s),
+% \end{align*}
+% where $Q$ is a parameter \hl{what does it do?} (effective mass associated with $s$ -- Frenkel), $T$ is \hl{??? wanted $T$?}, $p_s$ is \hl{???}. The coordinates in this ``extended'' system, momentum $\tilde{\vec p}_i$, position $\tilde{\vec r}_i$, and time $t$ are virtual, and can be related to the real coordinates via
+% \begin{align*}
+%     &\vec r_i = \vec r,&  &\vec p_i = \frac{\tilde{\vec p}_i}{s},&  &\text{and}&  &t = \int^{\tilde t} \frac{\dif \tau}{s}&
+% \end{align*}
+
+We follow the derivation in Frenkel and Smit's \emph{Understanding Molecular Simulation}\cite{frenkel2001understanding}. See also \cite{nose1984unified,hoover1985canonical} for more information.
+
+To show how the thermostat works we need to use the Lagrangian and Hamiltonian formulation of classical mechanics\todo{see where for more info?}. 
+% In classical mechanics the momentum $\vec p_i$ of a particle is defined in terms of its velocity $\dot{\vec r}_i$ by
+% \begin{align*}
+%     \vec p_i = m_i\dot{\vec r}_i,
+% \end{align*}
+% where $m_i$ is the mass of the particle. The kinetic energy $K$ of the system is given by
+% \begin{align*}
+%     K = \sum_{i=1}^N \frac{\vec p_i^2}{2m_i}.
+% \end{align*}
+The Lagrangian $\Lag$ of a classical $N$-body system is defined as the kinetic energy minus the potential energy $U$
+\begin{align*}
+    \Lag = K - U% = \sum_{i=1}^N \frac{\vec p_i^2}{2m_i} - U(\vec r),
+\end{align*}
+and what is called the \emph{generalized} momentum $\vec p_i$ of a \emph{generalized} coordinate $\vec q_i$ defined as
+\begin{align}
+    \vec p_i = \frac{\partial \mathcal{L}}{\partial \dot{\vec q}_i},
+    \label{eq:lag_momentum}
+\end{align}
+\hl{where we denote the time derivative by a dot.} These generalized coordinates and momenta are not bound to any one coordinate system, and may be any quantitative attribute of the system.
+
+What the Nosé-Hoover thermostat does is to introduce an additional coordinate $s$ to the Lagrangian, creating a \hl{(virtual,)} extended system, with the following Lagrangian\cite{nose1984unified}:
+\begin{align}
+    \mathcal{L}_\text{Nos\'e} = \sum_{i=1}^N \frac{m_i}{2}s^2 \dot{\vec r}_i^2 - U(\vec r) + \frac{Q}{2}\dot s^2 - 3Nk_BT \ln s,
+    \label{eq:nose_lag}
+\end{align}
+where $Q$ is an effective ``mass'' associated with $s$, and $\vec r_i$ is the \emph{generalized} coordinate from earlier, \hl{interpreted as a virtual position of an atom using cartesian coordinates}. The momenta of this expanded system follow from \cref{eq:nose_lag,eq:lag_momentum} as
+\begin{align*}
+    &\vec p_i = \frac{\partial \mathcal{L}}{\partial \dot{\vec r}_i} = m_i s^2 \dot{\vec r}_i \\
+    &p_s = \frac{\partial \mathcal{L}}{\partial \dot s} = Q\dot s.
+\end{align*}
+This gives the following Hamiltonian for the extended system
+\begin{align}
+    \Ham_\text{Nos\'e} = \sum_{i=1}^N \frac{\vec p_i^2}{2m_is^2} + U(\vec r) + \frac{p_s^2}{2Q} + 3Nk_BT \ln s,
+    \label{eq:nose_hamiltonian}
+\end{align}
+It can be shown that we can relate the generalized coordinates to real variables (real variables indicated by a prime) as follows
+\begin{align}
+    \vec r' &= \vec r \nonumber\\
+    \vec p' &= \vec p/s \nonumber\\
+    s' &= s \nonumber\\
+    \Delta t' &= \Delta t/s. \label{eq:nose_time_scale}
+\end{align}
+From \cref{eq:nose_time_scale} we see that $s$ can be interpreted as a scaling factor of the time step. \hl{Something about this scaling? real and virtual measuring times $\tau'$ and $\tau$}
+% Further
+% \begin{align*}
+%     \tau' = \int_0^\tau \dif \frac{1}{s(t)}
+% \end{align*}
+
+From the Hamiltonian \cref{eq:nose_hamiltonian} we can derive the equations of motion for the virtual variables $\vec r$, $\vec p$, and $t$, and the real variables $\vec r'$, $\vec p'$, and $t'$ \cite{hoover1985canonical}
+\begin{align*}
+    \dod{\vec r_i'}{t'}     &= s\dod{\vec r_i}{t} = \frac{\vec p_i}{m_is} = \frac{\vec p_i'}{m_i} \\
+    \dod{\vec p_i'}{t'}     &= s\dod{\vec (p_i/s)}{t} = \dod{\vec p_i}{t} - \frac{1}{s}\vec p_i\dod{s}{t} = -\frac{\partial U(\vec r')}{\partial \vec r_i'} - \frac{s'p_s'}{Q}\vec p_i' \\
+    \frac{1}{s}\dod{s'}{t'} &= \frac{s}{s}\dod{s}{t} = \frac{s'p_s'}{Q} \\
+    \dod{(s'p_s'/Q)}{t'}    &= \frac{s}{Q}\dod{p_s}{t} = \left( \sum_{i=1}^N \frac{p_i'^2}{m_i} - 3Nk_BT\right) / Q.
+\end{align*}
+\tododo{remove this complicated version? we haven't derived it anyway...}
+These equations can further be simplified if we introduce a thermodynamic friction coefficient $\xi = s'p_s'/Q$ and drop the primes. We then get the following equations of motion
+\begin{align}
+    \xi             &= \frac{sp_s}{Q} \label{eq:nose_xi}\\
+    \dot{\vec r}_i  &= \frac{\vec p_i}{m} \label{eq:nose_position}\\
+    \dot{\vec p}_i  &= -\dpd{U(\rvec)}{r_i} - \xi \vec p_i \label{eq:nose_momentum}\\
+    \dot\xi         &= \left( \sum_{i=1}^N \frac{p_i^2}{m_i} - 3Nk_BT \right) / Q \label{eq:nose_dotxi}%\\
+%     \frac{\dot s}{s} &= \dod{\ln s}{t} = \xi
+\end{align}
+% Note that the last equation is redundant, since eq. 1-4 form a closed set
+
+% \todo[inline]{Remove this part, integrate it in ensembles part}
+% A problem with the Nosé-Hoover thermostat is now apparent. Since the velocity appears on both sides of \cref{eq:nose_momentum}, we can't implement it directly in the velocity Verlet integrator. To see this we consider a standard microcanonical simulation \hl{(constant $N$, $V$, and $E$}. There the velocity Verlet algorithm is of the form
+% (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
+% \begin{align*}
+%     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}\\
+%     \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}.
+% \end{align*}
+% Using the Nosé-Hoover equations of motion in \cref{eq:nose_xi,eq:nose_position,eq:nose_momentum,eq:nose_dotxi} we get
+% \begin{align*}
+%     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \left[ \frac{\vec F(t)}{m} - \xi(t)\vec v(t) \right] \frac{\Delta t^2}{2}\\
+%     \vvec(t + \Delta t) 
+%         &= \vvec(t) + \Bigg[ 
+%             \left(\frac{\vec F(t+\Delta t)}{m} - \xi(t+\Delta t)\vec v(t+\Delta t)\right) \\
+%             &\phantom{= \vvec(t) + \Big[} + \left(\frac{\vec F(t)}{m} - \xi(t)\vec v(t)\right)
+%         \Bigg] 
+%         \frac{\Delta t}{2}.
+% \end{align*}
+% We see that calculating $\vec r(t+\Delta t)$ goes well, but to calculate $\vec v(t+\Delta t)$ we see that we need to know $\vec v(t+\Delta t)$ itself \hl{($\vec v(t+\Delta t)$ appears on both sides)}, turning the velocity Verlet integrator into an \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. Martyna \emph{et al.}\cite{martyna1996explicit} has developed a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems.\todoa{this paragraph is copied from Frenkel p. 535/555..!}
+
+% It can be shown that the Nosé-Hoover scheme only generates a correct canonical distribution for molecular systems in which there are no external forces and the center of mass remains fixed \cite[Appendix B]{frenkel2001understanding}\cite{hoover1985canonical}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocity, which we usually do in our simulations, \hl{to avoid drift/flow}. If we want to simulate systems with an external force, for example to introduce flow, or a system where the center off mass is not fixed, we have to use what is called Nosé-Hoover \emph{chains}.
+
+% \section[Nos\'e-Hoover chains]{\hl{Nos\'e-Hoover chains}}
+% 
+% \todobo{Why use chains? What is wrong with the regular Nosé-Hoover?} 
+% 
+% % where $Q$ is a parameter \hl{what does it do?} (effective mass associated with $s$ -- Frenkel), $T$ is \hl{??? wanted $T$?}, $p_s$ is \hl{???}. The coordinates in this ``extended'' system, momentum $\tilde{\vec p}_i$, position $\tilde{\vec r}_i$, and time $t$ are virtual, and can be related to the real coordinates via
+% % \begin{align*}
+% %     &\vec r_i = \vec r,&  &\vec p_i = \frac{\tilde{\vec p}_i}{s},&  &\text{and}&  &t = \int^{\tilde t} \frac{\dif \tau}{s}&
+% % \end{align*}
+% 
+% Proposed by Martyna et al. \todo{[136] in Frenkel's Understanding Mol.Sim.}
+% A Nos\"e-Hoover thermostat is coupled to another thermostat, or to a whole chain of thermostats. 
+% 
+% \orangebox{
+%     \begin{itemize}
+%         \item Nosé-Hoover and Nosé-Hoover chains
+%     \end{itemize}
+% }
