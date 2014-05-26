@@ -3,7 +3,7 @@ import math
 
 default_backend = 'Qt4Agg'
 backend = default_backend
-# backend = 'SVG'
+backend = 'SVG'
 # backend = 'AGG'
 
 if backend == "SVG":
@@ -105,17 +105,17 @@ n_timesteps_between_states = 100
 input_folders = [ \
     "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
     "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
-    "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
-    "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
-    "flat_fracture02/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
-    "flat_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+    # "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    # "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+    # "flat_fracture02/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+    # "flat_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
     "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
     "flat_square_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
 ]
 
 results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/new_results/"
 input_folders = [results_folder + input_folders[i] for i in range(len(input_folders))]
-legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+legends = ["rough01", "rough03", "flatsq02", "flatsq03"]
 
 
 ## Load results
@@ -143,12 +143,22 @@ reduction_factor = 1.1
 # print "reduction_factor = " + str(reduction_factor)
 
 # Create objects
-n_figs = 1
+n_figs = 2
 figs = []
 axes = []
-for i in range(4):
+for i in range(n_figs):
     figs.append(plt.figure(figsize = default_fig_size/reduction_factor))
     axes.append(figs[i].add_subplot(111))
+
+
+normalization_factors = np.array([ \
+    1022,
+    1014,
+    1045,
+    1097,
+])
+
+linestyles = ["-", "-", "--", "--"]
 
 # Loop over systems
 for system, density in enumerate(mean_densities):
@@ -156,19 +166,40 @@ for system, density in enumerate(mean_densities):
 
     # Only plot data in certain r-range
     # min_distance = 0.0
-    min_distance = 3.0
+    min_distance = 3.00000000001
     max_distance = 25.0
 
     istart = np.where(r >= min_distance)[0][0]
     istop = np.where(r <= max_distance)[0][-1] + 1  # add 1 to include end of range
     
     # Densities
-    axes[0].plot(r[istart:istop], density[istart:istop])
+    axes[0].plot(r[istart:istop], density[istart:istop],
+        label = legends[system],
+        linestyle = linestyles[system],
+    )
 
     # Normalize against bulk
-    normalized_density = density - density[]
-    axes[1].plot()
+    # normalized_density = density - density[]
+    axes[1].plot(r[istart:istop], density[istart:istop]/normalization_factors[system],
+        label = legends[system],
+        linestyle = linestyles[system],
+    )
 
+ax = axes[0]
+ax.set_ylim([850, 1250])
+ax.legend(loc = "best")
+
+ax.set_xlabel("\$r\\text{ [\AA]}\$")
+ax.set_ylabel("\$\\rho\$ [kg/m\$^3\$]")
+ax.set_title("Density of water")
+
+ax = axes[1]
+ax.set_ylim([0.85, 1.05])
+ax.legend(loc = "best")
+
+ax.set_xlabel("\$r\\text{ [\AA]}\$")
+ax.set_ylabel("\$\\rho/\\rho_0\$ [kg/m\$^3\$]")
+ax.set_title("Relative density of water")
 
     # # Difference between frac and flat
     # average_density_2 = []
@@ -235,3 +266,6 @@ for system, density in enumerate(mean_densities):
 
 if backend == default_backend:
     plt.show()
+else:
+    figs[0].savefig("density_water02.svg", bbox_inches = "tight")
+    figs[1].savefig("density_water_normalized02.svg", bbox_inches = "tight")

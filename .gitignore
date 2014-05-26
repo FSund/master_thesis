@@ -24,9 +24,13 @@
 *.pyg
 *.pyc
 *.tex_old
-
+*.tdo
 *.m~
 octave-core
 
 images/
 texmf/
+
+bibliography/Fractals.bib
+bibliography/SiO2-program.bib
+

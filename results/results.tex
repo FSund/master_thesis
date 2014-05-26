@@ -9,11 +9,39 @@
 %         \label{fig:cell_lists}%
     }%
 \end{figure}%
+
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water03}%
+    \caption{%
+        Density of water. \hl{FINISH CAPTION, normalize against bulk density}. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
 \begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{number_of_molecules02}%
     \caption{%
         Number of molecules. Bin width = 0.2 \AA?. \hl{FINISH CAPTION}. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water_normalized02}%
+    \caption{%
+        Density of water. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water_normalized03}%
+    \caption{%
+        Density of water. %
 %         \label{fig:cell_lists}%
     }%
 \end{figure}%
@@ -35,14 +63,32 @@
     }%
 \end{figure}%
 
+% \begin{figure}[htpb]%
+%     \centering%
+%     {
+%         \newcommand{\f}{\footnotesize}%
+%         \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion_constant02}%
+%     }
+%     \caption{%
+%         Diffusion. \hl{Make new figure using new diffusion program} \hl{FINISH CAPTION}. %
+% %         \label{fig:cell_lists}%
+%     }%
+% \end{figure}%
+
 \begin{figure}[htpb]%
     \centering%
-    {
-        \newcommand{\f}{\footnotesize}%
-        \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion_constant02}%
-    }
+    \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin01}%
     \caption{%
-        Diffusion. \hl{Make new figure using new diffusion program} \hl{FINISH CAPTION}. %
+        Diffusion. \hl{FINISH CAPTION}. %
+%         \label{fig:cell_lists}%
+    }%
+\end{figure}%
+
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin02}%
+    \caption{%
+        Diffusion. \hl{FINISH CAPTION}. %
 %         \label{fig:cell_lists}%
     }%
 \end{figure}%
@@ -154,6 +200,17 @@ Not very useful. Much of the same as distance to atom, only worse (but faster).
     \centering%
     \includesvg[width=1.0\textwidth, svgpath = ./images/tetrahedral_order_parameter/]{fancyfig04}%
     \caption{}%
+%     \label{fig:distance_to_atom_r20}%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[%
+%         width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
+        height=\textheight,%
+        svgpath = ./images/tetrahedral_order_parameter_new/]{figure01}%
+    \caption{\hl{Caption, add legends!}}%
 %     \label{fig:distance_to_atom_r20}%
 \end{figure}%
 

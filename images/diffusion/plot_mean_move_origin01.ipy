@@ -5,7 +5,7 @@ import os.path
 default_backend = 'Qt4Agg'
 
 backend = default_backend
-# backend = 'SVG'
+backend = 'SVG'
 
 import matplotlib
 matplotlib.use(backend)
@@ -93,10 +93,10 @@ origins = np.arange(folder_name_iterator_start, folder_name_n_steps*folder_name_
 systems = [ \
     "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps",
     "rough_fracture03/10_01_measuring_every_100th_timestep_200steps",
-    "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps",
-    "rough_fracture05/10_01_measuring_every_100th_timestep_200steps",
-    "flat_fracture02/10_01_measuring_every_100th_timestep",
-    "flat_fracture03/10_01_measuring_every_100th_timestep",
+    # "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps",
+    # "rough_fracture05/10_01_measuring_every_100th_timestep_200steps",
+    # "flat_fracture02/10_01_measuring_every_100th_timestep",
+    # "flat_fracture03/10_01_measuring_every_100th_timestep",
     "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps",
     "flat_square_fracture03/10_01_measuring_every_100th_timestep",
 ]
@@ -127,7 +127,7 @@ for idx, results_path in enumerate(results_paths):
 
 # Fig size
 default_fig_size = np.array([8.0, 6.0]) # inches
-reduction_factor = 1.6
+reduction_factor = 1.4
 fig = plt.figure(figsize = default_fig_size/reduction_factor)
 ax = fig.add_subplot(111)
 
@@ -139,7 +139,9 @@ ax3 = fig3.add_subplot(111)
 
 colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
 # legends = ["{\\f Flat fracture}", "{\\f Rough fracture}"]
-legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+# legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+legends = ["rough01", "rough03", "flatsq02", "flatsq03"]
+linestyles = ["-", "-", "--", "--"]
 
 timesteps_to_average_over = 25
 min_distance = 3.0
@@ -190,32 +192,36 @@ for system, data in enumerate(datasets):
     # print np.shape(mean_diff)
     # print np.shape(r_vectors[data_idx])
 
+    # Plot lines
     ax.plot(
         r[first_idx_to_plot:-1],   # r_vectors is one longer than data
         mean_diff_constant[first_idx_to_plot:-1],             # last one is bulk
         color = colors[system%len(colors)], 
-        label = legends[system]
+        linestyle = linestyles[system],
+        label = legends[system],
     )
 
-    # Bulk
-    ax.plot(r[-3], mean_diff[-1], 'o', markeredgecolor='none',
-        # label = "Bulk", 
-        color = colors[system%len(colors)]
-    )
+    # Plot bulk
+    # ax.plot(r[-3], mean_diff[-1], 'o', markeredgecolor='none',
+    #     # label = "Bulk", 
+    #     color = colors[system%len(colors)]
+    # )
 
 leg = ax.legend(
-    loc = "best", 
+    # loc = "best", 
+    loc = "lower right",
     # bbox_to_anchor = [0.5, 0.97],
     # framealpha = 0., 
-    handlelength = 1.0,
+    handlelength = 1.5,
     numpoints = 1,
-    fontsize = "small"
+    fontsize = "medium",
+    fancybox = True,
 )
-# leg.set_zorder(1001)
+#) leg.set_zorder(1001)
 
-# ax.set_xlabel("\$r\\text{ [\AA]}\$")
-# ax.set_ylabel("\$D\\text{ [\AA\$^2\$/ps]}\$")
-# ax.set_title("Diffusion constant")
+ax.set_xlabel("\$r\\text{ [\AA]}\$")
+ax.set_ylabel("\$D\\text{ [\AA\$^2\$/ps]}\$")
+ax.set_title("Diffusion constant for water")
 
 # from matplotlib.ticker import MultipleLocator
 # minorLocator = MultipleLocator(1.25)
@@ -227,7 +233,7 @@ leg = ax.legend(
 # ax.xaxis.grid(True)
 # ax.yaxis.grid(True)
 
-# ax.set_xlim([0.0, 15.0])
+ax.set_ylim([0.0, .25])
 
 # from matplotlib.ticker import MaxNLocator
 # ax.xaxis.set_major_locator(MaxNLocator(6))
