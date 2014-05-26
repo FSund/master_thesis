@@ -1,0 +1,261 @@
+import numpy as np
+import math
+import os.path
+
+default_backend = 'Qt4Agg'
+
+backend = default_backend
+backend = 'SVG'
+
+import matplotlib
+matplotlib.use(backend)
+matplotlib.rcParams['svg.fonttype'] = 'none' # To make text in the resulting svg actual text, instead of a path. 
+matplotlib.rcParams['savefig.dpi'] = 150
+
+import matplotlib.pyplot as plt
+if backend == default_backend:
+    plt.ion()
+
+def find_indices_in_range(vector, min_distance, max_distance):
+    indices = np.where((vector >= min_distance) & (vector <= max_distance))[0]
+    n_min, n_max = indices[[0,-1]]
+
+    return n_min, n_max, indices
+
+def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_statefiles = 100):
+    dt = 20.67 # atomic unit of time
+    atomic_unit_of_time = 2.418884326505e-17 # seconds
+    timestep = dt*atomic_unit_of_time
+    time_between_statefiles = timestep*n_timesteps_between_statefiles/(1.0e-12) # picoseconds
+    
+    results = np.genfromtxt( # makes np.ndarray
+        results_file,
+        # names = True, #  If `names` is True, the field names are read from the first valid line
+        comments = '#', # Skip characters after #
+        # delimiter = '\t', # tab separated values
+        # dtype = None # guess the dtype of each column
+    )
+    results = results[1:-1] # Skip first line, since t and msd = 0 (divide by 6t goes bad)
+    
+    r_vector = np.arange(r_start, r_step*(n_steps+1), r_step) # +1 to get the end values of the range for legends
+    # print r_vector
+    
+    data = results[:,1:] # Skip first column, which is the timestep
+    timestep = results[:,0] # First column is timestep
+    time = timestep*time_between_statefiles
+
+    # n = np.shape(data)[1] # Number of data sets (different distances from SiO2 matrix)
+    #print "N = " + str(n)
+
+    return time, data, r_vector
+    
+# def load_results_move_origin():
+
+
+def find_nan_columns(matrix):
+
+    # remove columns/data sets with nan in them
+    to_delete = []
+    for i in range(np.shape(matrix)[1]):
+        if any(math.isnan(number) for number in matrix[:,i]):
+            to_delete.append(i)
+
+    return to_delete
+
+def remove_nan(data, r_vector):
+
+    print "Old shape: " + str(np.shape(data))
+    print "Old shape: " + str(np.shape(r_vector))
+
+    columns_to_delete = find_nan_columns(data)
+
+    data = np.delete(data, (columns_to_delete), axis=1)
+    r_vector = np.delete(r_vector, columns_to_delete)
+
+    print "Removed columns: " + str(columns_to_delete)
+    print "New shape: " + str(np.shape(data))
+    print "New shape: " + str(np.shape(r_vector))
+
+    return data, r_vector
+
+## Load data
+results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/diffusion/new_results_move_origin"
+r_start = 0.0
+r_step = 0.25
+n_steps = 40
+folder_name_iterator_start = 0
+folder_name_step = 1
+folder_name_n_steps = 200
+
+steps_per_origin = 40
+origins = np.arange(folder_name_iterator_start, folder_name_n_steps*folder_name_step, steps_per_origin*folder_name_step)
+
+systems = [ \
+    # "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps",
+    # "rough_fracture03/10_01_measuring_every_100th_timestep_200steps",
+    "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps",
+    "rough_fracture05/10_01_measuring_every_100th_timestep_200steps",
+    "flat_fracture02/10_01_measuring_every_100th_timestep",
+    "flat_fracture03/10_01_measuring_every_100th_timestep",
+    # "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps",
+    # "flat_square_fracture03/10_01_measuring_every_100th_timestep",
+]
+n_systems = len(systems)
+partial_results_file = "new_program_r0_%.2f_dr%.2f_n%d_originStep%d_000" %(r_start, r_step, n_steps, steps_per_origin)
+results_paths = [os.path.join(results_folder, system, partial_results_file) for system in systems]
+
+datasets = []
+r_vectors = []
+
+for idx, results_path in enumerate(results_paths):
+    datasets.append([])
+    r_vectors.append([])
+    for origin in origins:
+        # filename = "results_for_states%d-%d_stateStep%d.txt" %
+        filename = "results_for_states%d-%d_stateStep%d.txt" % (origin, origin + steps_per_origin*folder_name_step, folder_name_step)
+        path_to_file = os.path.join(results_path, filename)
+
+        time, data, r_vector = load_results(results_file = path_to_file, n_timesteps_between_statefiles = 100, 
+                                 r_start = r_start, r_step = r_step, n_steps = n_steps)
+        # data, r_vector = remove_nan(data, r_vector) # Don't remove nan, for now...
+        datasets[idx].append(data)
+        r_vectors[idx].append(r_vector)
+
+        # print np.shape(data)
+
+# return
+
+# Fig size
+default_fig_size = np.array([8.0, 6.0]) # inches
+reduction_factor = 1.4
+fig = plt.figure(figsize = default_fig_size/reduction_factor)
+ax = fig.add_subplot(111)
+
+# fig2 = plt.figure(2, figsize = default_fig_size/reduction_factor)
+# ax2 = fig2.add_subplot(111)
+
+fig3 = plt.figure()
+ax3 = fig3.add_subplot(111)
+
+colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
+# legends = ["{\\f Flat fracture}", "{\\f Rough fracture}"]
+# legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+legends = ["rough04", "rough05", "flat02", "flat03"]
+linestyles = ["-", "-", "--", "--"]
+
+timesteps_to_average_over = 25
+min_distance = 3.0
+# Loop over systems
+for system, data in enumerate(datasets):
+
+    r = r_vectors[system][0] # All r-vectors are the same, since we don't remove nan
+    n_distances = len(r)
+
+    # Average over origins
+    mean_diff_constant = np.zeros(n_distances)
+    n_origins = len(origins)
+    for idx, origin in enumerate(origins):
+        msd = data[idx]
+
+        # print "msd.shape = " + str(msd.shape)
+
+        # Use <r^2> = D/(2dt)
+        diffusion = np.zeros(msd.shape)
+        for i in range(n_distances):
+            diffusion[:,i] = msd[:,i]/(6.0*time)
+        mean_diff = np.mean(diffusion[timesteps_to_average_over:], axis=0)
+
+        # Use d<r^2>/dx = D/(2d)
+        diff_constant = np.zeros(n_distances)
+        for i in range(n_distances):
+            this_msd = msd[:,i]/6.0
+            i0 = len(time)*0.5 # only fit to last half of data
+            p = np.polyfit(time[i0:], this_msd[i0:], 1)
+
+            if system == 0 and i in 12 + np.array([0, 2, 4, 6, 8, 10, 20]):
+                ax3.plot(time, this_msd, color = colors[i%len(colors)])
+                xp = [time[0]*0.9, time[-1]*1.1]
+                # ax3.plot(xp, np.polyval(p, xp))
+
+            diff_constant[i] = p[0]
+            # print p
+
+        mean_diff_constant += diff_constant
+
+    mean_diff_constant /= float(n_origins)
+    first_idx_to_plot = np.where(r>=min_distance*0.99999)[0][0]
+
+    # ax2.plot(r[first_idx:], diff[first_idx:])
+
+    # print "data shape: " + str(np.shape(data))
+    # print np.shape(diffusion)
+    # print np.shape(mean_diff)
+    # print np.shape(r_vectors[data_idx])
+
+    # Plot lines
+    ax.plot(
+        r[first_idx_to_plot:-1],   # r_vectors is one longer than data
+        mean_diff_constant[first_idx_to_plot:-1],             # last one is bulk
+        color = colors[system%len(colors)], 
+        linestyle = linestyles[system],
+        label = legends[system],
+    )
+
+    # Plot bulk
+    # ax.plot(r[-3], mean_diff[-1], 'o', markeredgecolor='none',
+    #     # label = "Bulk", 
+    #     color = colors[system%len(colors)]
+    # )
+
+leg = ax.legend(
+    # loc = "best", 
+    loc = "lower right",
+    # bbox_to_anchor = [0.5, 0.97],
+    # framealpha = 0., 
+    handlelength = 1.5,
+    numpoints = 1,
+    fontsize = "medium",
+    fancybox = True,
+)
+#) leg.set_zorder(1001)
+
+ax.set_xlabel("\$r\\text{ [\AA]}\$")
+ax.set_ylabel("\$D\\text{ [\AA\$^2\$/ps]}\$")
+ax.set_title("Diffusion constant for water")
+
+# from matplotlib.ticker import MultipleLocator
+# minorLocator = MultipleLocator(1.25)
+# ax.xaxis.set_minor_locator(minorLocator)
+# minorLocator = MultipleLocator(0.025)
+# ax.yaxis.set_minor_locator(minorLocator)
+
+# Add grid
+# ax.xaxis.grid(True)
+# ax.yaxis.grid(True)
+
+ax.set_ylim([0.0, .25])
+
+# from matplotlib.ticker import MaxNLocator
+# ax.xaxis.set_major_locator(MaxNLocator(6))
+# ax.yaxis.set_major_locator(MaxNLocator(6))
+
+## Make box below legend
+# import matplotlib.transforms as mtransforms
+# bb = mtransforms.Bbox([[0.03, 0.65], [0.45, 0.97]])
+
+# from matplotlib.patches import FancyBboxPatch
+# p_bbox = FancyBboxPatch(
+#     (bb.x0, bb.y0),
+#     abs(bb.width), abs(bb.height),
+#     transform = ax.transAxes, # default ?
+#     boxstyle = "square,pad=0",
+#     ec="k", fc="w",
+#     zorder = 1000
+# )
+# ax.add_patch(p_bbox)
+# plt.draw()
+
+if backend == default_backend:
+    plt.show()
+elif backend == "SVG":
+    fig.savefig("diffusion_constant_move_origin02.svg", bbox_inches = "tight")

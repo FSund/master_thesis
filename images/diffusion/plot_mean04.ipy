@@ -1,0 +1,251 @@
+import numpy as np
+import math
+import os.path
+
+default_backend = 'Qt4Agg'
+
+backend = default_backend
+# backend = 'SVG'
+
+import matplotlib
+matplotlib.use(backend)
+matplotlib.rcParams['svg.fonttype'] = 'none' # To make text in the resulting svg actual text, instead of a path. 
+matplotlib.rcParams['savefig.dpi'] = 150
+
+import matplotlib.pyplot as plt
+if backend == default_backend:
+    plt.ion()
+
+def find_indices_in_range(vector, min_distance, max_distance):
+    indices = np.where((vector >= min_distance) & (vector <= max_distance))[0]
+    n_min, n_max = indices[[0,-1]]
+
+    return n_min, n_max, indices
+
+def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_statefiles = 100):
+    dt = 20.67 # atomic unit of time
+    atomic_unit_of_time = 2.418884326505e-17 # seconds
+    timestep = dt*atomic_unit_of_time
+    time_between_statefiles = timestep*n_timesteps_between_statefiles/(1.0e-12) # picoseconds
+    
+    results = np.genfromtxt( # makes np.ndarray
+        results_file,
+        # names = True, #  If `names` is True, the field names are read from the first valid line
+        comments = '#', # Skip characters after #
+        # delimiter = '\t', # tab separated values
+        # dtype = None # guess the dtype of each column
+    )
+    results = results[1:-1] # Skip first line, since t and msd = 0 (divide by 6t goes bad)
+    
+    r_vector = np.arange(r_start, r_step*(n_steps+1), r_step) # +1 to get the end values of the range for legends
+    # print r_vector
+    
+    data = results[:,1:] # Skip first column, which is the timestep
+    timestep = results[:,0] # First column is timestep
+    time = timestep*time_between_statefiles
+
+    # n = np.shape(data)[1] # Number of data sets (different distances from SiO2 matrix)
+    #print "N = " + str(n)
+
+    return time, data, r_vector
+    
+
+def find_nan_columns(matrix):
+
+    # remove columns/data sets with nan in them
+    to_delete = []
+    for i in range(np.shape(matrix)[1]):
+        if any(math.isnan(number) for number in matrix[:,i]):
+            to_delete.append(i)
+
+    return to_delete
+
+def remove_nan(data, r_vector):
+
+    print "Old shape: " + str(np.shape(data))
+    print "Old shape: " + str(np.shape(r_vector))
+
+    columns_to_delete = find_nan_columns(data)
+
+    data = np.delete(data, (columns_to_delete), axis=1)
+    r_vector = np.delete(r_vector, columns_to_delete)
+
+    print "Removed columns: " + str(columns_to_delete)
+    print "New shape: " + str(np.shape(data))
+    print "New shape: " + str(np.shape(r_vector))
+
+    return data, r_vector
+
+## Load data
+results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/diffusion/new_results"
+datasets = []
+r_vectors = []
+r_start = 0.0
+r_step = 0.25
+n_steps = 40
+results_files = [ \
+    "/rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/rough_fracture03/10_01_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/flat_fracture02/10_01_measuring_every_100th_timestep/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/flat_fracture03/10_01_measuring_every_100th_timestep/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+    # "/flat_square_fracture03/10_01_measuring_every_100th_timestep/new_program_r0_0.00_dr0.25_n40_000/results.txt",
+]
+results_files = [results_folder + results_file for results_file in results_files]
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# results_file = results_folder + "/flat_fracture02/10_01_measuring_every_100th_timestep/new_program_r0_0.00_dr0.25_n40_001/results.txt"
+# print results_file
+# time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+#                              r_start = r_start, r_step = r_step, n_steps = n_steps)
+# data, r_vector = remove_nan(data, r_vector)
+# datasets.append(data)
+# r_vectors.append(r_vector)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# results_file = results_folder + "/flat_fracture03/10_01_measuring_every_100th_timestep/new_program_r0_0.00_dr0.25_n40_000/results.txt"
+# print results_file
+# time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+#                              r_start = r_start, r_step = r_step, n_steps = n_steps)
+# data, r_vector = remove_nan(data, r_vector)
+# datasets.append(data)
+# r_vectors.append(r_vector)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# results_file = results_folder + "/rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_program_r0_0.00_dr0.25_n40_000/results.txt"
+# print results_file
+# time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+#                              r_start = r_start, r_step = r_step, n_steps = n_steps)
+# data, r_vector = remove_nan(data, r_vector)
+# datasets.append(data)
+# r_vectors.append(r_vector)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+for results_file in results_files:
+    time, data, r_vector = load_results(results_file = results_file, n_timesteps_between_statefiles = 100, 
+                             r_start = r_start, r_step = r_step, n_steps = n_steps)
+    data, r_vector = remove_nan(data, r_vector)
+    datasets.append(data)
+    r_vectors.append(r_vector)
+
+
+# Fig size
+default_fig_size = np.array([8.0, 6.0]) # inches
+reduction_factor = 1.6
+fig = plt.figure(figsize = default_fig_size/reduction_factor)
+ax = fig.add_subplot(111)
+
+fig2 = plt.figure(figsize = default_fig_size/reduction_factor)
+ax2 = fig2.add_subplot(111)
+
+fig3 = plt.figure()
+ax3 = fig3.add_subplot(111)
+
+colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
+# legends = ["{\\f Flat fracture}", "{\\f Rough fracture}"]
+legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+
+timesteps_to_average_over = 25
+min_distance = 3.0
+for data_idx, data in enumerate(datasets):
+    r = r_vectors[data_idx]
+    first_idx = np.where(r>=min_distance*0.99999)[0][0]
+
+    diffusion = np.zeros(data.shape)
+    for i in range(np.shape(data)[1]):
+        diffusion[:,i] = data[:,i]/(6.0*time)
+    mean_diff = np.mean(diffusion[timesteps_to_average_over:], axis=0)
+
+    diff = np.zeros(r.shape)
+    for i in range(len(r)):
+        msd = data[:,i]/6.0
+        i0 = len(time)*0.5 # only fit to last half of data
+        p = np.polyfit(time[i0:], msd[i0:], 1)
+
+        if data_idx == 0:
+            ax3.plot(time, msd)
+            xp = [time[0]*0.9, time[-1]*1.1]
+            ax3.plot(xp, np.polyval(p, xp))
+
+        diff[i] = p[0]
+        print p
+
+    ax2.plot(r[first_idx:], diff[first_idx:], label = legends[data_idx])
+
+    print "data shape: " + str(np.shape(data))
+    print np.shape(diffusion)
+    print np.shape(mean_diff)
+    print np.shape(r_vectors[data_idx])
+
+    ax.plot(
+        r[first_idx:-1],   # r_vectors is one longer than data
+        mean_diff[first_idx:-1],             # last one is bulk
+        color = colors[data_idx%len(colors)], 
+        label = legends[data_idx]
+    )
+
+    # Bulk
+    ax.plot(r[-3], mean_diff[-1], 'o', markeredgecolor='none',
+        # label = "Bulk", 
+        color = colors[data_idx%len(colors)]
+    )
+
+leg = ax.legend(
+    loc = "best", 
+    # bbox_to_anchor = [0.5, 0.97],
+    # framealpha = 0., 
+    handlelength = 1.0,
+    numpoints = 1,
+    # fontsize = "small"
+)
+# leg.set_zorder(1001)
+
+leg = ax2.legend(
+    loc = "best", 
+    # bbox_to_anchor = [0.5, 0.97],
+    # framealpha = 0., 
+    handlelength = 1.0,
+    numpoints = 1,
+    # fontsize = "small"
+)
+
+ax.set_xlabel("\$r\\text{ [\AA]}\$")
+ax.set_ylabel("\$D\\text{ [\AA\$^2\$/ps]}\$")
+ax.set_title("Diffusion constant")
+
+from matplotlib.ticker import MultipleLocator
+minorLocator = MultipleLocator(1.25)
+ax.xaxis.set_minor_locator(minorLocator)
+minorLocator = MultipleLocator(0.025)
+ax.yaxis.set_minor_locator(minorLocator)
+
+# Add grid
+ax.xaxis.grid(True)
+ax.yaxis.grid(True)
+
+# ax.set_xlim([0.0, 15.0])
+
+from matplotlib.ticker import MaxNLocator
+ax.xaxis.set_major_locator(MaxNLocator(6))
+# ax.yaxis.set_major_locator(MaxNLocator(6))
+
+## Make box below legend
+# import matplotlib.transforms as mtransforms
+# bb = mtransforms.Bbox([[0.03, 0.65], [0.45, 0.97]])
+
+# from matplotlib.patches import FancyBboxPatch
+# p_bbox = FancyBboxPatch(
+#     (bb.x0, bb.y0),
+#     abs(bb.width), abs(bb.height),
+#     transform = ax.transAxes, # default ?
+#     boxstyle = "square,pad=0",
+#     ec="k", fc="w",
+#     zorder = 1000
+# )
+# ax.add_patch(p_bbox)
+plt.draw()
+
+if backend == default_backend:
+    plt.show()
+elif backend == "SVG":
+    fig.savefig("diffusion_constant05.svg", bbox_inches = "tight")
