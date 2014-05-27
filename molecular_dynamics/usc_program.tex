@@ -1,11 +1,10 @@
-\chapter{SiO/water potential and program}
+\chapter{Molecular dynamics program/code used for experiments}
+\todoa{Finish writing about sio2/water program}
 To study an advanced system like silica and water\hl{(, which consists of hydrogen (H), oxygen (O) and silicon (Si) atoms,)} we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. Structures like usually don't appear if we use a simple diatomic potential like Lennard-Jones, so we need to use a higher order potential. We would also like to be able to simulate chemical reactions we know happen, like transfer of oxygen atoms from silica to water.
 
 The potential implemented in the program we use in this thesis has been developed at the University of Southern California (USC) by P. Vashishta, Rajiv K. Kalia, José P. Rino and Ingvar Ebbsj\"o\cite{vashishta1990interaction}, see also\cite{shekhar2013nanobubble,shekhar2013nanobubble_supplements}. The potential contains two-body and three-body terms, and allows oxygen atoms to be transferred from silica to water. See \cref{sec:sio2_potential} for more details on the potential.
 
 The potential is implemented in a FORTRAN 77 program which has been parallellized an highly optimized \hl{source?}. \hl{The program is unfortunately closed-source}.
-
-The program implements a \hl{Nos\'e-Hoover chain thermostat} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
 \todob{Timestep set according to vibrational frequency of water?}
 
@@ -157,6 +156,10 @@ The parameters used in our simulations were chosen by first determing good param
 \section{Integrator}
 \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
 \todob{Plot of energy conservation here?}
+
+The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
+
+The program utilizes the fact that the vibrational frequency in water is much higher than the frequency of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules.
 % %
 % \begin{figure}[htpb]%
 %     \centering%

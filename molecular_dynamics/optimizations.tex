@@ -1,5 +1,5 @@
 \chapter{Optimizations?}
-
+\todoa{Move optimizations to main md part?}
 \section{Verlet- and cell-lists\label{sec:cell_lists}}
 If we try to simulate systems with a lot of atoms using the program we now have developed, we see that the number of evaluations of the potential quickly grow with the number of atoms, scaling as $\mathcal{O}(N^2)$. To optimize the program we can limit the number of evaluations by realizing that the Lennard-Jones in potential decays as $r^{-12}$, meaning that the force between most atoms will be neglible (see also \cref{fig:lennard-jones_potential}). The equilibrium distance of the potential is $r_{\text{eq}} =  2^{1/6}\sigma \approx 3.8 \text{~\AA}$, and we find that the potential has decreased to $21\%$ of the value at the equilibrium distance at a distance $r_{ij} =  5.5$, and to $0.5\%$ at a distance $r_{ij} =  3\sigma \approx 10.2\text{~\AA}$. \hl{This means that we can skip the force calculations for atoms further apart than} $r_{\text{cutoff}} = 3\sigma$.
 

@@ -5,6 +5,7 @@
     \item microcanonical = constant $N$, $V$ and $E$
 \end{itemize}
 }
+\todoa{Clean up ensembles intro}
 
 \todo{see \cite[section 3.7]{griebel2007numerical} for good intro to thermostats/ensembles}
 % \section{Ensemble/thermostats}
@@ -12,7 +13,7 @@ We have now developed a molecular dynamics program that simulates simple systems
 
 % \hl{To study the canonical ensemble we can use a thermostat, which is a method for controlling the temperature of the system.} \todo{transition to parts below}
 
-The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todoco{small discussion of how heat bath really works? see thijssen p. 203(216)} We measure the temperature via the kinetic energy of the system, so we know we have to \hl{modify} the velocities of the system to control the temperature. 
+The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todoco{small discussion of how heat bath really works? see thijssen p. 203(216)} We measure the temperature via the kinetic energy of the system, so we know we have to somehow control and modify the velocities of the atoms in the system to control the temperature. 
 
 \orangebox{
     \begin{itemize}
@@ -74,7 +75,7 @@ In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should
 The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
 
 \section{Nos\'e-Hoover thermostat and Nos\'e-Hoover chains}
-The Nos\'e-Hoover thermostat is an advanced thermostat \hl{based on statistical mechanics}, that generates a correct canonical ensemble \hl{(under certain conditions, which will be discussed later)}, and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. Nosé-Hoover type thermostats work by adding a term to the force calculations, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
+The Nos\'e-Hoover thermostat is an advanced thermostat \hl{based on statistical mechanics}, that generates a correct canonical ensemble \hl{(under certain conditions, which will be discussed later)} and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. Nosé-Hoover type thermostats work by adding a so-called \emph{friction}-term to the forces on the atoms, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
 
 \todoa{A bit more general about Nosé-Hoover thermostats, developmend history stuff}
 
@@ -103,7 +104,7 @@ The simplest form of the Nosé-Hoover type thermostats is the Nosé-Hoover therm
 \end{align}
 where the friction coefficient generally depends on time, $\xi = \xi(t)$, and the choice of $\xi(t)$ determines the characteristics of the thermostat. \todoao{write more about this time dependence? transition to below}
 
-Looking at \cref{eq:nose_hoover_force} a problem is apparent, which we will illustrate by inserting the new expression for the force into our integrator of choice, the velocity Verlet algorithm from from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity}. The velocity Verlet algorithm has the following form
+If we try to integrate these equations of motion using our integrator of choice, the velocity Verlet algorithm, a problem with using this thermostat will become apparent. The velocity Verlet integrator has the followin form (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
 \begin{align*}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}\\
     \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}.
@@ -143,7 +144,7 @@ If we insert \cref{eq:nose_hoover_force} into these equations (using $\Fvec = m\
         \Bigg] 
         \frac{\Delta t}{2},
 \end{align*}
-where $U(\rvec(t)) = U(t)$. The problem is now apparent: to calcuate $\vvec(t+\Delta t)$ we need to already know $\vvec(t+\Delta)$, which turns the integrator into a \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat is usually implemented using a \hl{predictor-corrector scheme, or solved iteratively(ref [138] Frenkel, p. 535/555)}. This has the disadvantage that the solution is no longer time reversible. As solution to this has been proposed by Martyna et al. in \cite{martyna1996explicit}, where they develop a set of explicit reversible integrators using the \hl{Louiville approach} for this type of extended systems, similar to the way we derive the velocity Verlet algorithm in \cref{appendix:liouville_verlet}.
+where $U(\rvec(t)) = U(t)$. The problem is now apparent: to calcuate $\vvec(t+\Delta t)$ we need to already know $\vvec(t+\Delta)$, which turns the integrator into a \emph{implicit} integrator. For this reason the Nosé-Hoover thermostat can be implemented using a predictor-corrector scheme, or solved iteratively\cite[Appendix E.2]{frenkel2001understanding}. This has the disadvantage that the solution is no longer time reversible. A solution to this has been proposed by Martyna et al. in \cite{martyna1996explicit}, where they develop a set of explicit reversible integrators using the Louiville approach for this type of extended systems, similar to the way we derive the velocity Verlet algorithm in \cref{appendix:liouville_verlet}.
 
 \subsubsection{Choice of $\xi$}
 In the so-called Nosé-Hoover thermostat the choice of $\xi$ is
@@ -162,23 +163,24 @@ An important result derived by Hoover in \cite{hoover1986constant} is that this 
 % \todoa{Do something about transition/section/headline here}
 
 
-\subsection{Nosé-Hoover chains}
-It can be shown that the Nosé-Hoover thermostat only generates a correct canonical distribution for molecular systems in which there are no external forces and the center of mass remains fixed \cite[Appendix B]{frenkel2001understanding}\cite{hoover1985canonical}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocity, which we usually do in our simulations, \hl{to avoid drift/flow}. If we want to simulate systems with an external force, for example to introduce flow, or a system where the center off mass is not fixed, we have to use what is called Nosé-Hoover \emph{chains}, as proposed by Martyna et al.\cite{martyna1992nose}. 
+\subsection{Nosé-Hoover chains\label{sec:nose_hoover_chain}}
+It can be shown that the Nosé-Hoover thermostat only generates a correct canonical distribution for molecular systems in which there are no external forces and the center of mass remains fixed \cite[Appendix B.2.1]{frenkel2001understanding}\cite{hoover1985canonical}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocity, which we usually do in our simulations to avoid drift. If we want to simulate systems with an external force, for example to introduce flow, or a system where the center off mass is not fixed, we have to use what is called Nosé-Hoover \emph{chains}, as proposed by Martyna et al.\cite{martyna1992nose}. 
 
 Nosé-Hoover chains is a scheme where we use a Nosé-Hoover thermostat which is coupled to another thermostat, or a whole chain of thermostats. In the Nosé-Hoover chains thermostat\cite{martyna1992nose} we get the following equations of motion
 \begin{align*}
     \dot\rvec &= \vvec \\
     \Fvec &= -\nabla U(\rvec) - \frac{p_{\xi,1}}{Q_1}m\vvec,
 \end{align*}
-which we see have a similar form to the equations we get when using a regular Nosé-Hoover thermostat (see \cref{eq:nose_hoover_velocity,eq:nose_hoover_force}). The 
+which we see have a similar form to the equations we get when using a regular Nosé-Hoover thermostat (see \cref{eq:nose_hoover_velocity,eq:nose_hoover_force}). The equations of motion for the thermostats, with $M$ coupled thermostats, are
 \begin{align*}
     \dot \xi_k &= \frac{p_{\xi,k}}{Q_k} \qquad\text{for } k = 1,\dots,M \\
     \dot{p_{\xi,1}} &= \left( \sum_i \frac{p_i^2}{m_i} - 3Nk_BT \right) - \frac{p_{\xi,2}}{Q_2} p_{\xi,1} \\
     \dot{p_{\xi,k}} &= \left[ \frac{p_{\xi_k-1}^2}{Q_{k-1}} - k_BT \right] - \frac{p_{\xi,k+1}}{Q_{k+1}}p_{\xi,k} \\
     \dot{p_{\xi,M}} &= \left[ \frac{p_{\xi_M-1}^2}{Q_{M-1}} - k_BT \right].
 \end{align*}
+As with the Nosé-Hoover thermostat, the regular velocity Verlet integrator can't be used with this thermostat, but a derivation of an integrator for these equations of motion can be seen in \cite[Appendix E.2.1]{frenkel2001understanding} and \cite{martyna1996explicit}, where they again use the Liouville approach similar to the one we used to derive the velocity Verlet integrator in \cref{appendix:liouville_verlet}.
 
-\todobo{As mentioned, this form will generate a canonical distribution even in a system with external forces, and center of mass that is not fixed}
+The Nosé-Hoover chains thermostat will generate a canonical distribution even in a system with external forces, and center of mass that is not fixed\cite[Appendix B.2.2]{frenkel2001understanding}.
 
 
 % Since the force depends on both the positions $\rvec$ and velocities $\vvec$, and our integrator of choice, the velocity Verlet algorithm, needs the forces in the next timestep to calculate the velocities in the next timestep, we turn the velocity Verlet integrator into a  (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
