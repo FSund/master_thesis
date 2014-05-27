@@ -11,11 +11,11 @@ Most molecular dynamics programs will follow an flow similar to the following:
 %
 \begin{itemize}[midsep]
     \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
-    \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation.\todo{remove drift!}
+    \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation. Remove any net velocity by subtracting the mean velocity in each spatial direction from the velocities of all atoms.
     \item For each timestep
     \begin{itemize}[midsep]
         \item Calculate the forces between the atoms.
-        \item Integrate Newton's equations of motion using an appropriate integration scheme \todo{examples?}.
+        \item Integrate Newton's equations of motion using an appropriate integration scheme.
         \item Sample the values of the quantities we want to study, and add to the averages.
     \end{itemize}
     \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
@@ -40,18 +40,18 @@ An example of a program that implements the above procedure can be seen in \cref
 }%
 \end{listing}%
 
-When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, which we see from the $r^{-12}$ term would give very big forces\todo{not defined yet... move this section?}, and to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
+When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, since we usually have a strong repulsive force when the atoms get close together, which would give very big forces. We also want to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
 \section{Calculation of forces\label{sec:program:lj}}
 The forces are calculated from the derivatives of interatomic potentials, that usually only depend on the positions of the atoms. The potentials are generally of the form
 \begin{align*}
     U(\rvec) = \sum_{i<j} U_{ij}(r_{ij}) + \sum_{i<j<k} U_{ijk}(\rvec_i, \rvec_i, \rvec_k) + \dots,
 \end{align*}
-where $\rvec_i$ is the position of atom $i$, $r_{ij}$ is the distance between atom $i$ and $j$, $U_{ij}$ is a two-particle potential depending only on the distance between two atoms, and $U_{ijk}$ is a three-particle potential that usually also depends on the angle between three atoms. Higher-order contributions are also often used\todo{ReaxFF}, but they are very demanding to evaluate numerically.
+where $\rvec_i$ is the position of atom $i$, $r_{ij}$ is the distance between atom $i$ and $j$, $U_{ij}$ is a two-particle potential depending only on the distance between two atoms, and $U_{ijk}$ is a three-particle potential that usually also depends on the angle between three atoms. Higher-order contributions to the forces are also sometimes used, but these are very demanding to calculate.
 
 The potentials are often developed from quantum mechanical calculations, and when doing this one has to weigh the benefits of having a complex potential that models the interactions accurately, against having a less complex potential that will be easier to implement, and faster to evaluate. The limiting factor in any molecular dynamics calculation is the cost of doing simulations on high-performance computing clusters\hl{like abel}, but luckily it seems like the progress in \hl{CPU} development still seems to follow Moore's Law\hl{source?}, which states that the number of transistors on integrated circuits double approximately every two years\cite{moore1965cramming}, effectively halving the price of doing \hl{the same computation}\hl{(source?)} every two years.
 
-In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential, \hl{after its creator(s)}, who used to to study the \hl{noble gas} Argon \hl{(among other stuff?)}. The potential is a simple two-particle potential with the following form
+In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential, \hl{after its creator(s)}, who used to to study the \hl{noble gas} Argon \hl{(among other stuff?)}. The potential is a two-particle potential with the following form
 % To model a simple mono-atomic system we use the well-known Lennard-Jones potential\cite{jones1924potential}, which when applied on the noble gas \hl{(inert)} Argon gives results that are in good agreement with experimental results. The potential is usually written as follows
 \begin{align}
 %     U(r) = 4\varepsilon \Big[
@@ -67,9 +67,9 @@ In this example we will be using a potential first seen as early as 1924\cite{jo
     = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right],
     \label{eq:lennard-jones_potential}
 \end{align}
-where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$-term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$-term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}. 
+where $\sigma$ is the distance between where the potential is zero \hl{(the equilibrium distance between the atoms)}, $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the distance where the potential is at its minimum. The $r^{-12}$-term is a repulsive term that describes \hl{Pauli repulsion/steric repulsion/overlap of electron orbitals} and the $r^{6}$-term is an attractive term that describes \hl{long range/van der Waals/dipole-dipole/dispersion} interactions. \todob{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}
 
-Even though the potential is simple, it describes many properties noble gases like Argon well, and has been used by many \todo{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+Even though the potential is simple, it describes many properties noble gases like Argon well, and its simplicity also means that the computational cost of calculating the forces between atoms is low. For these reasons it has been used in a lot of studies\todoc{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
 %
 \begin{figure}[htpb]%
     \centering%
@@ -143,6 +143,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 }%
 \end{listing}%
 
+If we are using higher-order potentials we can use the same optimization for the two-particle terms of the potential, but it's a bit more complicated for the terms depending on the positions of three or more particles, but there are still optimizations that can be done.
 
 \input{molecular_dynamics/integration_scheme.tex}
 

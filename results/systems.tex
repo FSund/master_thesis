@@ -1,44 +1,419 @@
 \chapter{Studied systems}
 \todoa{Write about the systems we studied}
 
+We have do experiments on a total of 8 different systems, all consisting of a slab of silica with a fracture in the center filled with water. Four of them are ``reference'' systems with just a flat fracture in the center, and the other four are fractures contructed in different ways.
+
+All systems are created using the experimental procedure from \cref{sec:experimental_procedure}. The systems are initialized as a perfect crystal of $\upbeta$-cristobalite. The system is then brought to 4500 Kelvin using a thermostat, to melt the silica crystal. It is then cooled back down to 300 Kelvin, and a fracture is cut out of the solid slab of silica, the system dangling ends are passivated, and the fracture is filled with water. The system is then thermalized at 300 Kelvin.
+
+A summary of the different systems can be seen in \cref{tab:systems}, where we have listed the dimension, porosity, water density, and number of atoms in each system.
+
+The fractures in the systems labelled ``rough fracture'' are all created from surfaces with a Hurst exponent close to \hl{0.75}, generated using the method from \cref{sec:diamond_square_2d_finite}, and cut out using the method from \cref{sec:generating_fractures}. Systems 1 and 2 are created using two different surfaces, where we create the fracture by putting one surface above the other, and cutting out the atoms in the space between them. Surface 3 and 4 are created using the same surface repeated twice for the top and bottom part of the fracture, with a distance of respectively 14.4 and 28.8 \AA~ between the surfaces.
+
+\begin{table}[htpb]
+\centering
+    \begin{tabular}{l|cccccc}
+    \textit{System}             & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$       & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
+    Flat fracture \#1           & $179 \times 179 \times 179$   & 48            & 86                & 260 k     & 25 k                  & 60 k                             \\ % flat_square_fracture02, N = 259955
+    Flat fracture \#2           & $179 \times 179 \times 179$   & 48            & 86                & 271 k     & 25 k                  & 64 k                             \\ % flat_square_fracture03, N = 271328
+    Flat fracture \#3           & $143 \times 143 \times 57$    & 25            & 14.4              & 90 k      & 19 k                  & 10 k                             \\ % flat_fracture02, N = 89646
+    Flat fracture \#4           & $143 \times 143 \times 57$    & 50            & 28.8              & 107 k     & 13 k                  & 22 k                             \\ % flat_fracture03, N = 106829
+    \hline %
+    Rough fracture \#1          & $179 \times 179 \times 179$   & ${\sim}12$    & -                 & 393 k  & 111 k                    & 19 k           \\ % rough_fracture01_abel, N = 393181
+    Rough fracture \#2          & $172 \times 172 \times 172$   & ${\sim}13$    & -                 & 347 k  & 97 k                     & 18 k            \\ %rough_fracture03, N = 347176
+    Rough fracture \#3          & $172 \times 172 \times 172$   & ${\sim}13$    & 14.4              & 349 k  & 99 k                     & 16 k            \\ % rough_fracture04_same_distance, N = 348573
+    Rough fracture \#4          & $172 \times 172 \times 172$   & ${\sim}23$    & 28.8              & 368 k  & 89 k                     & 34 k            \\ % rough_fracture05 N = 367958
+    \end{tabular}%
+    \vspace{8pt}
+    \caption{%
+%     \caption{%
+%     a
+        An overview of the 8 different systems we have done experiments on. ``Flat fracture'' 1 through 4 are reference systems, that consist of a silica slab with a single flat fracture filled with water. ``Rough fracture'' 1 through 4 consist of a silica slab with different water-filled fractures with different geometries.%
+        \\%
+%
+        $\phi$ is the approximate porosity of the system, defined as the volume of the fracture relative to the volume of the whole system. $r$ is the distance between the surfaces used to cut generate the fracture. $N$ is the total number of atoms (silicon, oxygen and hydrogen), $N_\text{SiO$_2$}$ is the number of SiO$_2$-units, and $N_\text{H$_2$O}$ is the number of water molecules. %
+%
+%         $N_\text{H$_2$O}$ and $N_\text{SiO$_2$}$ measured in flat02 and flat03 using slice of heigth 14.4/28.8, and then counting number of oxygen/silicon in slice. \hl{Volumes of rough fractures calculated using Ovito ``construct surface mesh''}%
+        \label{tab:systems}%
+%     }%
+    }
+\end{table}%
+
+% \begin{table}
+%     \begin{tabular}{l|cccccc}
+%     \textit{System}             & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$       & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
+% %     Flat square fracture \#1    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 259 955   & 25 469                & 60 132                             \\ % flat_square_fracture02, N = 259955
+% %     Flat square fracture \#2    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 271 328   & 25 485                & 63 722                             \\ % flat_square_fracture03, N = 271328
+% %     Flat fracture \#1           & $143 \times 143 \times 57$    & 25            & 14.4              & 89 646    & 19 187                & 9 701                             \\ % flat_fracture02, N = 89646
+% %     Flat fracture \#2           & $143 \times 143 \times 57$    & 50            & 28.8              & 106 829   & 12 765                & 21 801                             \\ % flat_fracture03, N = 106829
+%     Flat fracture \#1    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 260 k     & 25 k                  & 60 k                             \\ % flat_square_fracture02, N = 259955
+%     Flat fracture \#2    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 271 k     & 25 k                  & 64 k                             \\ % flat_square_fracture03, N = 271328
+%     Flat fracture \#3           & $143 \times 143 \times 57$    & 25            & 14.4              & 90 k      & 19 k                  & 10 k                             \\ % flat_fracture02, N = 89646
+%     Flat fracture \#4           & $143 \times 143 \times 57$    & 50            & 28.8              & 107 k     & 13 k                  & 22 k                             \\ % flat_fracture03, N = 106829
+%     \end{tabular}%
+%     \caption{%
+%         $N_\text{H$_2$O}$ and $N_\text{SiO$_2$}$ measured in flat02 and flat03 using slice of heigth 14.4/28.8, and then counting number of oxygen/silicon in slice%
+%     }%
+% \end{table}%
+% 
+% \begin{table}
+%     \begin{tabular}{l|cccccc}
+% %     \textit{System}         & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$& $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
+% %     Rough fracture \#1      & $179 \times 179 \times 179$   & ~             & -                 & 393 181   & 111 419               & 19 737           \\ % rough_fracture01_abel, N = 393181
+% %     Rough fracture \#2      & $172 \times 172 \times 172$   & ~             & -                 & 347 176   & 97 077                & 18 764            \\ %rough_fracture03, N = 347176
+% %     Rough fracture \#3      & $172 \times 172 \times 172$   & ~             & 14.4              & 348 573   & 99 491                & 16 787            \\ % rough_fracture04_same_distance, N = 348573
+% %     Rough fracture \#4      & $172 \times 172 \times 172$   & ~             & 28.8              & 367 958   & 88 503                & 34 258            \\ % rough_fracture05 N = 367958
+%     \textit{System}         & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$   & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
+%     Rough fracture \#1      & $179 \times 179 \times 179$   & ~             & -                 & 393 k  & 111 k                  & 19 k           \\ % rough_fracture01_abel, N = 393181
+%     Rough fracture \#2      & $172 \times 172 \times 172$   & ~             & -                 & 347 k  & 97 k                   & 18 k            \\ %rough_fracture03, N = 347176
+%     Rough fracture \#3      & $172 \times 172 \times 172$   & ~             & 14.4              & 349 k  & 99 k                   & 16 k            \\ % rough_fracture04_same_distance, N = 348573
+%     Rough fracture \#4      & $172 \times 172 \times 172$   & ~             & 28.8              & 368 k  & 89 k                   & 34 k            \\ % rough_fracture05 N = 367958
+%     \end{tabular}%
+%     \caption{%
+%         \hl{Caption}%
+%     }%
+% \end{table}%
+
+\FloatBarrier
+\section[Renderings]{\hl{Renderings}}
+\todoa{Fix title of renderings section}
+We have made some renderings of the systems we have studied, as can be seen in \crefrange{fig:rough_fracture01}{fig:flat_fractures}. All renderings and visualizations were made using the program Ovito\cite{stukowski2010ovito}, using the built-in open-source ``Tachyon'' rendering engine.
+
+In the renderings in this section we generally have colored the silicon atoms yellow, the oxygen atoms blue, and the hydrogen atoms white. The silicon atoms have been given a radius of 1 \AA, the oxygen atoms 0.6 \AA, and the hydrogen atoms 0.3 \AA.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.49\textwidth}%
+%     \setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+        \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_17}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \caption{%
+        Caption. %
+        \label{fig:rough_fracture01}%
+    }%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.49\textwidth}%
+%     \setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_05}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_06}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_07}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_08}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \caption{%
+        Caption. %
+%         \label{fig:}%
+    }%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.49\textwidth}%
+%     \setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_06}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_07}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_05_20ang}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_08}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \caption{%
+        Caption. %
+%         \label{fig:}%
+    }%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.49\textwidth}%
+%     \setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_05}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_04}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_02_20ang}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_06}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \caption{%
+        Caption. %
+%         \label{fig:}%
+    }%
+\end{figure}%
+
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.49\textwidth}%
+%     \setlength{\mycaptionwidth}{0.3\textwidth}%
+%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture02_03}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture03_04}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture02_03}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \hfill%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \centering% % Need to center to get image centered over caption
+        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture03_03}%
+        \caption{Caption.}%
+%         \label{fig:hex_to_tetra}%
+    \end{subfigure}%
+    \caption{%
+        Caption. %
+        \label{fig:flat_fractures}%
+    }%
+\end{figure}%
+%
+%
+\FloatBarrier
+%
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \setlength{\myfigwidth}{0.45\textwidth}%
+% %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+% %
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_06}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \\%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_05}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \\%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_07}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+% \end{figure}%
+
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \setlength{\myfigwidth}{0.45\textwidth}%
+% %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+% %
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_06}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_05}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \\%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_07}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_04}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \\%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_05_20ang}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_02_20ang}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+% \end{figure}%
+% 
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \setlength{\myfigwidth}{0.48\textwidth}%
+% %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+% %
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture02_02}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture03_02}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \\%
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_03}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+%     \hfill
+%     \begin{subfigure}[b]{\myfigwidth}%
+%         \centering% % Need to center to get image centered over caption
+%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_01}%
+%         \caption{Caption.}%
+% %         \label{fig:hex_to_tetra}%
+%     \end{subfigure}%
+% \end{figure}%
 
 % Dimension:
 % Unit cell: a = 7.166 - 7.1626 ?
 
-\begin{table}
-    \begin{tabular}{l|cccccc}
-    \textit{System}             & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$       & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
-%     Flat square fracture \#1    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 259 955   & 25 469                & 60 132                             \\ % flat_square_fracture02, N = 259955
-%     Flat square fracture \#2    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 271 328   & 25 485                & 63 722                             \\ % flat_square_fracture03, N = 271328
-%     Flat fracture \#1           & $143 \times 143 \times 57$    & 25            & 14.4              & 89 646    & 19 187                & 9 701                             \\ % flat_fracture02, N = 89646
-%     Flat fracture \#2           & $143 \times 143 \times 57$    & 50            & 28.8              & 106 829   & 12 765                & 21 801                             \\ % flat_fracture03, N = 106829
-    Flat fracture \#1    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 260 k     & 25 k                  & 60 k                             \\ % flat_square_fracture02, N = 259955
-    Flat fracture \#2    & $179 \times 179 \times 179$   & 48            & ${\sim} 86$       & 271 k     & 25 k                  & 64 k                             \\ % flat_square_fracture03, N = 271328
-    Flat fracture \#3           & $143 \times 143 \times 57$    & 25            & 14.4              & 90 k      & 19 k                  & 10 k                             \\ % flat_fracture02, N = 89646
-    Flat fracture \#4           & $143 \times 143 \times 57$    & 50            & 28.8              & 107 k     & 13 k                  & 22 k                             \\ % flat_fracture03, N = 106829
-    \end{tabular}%
-    \caption{%
-        $N_\text{H$_2$O}$ and $N_\text{SiO$_2$}$ measured in flat02 and flat03 using slice of heigth 14.4/28.8, and then counting number of oxygen/silicon in slice%
-    }%
-\end{table}%
 
-\begin{table}
-    \begin{tabular}{l|cccccc}
-%     \textit{System}         & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$& $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
-%     Rough fracture \#1      & $179 \times 179 \times 179$   & ~             & -                 & 393 181   & 111 419               & 19 737           \\ % rough_fracture01_abel, N = 393181
-%     Rough fracture \#2      & $172 \times 172 \times 172$   & ~             & -                 & 347 176   & 97 077                & 18 764            \\ %rough_fracture03, N = 347176
-%     Rough fracture \#3      & $172 \times 172 \times 172$   & ~             & 14.4              & 348 573   & 99 491                & 16 787            \\ % rough_fracture04_same_distance, N = 348573
-%     Rough fracture \#4      & $172 \times 172 \times 172$   & ~             & 28.8              & 367 958   & 88 503                & 34 258            \\ % rough_fracture05 N = 367958
-    \textit{System}         & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$   & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
-    Rough fracture \#1      & $179 \times 179 \times 179$   & ~             & -                 & 393 k  & 111 k                  & 19 k           \\ % rough_fracture01_abel, N = 393181
-    Rough fracture \#2      & $172 \times 172 \times 172$   & ~             & -                 & 347 k  & 97 k                   & 18 k            \\ %rough_fracture03, N = 347176
-    Rough fracture \#3      & $172 \times 172 \times 172$   & ~             & 14.4              & 349 k  & 99 k                   & 16 k            \\ % rough_fracture04_same_distance, N = 348573
-    Rough fracture \#4      & $172 \times 172 \times 172$   & ~             & 28.8              & 368 k  & 89 k                   & 34 k            \\ % rough_fracture05 N = 367958
-    \end{tabular}%
-    \caption{%
-        \hl{Caption}%
-    }%
-\end{table}%
 
 % \begin{table}
 %     \begin{tabular}{l|cccc}

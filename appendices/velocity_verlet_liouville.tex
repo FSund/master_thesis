@@ -169,18 +169,20 @@ To investigate the error introduced by this truncation we express it as an \emph
     = e^{\Liou \Delta t + \errop},
 \end{align*}
 which, using Campbell-Baker-Hausdorff expansion, can be expressed in terms of the commutators of $\vec L_p$ and $\vec L_r$ as
-\begin{align*}
-    \errop = \sum_{n=1}^\infty (\Delta t)^{2n+1} c_{2n+1},
-\end{align*}
-where $c_m$ denotes a combination of mth-order commutators. The leading term is
-\begin{align*}
-    -(\Delta t)^3 \left( \frac{1}{24} \left[ \Liou_r, \left[ \Liou_r, \Liou_p \right] \right] + \frac{1}{12} \left[ \Liou_p, \left[ \Liou_r, \Liou_p \right] \right] \right),
-\end{align*}
-from which we conclude that the \hl{global/accumulated} truncation error after $P$ timesteps goes as $\mathcal{O}(\Delta t^3)$.
+\begin{align}
+    \errop = \sum_{n=1}^\infty (\Delta t)^{2n+1} c_{2n+1},\label{eq:campbell_expansion}
+\end{align}
+where $c_m$ denotes a combination of mth-order commutators. %
+% The leading term of this expression is
+% \begin{align*}
+%     -(\Delta t)^3 \left( \frac{1}{24} \left[ \Liou_r, \left[ \Liou_r, \Liou_p \right] \right] + \frac{1}{12} \left[ \Liou_p, \left[ \Liou_r, \Liou_p \right] \right] \right),
+% \end{align*}
+% from which we conclude that the \hl{global/accumulated} truncation error after $P$ timesteps goes as $\mathcal{O}(\Delta t^3)$.
 %meaning that the local truncation error \hl{(per timestep)} goes as $\mathcal{O}(\Delta t^4)$, which agrees with \hl{???}.
+From this it can be shown that, if the expansion in \cref{eq:campbell_expansion} converges, Verlet style integrators will rigorously conserve a \emph{pseudo}-Hamiltonian, and that the difference between this pseudo-Hamiltonian and the actual Hamiltonian is of the order $(\Delta t)^{2n}$, where $n$ depends on the order of the algorithm\cite[section 4.3.3]{frenkel2001understanding}.
 
-\subsection{Error in regular Verlet?}
-\todob{Maybe show that velocity and regular are equivalent, and thus the error is the same?}
+% \subsection{Error in regular Verlet?}
+% \todob{Maybe show that velocity and regular are equivalent, and thus the error is the same?}
 
 
 

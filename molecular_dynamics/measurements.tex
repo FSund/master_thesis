@@ -15,7 +15,7 @@ The method of voxelation is a method where we divide our simulation system into 
 \begin{align*}
     n_i = \frac{L_i}{l_i},
 \end{align*}
-where $L_i$ is the system size, assuming that the voxel size $l_i$ is set so that $L_i$ is evenly divisible by $l_i$, that the remainder of $L_i/l_i$ is zero. If we have a maximum or minimum voxel size $l_i^\text{max}$ or $l_i^\text{min}$ we can use the following relations to calculate the number of voxels
+where $L_i$ is the system size, and we assume that the voxel size $l_i$ is set so that $L_i$ is evenly divisible by $l_i$\hl{, meaning that the remainder of $L_i/l_i$ is zero}. If we have a maximum or minimum voxel size $l_i^\text{max}$ or $l_i^\text{min}$ we can use the following relations to calculate the number of voxels
 \begin{align*}
     &n_i=\left\lfloor\frac{L_i}{l_i^\text{max}}\right\rfloor &\text{or}& &n_i=\left\lceil\frac{L_i}{l_i^\text{min}}\right\rceil,
 \end{align*}
