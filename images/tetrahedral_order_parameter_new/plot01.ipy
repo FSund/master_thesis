@@ -39,7 +39,7 @@ bulk_distance = 10.0
 
 # distances_to_plot = np.array([2.0, 3.5, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.0, 9.0, 10.0, 10.5])
 # distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5])
-distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 9.5])
+distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.5]) # 9.5 not available for flat_fracture02
 
 
 r_indices_to_plot = []
@@ -67,17 +67,18 @@ systems = [ \
     "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/000",
     "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/000",
     "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/000",
-    # "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/000",
-    # "flat_fracture02/10_01_measuring_every_100th_timestep/000",
-    # "flat_fracture03/10_01_measuring_every_100th_timestep/000",
-    # "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/000",
+    "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/000",
+    "flat_fracture02/10_01_measuring_every_100th_timestep/000",
+    "flat_fracture03/10_01_measuring_every_100th_timestep/000",
+    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/000",
     # "flat_square_fracture03/10_01_measuring_every_100th_timestep/000",
 ]
 results_folders = [os.path.join(results_folder, system) for system in systems]
 n_systems = len(systems)
 
 # Legends
-legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+# legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
+legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Flat \#1", "Flat \#2", "Flat \#3", "Flat \#4"]
 
 def load_results(results_folder, r_vector, r_indices_to_plot):
 
@@ -199,11 +200,10 @@ fig.text(s = "Relative occurrence", x=0.04, y=0.5, rotation = "vertical", transf
 ## TODO: Add legends (one for each system/color)
 
 # Legends
-legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
 # leg = ax.legend(fancy_legtexts, bbox_to_anchor = (0.79, 0.04), bbox_transform = fig.transFigure, borderaxespad = 0, ncol = 2, fancybox = True)
 leg = axes[0].legend(legends, 
     loc = "upper center", # actually decides where the "origin" of bbox below is
-    bbox_to_anchor = (0.5, 0.05), bbox_transform = fig.transFigure, borderaxespad = 0, ncol = 2, fancybox = True)
+    bbox_to_anchor = (0.5, 0.05), bbox_transform = fig.transFigure, borderaxespad = 0, ncol = 3, fancybox = True)
 
 if backend == default_backend:
     plt.show()
