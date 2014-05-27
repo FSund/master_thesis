@@ -28,8 +28,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    void calculateForces(System &system)
-    {
+    void calculateForces(System &system) {
         ivec3 nCells;
         vector<Atom*> cells = 
             sortAtomsIntoCells(system, cutoffLength, nCells);
@@ -39,8 +38,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
         for (int j = 0; j < nCells[1]; j ++)
         for (int k = 0; k < nCells[2]; k ++)
         {{{
-            for (Atom *atom : cells[i][j][k])
-            {
+            for (Atom *atom : cells[i][j][k]) {
                 atom->force() += 
                     calculateForceFromNeighborCells(
                         cells, nCells, atom, i, j, k
@@ -58,14 +56,13 @@ An implementation of the calculation of forces using cell lists can be seen in \
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     vector<Atom*> sortAtomsIntoCells(
-        System &system, double cutoffLength, ivec3 &nCells)
-    {
+        System &system, double cutoffLength, ivec3 &nCells) {
+        
         nCells = floor(system.size() / cutoffLength);
         ivec3 boxSize = system.size() / vec3(nCells);
         
         vector<Atom*> cells;
-        for (Atom *atom : system.atoms())
-        {
+        for (Atom *atom : system.atoms()) {
             ivec3 index = floor(atom->position() / boxSize);
             cells[index[0]][index[1]][index[2]].push_back(atom);
         }
@@ -82,8 +79,8 @@ An implementation of the calculation of forces using cell lists can be seen in \
 \begin{cppcode*}{gobble=4}
     vec3 calculateForceFromNeighborCells(
         vector<Atom*> &cells, ivec3 &nCells, Atom *atom1, 
-        int i1, int j1, int k1)
-    {
+        int i1, int j1, int k1) {
+        
         vec3 force = zeros<vec3>();
         // Loop over 27 neighbor cells (including self)
         for (int di = -1; di <= 1; di++)
@@ -94,9 +91,9 @@ An implementation of the calculation of forces using cell lists can be seen in \
             int i2 = (i1 + di + nCells[0]) % nCells[0];
             int j2 = (j1 + dj + nCells[1]) % nCells[1];
             int k2 = (k1 + dk + nCells[2]) % nCells[2];
+            
             // Loop over atoms in neighbor cell
-            for (Atom *atom2 : cells[i2][j2][k2])
-            {
+            for (Atom *atom2 : cells[i2][j2][k2]) {
                 if (atom1 == atom2) continue; // Skip i == j
                 force() += calculateForceBetweenTwoAtoms(atom1, atom2);
             }

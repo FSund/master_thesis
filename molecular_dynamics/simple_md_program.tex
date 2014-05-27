@@ -28,8 +28,7 @@ An example of a program that implements the above procedure can be seen in \cref
     System system = initializeSystem(parameters);
     double time = 0.0;
     double dt = 0.01;
-    for (double time = 0; time < tMax; time += dt)
-    {
+    for (double time = 0; time < tMax; time += dt) {
         calculateForces(system);
         integrateEquationsOfMotion(system, dt);
         sample(system);
@@ -102,14 +101,12 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 % \end{cppcode*}
 %         for (vector<Atom*>::iterator atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1)
 \begin{cppcode*}{gobble=4}
-    void calculateForces(System &system)
-    {
+    void calculateForces(System &system) {
         const vector<Atom*> &atoms = system.atoms();
-        for (auto atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1)
-        {
+        for (auto atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1) {
+        
             // Use Newton's third law to skip half the force calculations
-            for (auto atom2 = atom1.next(); atom2 != atoms.end(); ++atom2)
-            {
+            for (auto atom2 = atom1.next(); atom2 != atoms.end(); ++atom2) {
                 vec3 force = calculateForceBetweenTwoAtoms(*atom1, *atom2);
                 
                 (*atom1)->force() += force;
@@ -127,8 +124,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2)
-    {
+    vec3 calculateForceBetweenTwoAtoms(Atom *atom1, Atom *atom2) {
         vec3 drVec = atom1->position() - atom2->position();
         
         double dr2 = drVec.lengthSquared();
@@ -178,12 +174,9 @@ The first thing we have to do to implement periodic boundary conditinos is to ch
 %     }
 % \end{cppcode*}%
 \begin{cppcode*}{gobble=4}
-    void checkBoundaryConditions(System &system)
-    {
-        for (Atom *atom : system.atoms())
-        {
-            for (int dim = 0; dim < 3; dim++)
-            {
+    void checkBoundaryConditions(System &system) {
+        for (Atom *atom : system.atoms()) {
+            for (int dim = 0; dim < 3; dim++) {
                 if (atom->position()[dim] < 0.0) 
                     atom->position()[dim] += system.size()[dim];
                 else if (atom->position()[dim] >= system.size()[dim]) 
@@ -205,11 +198,10 @@ To find the distance between atom $i$ and the closest image of atom $j$ we \hl{j
 \begin{cppcode*}{gobble=4}
     double calculateDistanceSquaredUsingMinimumImageConvention(
         const vec3 &u, const vec3 &v, 
-        const vec3 &systemSize, const vec3 &halfSystemSize)
-    {
+        const vec3 &systemSize, const vec3 &halfSystemSize) {
+        
         vec3 dr = u - v;
-        for (int dim = 0; dim < 3; dim++)
-        {
+        for (int dim = 0; dim < 3; dim++) {
             if (dr[dim] >= halfSystemSize[dim]) dr -= systemSize[dim];
             else if (dr[dim] < -halfSystemSize[dim]) dr += systemSize[dim];
         }

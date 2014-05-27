@@ -33,20 +33,16 @@ where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \h
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void applyBerendsenThermostat(System &system, double T, double Tbath, 
-        double dt, double tau)
-    void applyBerendsenThermostat(vector<Atom*> &atoms, double T, double Tbath, 
-        double dt, double tau)
-    {
+        double dt, double tau) {
+        
         double gamma = sqrt(1 + dt/tau(Tbath/T - 1));
         for (Atom *atom : system.atoms())
-        for (Atom *atom : atoms)
-        {
             atom->velocity() *= gamma;
         }
     }
 \end{cppcode*}
 \caption{%
-    \texttt{applyBerendsenThermostat}. \hl{decide on System or vector<Atom*> as input}%
+    Implementation of the Berendsen thermostat in the function \texttt{applyBerendsenThermostat}. %
     \label{list:applyBerendsenThermostat}%
 }%
 \end{listing}%

@@ -58,10 +58,8 @@ See \cref{list:regular_verlet} for an example of how to implement the Verlet int
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    void integrateEquationsOfMotion(System &system, double dt)
-    {
-        for (Atom *atom : system.atoms())
-        {
+    void integrateEquationsOfMotion(System &system, double dt) {
+        for (Atom *atom : system.atoms()) {
             vec3 newPosition = 2.0*atom->position() - atom->oldPosition() 
                                + atom->force()*dt*dt;
             atom->oldPosition() = atom->position();

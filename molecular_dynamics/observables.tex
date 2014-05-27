@@ -18,8 +18,7 @@
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    void sample(System &system)
-    {
+    void sample(System &system) {
         double temperature = temperatureSample(system);
         double pressure = pressureSample(system, temperature);
         double rSquared = diffusionSample(system);        
@@ -56,11 +55,9 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    double temperatureSample(System &system)
-    {
+    double temperatureSample(System &system) {
         double kineticEnergy = 0.0;
-        for (Atom *atom : system.atoms())
-        {
+        for (Atom *atom : system.atoms()) {
             kineticEnergy += atom->velocity().lenghtSquared();
         }
 
@@ -95,11 +92,9 @@ An example of how to calculate the pressure in a molecular dynamics \hl{simulati
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
-    double pressureSample(System &system, double temperature)
-    {
+    double pressureSample(System &system, double temperature) {
         double pressure;
-        for (Atom *atom : system.atoms())
-        {
+        for (Atom *atom : system.atoms()) {
             pressure += atom->pressure();
         }
         pressure /= (3.0*system.volume());
