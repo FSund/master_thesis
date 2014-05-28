@@ -1,19 +1,6 @@
 \section{Hurst exponent}
-\orangebox{
-\begin{itemize}
-    \item define fractal dimension
-\end{itemize}
-}
-
-One common method to characterize fractals is by the Hurst exponent, usually called $H$\footnote{\todo[inline]{The name used by Hurst in his work where he first describes the exponent was actually $K$\cite{hurst1965longterm}\cite{hurst1951longterm}}}, which comes from a statistical method developed by Hurst\cite{hurst1965longterm}\cite{hurst1951longterm}. The Hurst exponent is related to the fractal dimension $D$ by
-\begin{align*}
-    D = d-H,
-\end{align*}
-where $d$ is the spatial dimension of the fractal's domain\cite{feder1988fractals}.
-
-The statistical method developed by Hurst is called \emph{rescaled range analysis} and was designed for use on 1-dimensional time series $f(t)$. The method has been generalized to higher dimensions\cite{fan2013rescaled}, but the original 1D form is shown here.
-
-\todo[inline]{Something about that it's hard to measure, and why.}
+One of the earliest methods for measuring the Hurst exponent is a statistical method developed by Hurst in his studies of the Nile river\cite{hurst1965longterm}\cite{hurst1951longterm}. This method is called \emph{rescaled range analysis} and was designed for use on 1-dimensional time series $f(t)$. The method has been generalized to higher dimensions\cite{fan2013rescaled}, but the original 1D form is shown here.
+\todobo{Something about that it's hard to measure, and why.}%
 
 \subsection{Rescaled range analysis}
 First the time series is divided into \todo{overlapping/non-overlapping?} intervals of length $\tau$. The average over each interval of length $\tau$ is

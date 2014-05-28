@@ -10,7 +10,7 @@
 \input{preamble/custom_commands_and_settings.tex}
 
 \author{Filip Sund}
-\title{\uppercase{Water confined in nanoporous media}}
+\title{\uppercase{Water confined in\\ nanoporous silica}}
 \date{June 2014}
 
 % TODO: Sometime
@@ -34,7 +34,7 @@
 
 % ---- Includeonly stuff ---- %
 % \includeonly{molecular_dynamics/introduction}
-\includeonly{molecular_dynamics/simple_md_program}
+% \includeonly{molecular_dynamics/simple_md_program}
 % \includeonly{molecular_dynamics/optimizations}
 % \includeonly{molecular_dynamics/observables}
 % \includeonly{molecular_dynamics/ensembles}
@@ -64,7 +64,7 @@
 
 % \includeonly{molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/results}
 % \includeonly{molecular_dynamics/simple_md_program,appendices/integrators}
-% \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent}
+\includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent,fractures/generating_surfaces,fractures/generating_fractures}
 
 
 \begin{document}
@@ -102,6 +102,7 @@
     \include{fractures/generating_fractures}
 
 \part{Experiments}
+    \include{results/introduction}
     \include{molecular_dynamics/experimental_procedure}
     \include{molecular_dynamics/measurements}
     \include{results/systems}
@@ -112,10 +113,10 @@
 
 \part{Appendices}
 \begin{appendix}
-    \include{appendices/md_units}
+%     \include{appendices/md_units} % remove md units completely?
     \include{appendices/integrators}
     \include{appendices/nose_hoover}
-    \include{appendices/pressure}
+%     \include{appendices/pressure} % haven't measure pressure, and haven't derived it either
 \end{appendix}
 
 \printbibliography
