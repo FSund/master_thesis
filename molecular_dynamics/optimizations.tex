@@ -3,7 +3,7 @@
 \section{Verlet- and cell-lists\label{sec:cell_lists}}
 If we try to simulate systems with a lot of atoms using the program we now have developed, we see that the number of evaluations of the potential quickly grow with the number of atoms, scaling as $\mathcal{O}(N^2)$. To optimize the program we can limit the number of evaluations by realizing that the Lennard-Jones in potential decays as $r^{-12}$, meaning that the force between most atoms will be neglible (see also \cref{fig:lennard-jones_potential}). The equilibrium distance of the potential is $r_{\text{eq}} =  2^{1/6}\sigma \approx 3.8 \text{~\AA}$, and we find that the potential has decreased to $21\%$ of the value at the equilibrium distance at a distance $r_{ij} =  5.5$, and to $0.5\%$ at a distance $r_{ij} =  3\sigma \approx 10.2\text{~\AA}$. \hl{This means that we can skip the force calculations for atoms further apart than} $r_{\text{cutoff}} = 3\sigma$.
 
-The naive implementation of this cutoff length is to do a test inside the force calculation \texttt{calculateForces} in \cref{list:calculate_forces} and see if the distance between atom $i$ and $j$ is greater than the cutoff distance, $r_{ij} > r_\text{cutoff}$, but this still requires the calculation of a lot of interatomic distances. What we do instead is to implement something called \hl{\emph{cell-lists} (different name?)}. This is done by dividing the system into boxes of length 
+The naive implementation of this cutoff length is to do a test inside the force calculation \mono{calculateForces} in \cref{list:calculate_forces} and see if the distance between atom $i$ and $j$ is greater than the cutoff distance, $r_{ij} > r_\text{cutoff}$, but this still requires the calculation of a lot of interatomic distances. What we do instead is to implement something called \hl{\emph{cell-lists} (different name?)}. This is done by dividing the system into boxes of length 
 \begin{align*}
     l &= L/n,
 \end{align*}
@@ -48,7 +48,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
     }
 \end{cppcode*}
 \caption{%
-    An example of an implementation of the force calculation \texttt{calculateForces} from \cref{list:simple_md_program}, using the Lennard-Jones potential with a cutoff length for the force, and cell lists. Notice that we don't use Newton's third law, to simplify the example. Examples of how to calculate the forces using cell lists and Newton's third law are described \cref{sec:cell_lists}.%
+    An example of an implementation of the force calculation \mono{calculateForces} from \cref{list:simple_md_program}, using the Lennard-Jones potential with a cutoff length for the force, and cell lists. Notice that we don't use Newton's third law, to simplify the example. Examples of how to calculate the forces using cell lists and Newton's third law are described \cref{sec:cell_lists}.%
     \label{list:cutoff_forcecalculation}%
 }%
 \end{listing}%
@@ -70,7 +70,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
     }
 \end{cppcode*}
 \caption{%
-    An example of an implementation of \texttt{sortAtomsIntoCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to sort atoms into cells for the cell list optimization described in \cref{sec:cell_lists}.%
+    An example of an implementation of \mono{sortAtomsIntoCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to sort atoms into cells for the cell list optimization described in \cref{sec:cell_lists}.%
     \label{list:sort_atoms_into_cells}%
 }%
 \end{listing}%
@@ -102,7 +102,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
     }
 \end{cppcode*}
 \caption{%
-    An example of an implementation of \texttt{calculateForceFromNeighborCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to calculate the force on an atom (\texttt{atom1}), from the atoms in the cell it belongs to (\texttt{cells[i1][j1][k1]}), and from the atoms in all 26 neighbor cells.%
+    An example of an implementation of \mono{calculateForceFromNeighborCells} from \cref{list:cutoff_forcecalculation}. This listing shows how to calculate the force on an atom (\mono{atom1}), from the atoms in the cell it belongs to (\mono{cells[i1][j1][k1]}), and from the atoms in all 26 neighbor cells.%
     \label{list:calculateForceFromNeighborCells}%
 }%
 \end{listing}%

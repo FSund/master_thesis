@@ -25,7 +25,7 @@
     }
 \end{cppcode*}
 \caption{%
-    Implementation of the function \texttt{sample} from \cref{list:simple_md_program}. See %
+    Implementation of the function \mono{sample} from \cref{list:simple_md_program}. See %
     %\cref{list:temperatureSample}, \cref{list:pressureSample}, \cref{list:diffusionSample} %
     \crefrange{list:temperatureSample}{list:diffusionSample} %
     for example implementation of the functions used.%
@@ -68,7 +68,7 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
     }
 \end{cppcode*}
 \caption{%
-    An example of how to calculate the temperature in a molecular dynamics simulation. Example implementation of \texttt{temperatureSample} from \cref{list:sampling}.%
+    An example of how to calculate the temperature in a molecular dynamics simulation. Example implementation of \mono{temperatureSample} from \cref{list:sampling}.%
     \label{list:temperatureSample}%
 }%
 \end{listing}%
@@ -104,7 +104,7 @@ An example of how to calculate the pressure in a molecular dynamics \hl{simulati
     }
 \end{cppcode*}
 \caption{%
-    An example of how to calculate the pressure in a molecular dynamics simulation. Example implementation of \texttt{pressureSample} from \cref{list:sampling}. Note that this function needs the temperature of the system as input, and assumes that the system is homogeneous, so we can estimate the density using $\rho = N/V$. We assume that the contribution to the pressure from each atom $\sum_{i<j}\vec F(\rvec_{ij})\cdot\rvec_{ij}$ (stored as \texttt{atom->pressure()}) has been calculated previously. This is usually calculated while calculating the forces between the atoms, since we need $\vec F(\rvec_{ij})$. See \cref{subsec:pressure} for more information.%
+    An example of how to calculate the pressure in a molecular dynamics simulation. Example implementation of \mono{pressureSample} from \cref{list:sampling}. Note that this function needs the temperature of the system as input, and assumes that the system is homogeneous, so we can estimate the density using $\rho = N/V$. We assume that the contribution to the pressure from each atom $\sum_{i<j}\vec F(\rvec_{ij})\cdot\rvec_{ij}$ (stored as \mono{atom->pressure()}) has been calculated previously. This is usually calculated while calculating the forces between the atoms, since we need $\vec F(\rvec_{ij})$. See \cref{subsec:pressure} for more information.%
     \label{list:pressureSample}%
 }%
 \end{listing}%

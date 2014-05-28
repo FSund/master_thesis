@@ -35,7 +35,7 @@ An example of a program that implements the above procedure can be seen in \cref
     }
 \end{cppcode*}
 \caption{%
-    An example of a typical implementation of a molecular dynamics program using object-oriented programming. See \cref{list:calculate_forces,list:regular_verlet,list:sampling} for examples of implementations of the functions \texttt{calculateForces}, \texttt{integrateEquationsOfMotion}, and \texttt{sample}.%
+    An example of a typical implementation of a molecular dynamics program using object-oriented programming. See \cref{list:calculate_forces,list:regular_verlet,list:sampling} for examples of implementations of the functions \mono{calculateForces}, \mono{integrateEquationsOfMotion}, and \mono{sample}.%
     \label{list:simple_md_program}%
 }%
 \end{listing}%
@@ -117,7 +117,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 \end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Implementation of \texttt{calculateForces} from \cref{list:simple_md_program}.%
+    Implementation of \mono{calculateForces} from \cref{list:simple_md_program}.%
     \label{list:calculate_forces}%
 }%
 \end{listing}%
@@ -138,7 +138,7 @@ See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an examp
 \end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Implementation of \texttt{calculateForceBetweenTwoAtoms} from \cref{list:calculate_forces}.%
+    Implementation of \mono{calculateForceBetweenTwoAtoms} from \cref{list:calculate_forces}.%
     \label{list:calculate_force_between_atoms}%
 }%
 \end{listing}%
@@ -187,7 +187,7 @@ The first thing we have to do to implement periodic boundary conditinos is to ch
     }
 \end{cppcode*}
 \caption{%
-    \texttt{checkBoundaryConditions}. \hl{assumes no more than one box outside...}%
+    \mono{checkBoundaryConditions}. \hl{assumes no more than one box outside...}%
     \label{list:pbc}%
 }%
 \end{listing}%
@@ -210,7 +210,7 @@ To find the distance between atom $i$ and the closest image of atom $j$ we \hl{j
     }
 \end{cppcode*}
 \caption{%
-    An example of how to find the distance between two points \texttt{u} and \texttt{v} in a periodic system of size \texttt{systemSize} using the \emph{minimum image convention}. We calculate the distance squared to avoid taking the square root, since this is a slow operation \hl{on a computer}.%
+    An example of how to find the distance between two points \mono{u} and \mono{v} in a periodic system of size \mono{systemSize} using the \emph{minimum image convention}. We calculate the distance squared to avoid taking the square root, since this is a slow operation \hl{on a computer}.%
     \label{list:minimum_image_convention}%
 }%
 \end{listing}%

@@ -85,7 +85,7 @@ An implementation of the voxelation method for creating neighbor lists can be se
     }
 \end{cppcode*}
 \caption{%
-    An example of how to find the neighbor atoms within a given distance (\texttt{radius}) of all atoms. This example assumes a cubic system of size \texttt{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \texttt{sortAtomsIntoVoxels} and \texttt{findAtomsWithinRadius}. %
+    An example of how to find the neighbor atoms within a given distance (\mono{radius}) of all atoms. This example assumes a cubic system of size \mono{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \mono{sortAtomsIntoVoxels} and \mono{findAtomsWithinRadius}. %
     \label{list:create_neighbor_lists}%
 }%
 \end{listing}%
@@ -107,7 +107,7 @@ An implementation of the voxelation method for creating neighbor lists can be se
     }
 \end{cppcode*}
 \caption{%
-    Example of implementation of \texttt{sortAtomsIntoVoxels} from \cref{list:create_neighbor_lists}, for sorting atoms into voxels with size \texttt{voxelSize}. We use the \texttt{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \texttt{sortAtomsIntoVoxels}. %
+    Example of implementation of \mono{sortAtomsIntoVoxels} from \cref{list:create_neighbor_lists}, for sorting atoms into voxels with size \mono{voxelSize}. We use the \mono{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \mono{sortAtomsIntoVoxels}. %
     \label{list:sortAtomsIntoVoxels}%
 }%
 \end{listing}%
@@ -132,7 +132,7 @@ An implementation of the voxelation method for creating neighbor lists can be se
     }
 \end{cppcode*}
 \caption{%
-    Example implementation of \texttt{findAtomsWithinRadius} from \cref{list:create_neighbor_lists}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \texttt{calculateDistanceSquaredBetweenAtoms}.%
+    Example implementation of \mono{findAtomsWithinRadius} from \cref{list:create_neighbor_lists}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \mono{calculateDistanceSquaredBetweenAtoms}.%
     \label{list:findAtomsWithinRadius}%
 }%
 \end{listing}%
@@ -154,7 +154,7 @@ An implementation of the voxelation method for creating neighbor lists can be se
     }
 \end{cppcode*}
 \caption{%
-    Example implementation of \texttt{calculateDistanceSquaredBetweenAtoms} from \cref{list:findAtomsWithinRadius}.%
+    Example implementation of \mono{calculateDistanceSquaredBetweenAtoms} from \cref{list:findAtomsWithinRadius}.%
     \label{list:calculateDistanceSquaredBetweenAtoms}%
 }%
 \end{listing}%
@@ -193,7 +193,7 @@ To use the voxelation method we need to have a maximum distance to look for sili
 % %     }
 % % \end{cppcode*}
 % % \caption{%
-% %     Example implementation of the procedure detailed in \cref{somesection}, to sort atoms into voxels of size \texttt{voxelSize}. We use the \texttt{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \texttt{sortAtomsIntoVoxels}. %
+% %     Example implementation of the procedure detailed in \cref{somesection}, to sort atoms into voxels of size \mono{voxelSize}. We use the \mono{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \mono{sortAtomsIntoVoxels}. %
 % %     \label{list:sortAtomsIntoVoxels}%
 % % }%
 % % \end{listing}%
@@ -246,7 +246,7 @@ To use the voxelation method we need to have a maximum distance to look for sili
 %     }
 % \end{cppcode*}
 % \caption{%
-%     An example of how to find the neighbor atoms within a given distance (\texttt{radius}) of all atoms. This example assumes a cubic system of size \texttt{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \texttt{sortAtomsIntoVoxels} and \texttt{findAtomsWithinRadius}. %
+%     An example of how to find the neighbor atoms within a given distance (\mono{radius}) of all atoms. This example assumes a cubic system of size \mono{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \mono{sortAtomsIntoVoxels} and \mono{findAtomsWithinRadius}. %
 %     \label{list:create_neighbor_lists}%
 % }%
 % \end{listing}%
@@ -275,7 +275,7 @@ To use the voxelation method we need to have a maximum distance to look for sili
 %     }
 % \end{cppcode*}
 % \caption{Test%
-%     \texttt{findAtomsWithinRadius}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \texttt{calculateDistanceSquaredBetweenAtoms}.%
+%     \mono{findAtomsWithinRadius}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \mono{calculateDistanceSquaredBetweenAtoms}.%
 %     \label{list:findAtomsWithinRadius}%
 % }%
 % \end{listing}%
@@ -299,7 +299,7 @@ To use the voxelation method we need to have a maximum distance to look for sili
 %     }
 % \end{cppcode*}
 % \caption{%
-%     \texttt{calculateDistanceSquaredBetweenAtoms}%
+%     \mono{calculateDistanceSquaredBetweenAtoms}%
 %     \label{list:calculateDistanceSquaredBetweenAtoms}%
 % }%
 % \end{listing}%
@@ -437,7 +437,7 @@ where $d$ is the \hl{spatial} \hl{dimensionality/dimension?}. This means that we
     }
 \end{cppcode*}
 \caption{%
-    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \texttt{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \texttt{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \hl{\emph{real}} position of the atom can be calculated by adding \texttt{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
+    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \mono{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \mono{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \hl{\emph{real}} position of the atom can be calculated by adding \mono{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
     \label{list:diffusionSample}%
 }%
 \end{listing}%
@@ -470,13 +470,13 @@ To help visualize, and to characterize our nanoporous system we developed a prog
 
 % \FloatBarrier
 \section{``Generation matrix''}
-Since the program from \cref{sec:distance_to_atom} takes a long time to run to get decent maps with high resolution, we decided to also develop a similar program that creates a 3d map of the space. To ease calculation we this time used a method inspired by the voxelation technique from \cref{sec:voxelation}. This program first divides the system into $n_x\times n_y\times n_z$ voxels, and make a 3d matrix of the same size for storing the label of each voxel. We first give all voxels with one or more atoms in them the label \hl{``0''}. We then label the rest of the voxels using an iterative method, increasing the \hl{numbers/labels} for each iteration. In each iteration we find the voxels that have a neighbor voxel \hl{labelled} with the previous label (\texttt{label-1}), using 4-neighbor connectivity, and give them the current label. When all voxels are labelled, they should have a label corresponding to the \hl{Manhattan distance} to the nearest atom.
+Since the program from \cref{sec:distance_to_atom} takes a long time to run to get decent maps with high resolution, we decided to also develop a similar program that creates a 3d map of the space. To ease calculation we this time used a method inspired by the voxelation technique from \cref{sec:voxelation}. This program first divides the system into $n_x\times n_y\times n_z$ voxels, and make a 3d matrix of the same size for storing the label of each voxel. We first give all voxels with one or more atoms in them the label \hl{``0''}. We then label the rest of the voxels using an iterative method, increasing the \hl{numbers/labels} for each iteration. In each iteration we find the voxels that have a neighbor voxel \hl{labelled} with the previous label (\mono{label-1}), using 4-neighbor connectivity, and give them the current label. When all voxels are labelled, they should have a label corresponding to the \hl{Manhattan distance} to the nearest atom.
 
 Although the Manhattan distance isn't as useful as the regular Euclidean distance we calculate using the \hl{``distance to atom''}-program, the benefit is that making a 3d map of space using the \hl{``generation matrix''} method uses about 3\% of the time that ``distance to atom'' uses for the same system and same resolution. 
 
 \todoa{Something about the usefulness of this measure?}
 
-\orangebox{A system of 347176 atoms (\texttt{rough\_fracture03}), water and SiO2, $256^3$ voxels, $~5$ seconds for ``generation matrix'', 2m27seconds for ``distance to atom'' (on one cpu)}
+\orangebox{A system of 347176 atoms (\mono{rough\_fracture03}), water and SiO2, $256^3$ voxels, $~5$ seconds for ``generation matrix'', 2m27seconds for ``distance to atom'' (on one cpu)}
 \todoc{Voxel counter code example?}
 
 % \FloatBarrier

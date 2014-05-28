@@ -45,6 +45,10 @@
 % \newcommand{\cpp}{\Verb!C++!} % Doesn't work in captions... Can be fixed with ``\protect'' before the verb, and ``\SaveVerb'' before list of figures, or the cprotect package. More info here: http://tex.stackexchange.com/questions/8810/how-to-include-verbatim-in-a-figure-caption
 \newcommand{\cpp}{\texttt{C++}}
 
+% ---- Font ---- %
+\newcommand*{\selectmono}{\fontfamily{fdm}\selectfont}
+\newcommand{\mono}[1]{{\selectmono#1}}
+
 % ---- Todo colors ---- %
 \newcommand{\todoa}[1]{\todo[inline,color=red!100]{#1}}
 \newcommand{\todob}[1]{\todo[inline,color=red!60]{#1}}
