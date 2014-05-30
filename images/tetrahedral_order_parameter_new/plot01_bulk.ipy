@@ -31,8 +31,8 @@ bulk_distance = 10.0
 
 results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/tetrahedral_order_parameter/bulk_results"
 systems = [ \
-    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/009",
-    "flat_square_fracture03/10_01_measuring_every_100th_timestep/003"
+    "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/010",
+    "flat_square_fracture03/10_01_measuring_every_100th_timestep/004"
 ]
 results_folders = [os.path.join(results_folder, system) for system in systems]
 n_systems = len(systems)

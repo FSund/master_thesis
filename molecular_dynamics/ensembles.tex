@@ -71,9 +71,11 @@ In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should
 The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
 
 \section{Nos\'e-Hoover thermostat and Nos\'e-Hoover chains}
-The Nos\'e-Hoover thermostat is an advanced thermostat \hl{based on statistical mechanics}, that generates a correct canonical ensemble \hl{(under certain conditions, which will be discussed later)} and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. Nosé-Hoover type thermostats work by adding a so-called \emph{friction}-term to the forces on the atoms, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
+The Nos\'e-Hoover thermostat is an advanced thermostat \hl{based on statistical mechanics}, that generates a correct canonical ensemble \hl{(under certain conditions, which will be discussed later)} and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. The effect of applying Nosé-Hoover type thermostats it that we get an additional \emph{friction}-term to the forces on the atoms, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
 
 \todoa{A bit more general about Nosé-Hoover thermostats, developmend history stuff}
+
+\todob{We have derived the equations of motion we get when using the Nosé-Hoover thermostat in \cref{appendix:nose_hoover}, and repeat some of the results here.}
 
 % A further development of an even more a These type of thermostats are in widespread use because of these properties, although they are a lot harder to implement than the Berendsen and Andersen thermostat. A derivation of the Nosé-Hoover thermostat can be seen in \cref{appendix:nose_hoover}, and some of the results are repeated here.
 
