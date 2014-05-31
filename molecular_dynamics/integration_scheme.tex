@@ -17,9 +17,9 @@ To integrate Newton's equations of motion (time derivative denoted by a dot)
 \end{align*}
 for the intermolecular potential $U(\rvec)$ there are a lot of different methods to choose between, ranging from the simple forward Euler method first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. Since the equations of motion are reversible, so should our integration method be. We also want to be able to use as large timesteps as possible, to save computation time. Lastly, and perhaps most importantly, we want the energy of our system to be conserved, so the long-term drift in energy should be small. We only need to be able to make statistically correct predictions about the trajectories of the atoms, so predicting the true trajectories of the atoms isn't a priority as long as they are statistically correct.
 
-ur integration method needs to\hl{???} ``Newton's equations of motion are time reversible, ans so should our algorithms be'' \hl{(see Frenkel p. 73/93)}.
-\todobo{something about trajectory of atoms in integrator?}
-\todobo{a bit more intro about integration}
+%Our integration method needs to\hl{???} ``Newton's equations of motion are time reversible, ans so should our algorithms be'' \hl{(see Frenkel p. 73/93)}.
+% \todobo{something about trajectory of atoms in integrator?}
+\todob{a bit more intro about integration}
 % \todoa{Rewrite integration chapter to properly integrate appendix}
 
 It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$, as shown in \cref{subsec:verlet_error_liouville}, and time-reversible. 
@@ -27,15 +27,15 @@ It turns out that a deceptively simple method first described by Loup Verlet in 
 \hl{It can be shown that the Verlet algorithm is so-called area-preserving}\cite[section 4.3.3]{frenkel2001understanding}, \hl{which means that the algorithm is compatible with energy conservation, but doesn't guarantee the absence of long-term energy drift.}
 
 (It is also and numerically cheap \hl{(compared to other methods)} \st{requiring on the order of $N$?? flops}.)
-
-\tododone{Decide on global error in velocity Verlet, and source for this}
-\todoao{Something about what demands we have for an integrator, see Frenkel p 73/93}
-\todobo{Discuss that global error has been hard to find sources for?}
-\tododo{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}
-\tododo{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}
+%
+% \tododone{Decide on global error in velocity Verlet, and source for this}%
+\todoa{Something about what demands we have for an integrator, see Frenkel p 73/93}%
+\todob{Discuss that global error has been hard to find sources for?}%
+\todod{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}%
+\todod{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}%
 
 \subsection{Regular Verlet integration}
-\todobo{Something general about Verlet methods before specific?}
+\todob{Something general about Verlet methods before specific?}
 The Verlet method has many variations, but the simplest form (the one used by Verlet in \cite{verlet1967computer}) has the form
 \begin{align}
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,

@@ -28,6 +28,7 @@
 %   - DONE, replaced with monospaced font, which breaks properly
 % Decide on code background
 % Check distance before and after \AA and \cpp and similar commands
+% Check ``htpb'' on all figures that need it (fracture frontpage thing need something else) -- search for begin\{figure\}
 
 % TODO: Before handing in
 % Replace \include with \input 
@@ -58,8 +59,17 @@
 % 
 % \includeonly{appendices/integrators}
 %
+% \includeonly{results/conclusion}
+% \includeonly{results/future}
+%
 
-\includeonly{results/introduction, molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
+% Part 1
+% \includeonly{molecular_dynamics/introduction,molecular_dynamics/simple_md_program,molecular_dynamics/optimizations,molecular_dynamics/observables,molecular_dynamics/ensembles,molecular_dynamics/usc_program}
+
+% Part 2
+\includeonly{fractures/fractures,fractures/hurst_exponent,fractures/detrending_moving_average,fractures/generating_surfaces,fractures/generating_fractures}
+
+% \includeonly{results/introduction, molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
 % \includeonly{molecular_dynamics/simple_md_program, molecular_dynamics/ensembles, molecular_dynamics/usc_program, appendices/nose_hoover}
 
 % \includeonly{molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/results}
@@ -89,7 +99,7 @@
     \include{molecular_dynamics/introduction}
 %     \include{molecular_dynamics/statistical_mechanics}
     \include{molecular_dynamics/simple_md_program}
-    \include{molecular_dynamics/optimizations}
+%     \include{molecular_dynamics/optimizations} % Moved cell lists to md part, removed MD units stuff
     \include{molecular_dynamics/observables}
     \include{molecular_dynamics/ensembles}
     \include{molecular_dynamics/usc_program}
@@ -108,8 +118,9 @@
     \include{results/systems}
     \include{results/results}
 
-% \part{Discussion}
-%     \include{discussion/discussion}
+\part{Conclusion}
+    \include{results/conclusion}
+    \include{results/future}
 
 \part{Appendices}
 \begin{appendix}

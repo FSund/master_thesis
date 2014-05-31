@@ -1,12 +1,14 @@
 \chapter{Molecular dynamics program/code used for experiments}
 \todoa{Finish writing about sio2/water program}
-To study an advanced system like silica and water\hl{(, which consists of hydrogen (H), oxygen (O) and silicon (Si) atoms,)} we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. Structures like usually don't appear if we use a simple diatomic potential like Lennard-Jones, so we need to use a higher order potential. We would also like to be able to simulate chemical reactions we know happen, like transfer of oxygen atoms from silica to water.
+To study an advanced system like silica (SiO$_2$) and water (H$_2$O) we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. Structures like that usually will not appear if we use a simple diatomic potential like Lennard-Jones, so we use a higher order potential. We would also like to be able to simulate chemical reactions like transfer of oxygen atoms from silica to water, which requires \hl{something?}.
 
-The potential implemented in the program we use in this thesis has been developed at the University of Southern California (USC) by P. Vashishta, Rajiv K. Kalia, José P. Rino and Ingvar Ebbsj\"o\cite{vashishta1990interaction}, see also\cite{shekhar2013nanobubble,shekhar2013nanobubble_supplements}. The potential contains two-body and three-body terms, and allows oxygen atoms to be transferred from silica to water. See \cref{sec:sio2_potential} for more details on the potential.
+The potential implemented in the program we use in this thesis has been developed at the University of Southern California (USC) by P. Vashishta, Rajiv K. Kalia, José P. Rino and Ingvar Ebbsj\"o\cite{vashishta1990interaction}, see also\cite{shekhar2013nanobubble,shekhar2013nanobubble_supplements}. The potential contains two-body and three-body terms, and allows oxygen atoms to be transferred between silica and water. See \cref{sec:sio2_potential} for more details on the potential.
 
-The potential is implemented in a FORTRAN 77 program which has been parallellized an highly optimized \hl{source?}. \hl{The program is unfortunately closed-source}.
+The potential is implemented in a FORTRAN 77, and it has been parallellized an highly optimized for running on high-performance computing clusters like Abel. \hl{The program is unfortunately closed-source}.
 
-The program implements both the fast and simple Berendsen thermostat, and the more sophisticated Nos\'e-Hoover chains thermostat.
+The program implements both the fast and simple Berendsen thermostat, and the more sophisticated Nos\'e-Hoover chains thermostat \hl{but we usually just use Berendsen, since we only want to change temperature, not measure NPT ensemble}.
+
+An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
 \todob{Timestep set according to vibrational frequency of water?}
 
@@ -56,7 +58,7 @@ The program implements both the fast and simple Berendsen thermostat, and the mo
     \end{itemize}
 }
 
-The interatomic potential\cite{vashishta1990interaction} \todoco{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of two-body and three-body terms, and has the form
+The interatomic potential\cite{vashishta1990interaction} \todoco{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of a two-body and a three-body part, and has the form
 \begin{align*}
     E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
 \end{align*}
@@ -65,7 +67,7 @@ for
     1\leq \{i,j,k\} \leq N.
 \end{align*}
 
-$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions. The two-body term \hl{(as lies in the name)} only depends on the interatomic distance between atom $i$ and $j$, $r = r_{ij} = |\rvec_{ij}|$, and it has the form%
+$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions. The two-body term \hl{(as lies in the name)} only depends on the interatomic distance between atom $i$ and $j$, $|\rvec_{ij}| = r_{ij} = r$, and it has the form%
 \begin{align*}
     V_{ij}^{(2)} (r) = 
     \underbrace{
@@ -86,7 +88,7 @@ $V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into
     ,
 \end{align*}%
 % where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ and 
-where the parameters of the are as follows%
+where the parameters are%
 \begin{itemize}[%
     leftmargin=*,%
     label={}%,
@@ -112,6 +114,7 @@ where the parameters of the are as follows%
         \item $w_{ij}$ controls the strength of the interaction
         \item $r_{4\text{s}}$ is the screening length for the interaction
     \end{itemize}
+    \vspace{10pt}
 \end{itemize}
 % $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
 
@@ -148,10 +151,11 @@ The parameters of the three-body term are as follows
         \item $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$
         \item $\theta_0$ is the angle at which the three-body term vanishes
     \end{itemize}
+    \vspace{10pt}
 \end{itemize}
 
 The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then gm
-\todob{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
+\todoa{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
 
 % where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
@@ -161,9 +165,9 @@ The parameters used in our simulations were chosen by first determing good param
 \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
 \todob{Plot of energy conservation here?}
 
-The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
+The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way.
 
-The program utilizes the fact that the vibrational frequency in water is much higher than the frequency of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules.
+The integrator utilizes the fact that the vibrational frequency in water is much higher than the frequency of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. This is what is called a multiple time-scale integrator.
 % %
 % \begin{figure}[htpb]%
 %     \centering%
