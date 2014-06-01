@@ -1,26 +1,25 @@
 
 \section{Generating fractures from surfaces\label{sec:generating_fractures}}
-To generate a realistic fracture we use the method of successive random additions, as described previously, to generate random surfaces with a known Hurst exponent. We then put one surface above the other, and let the space between the surfaces be the \hl{fracture/void}\footnote{Since we are using periodic systems, we could also have let the space outside the surfaces be the fracture and get the same result. \hl{But for easier visualization.}}.
+To generate a realistic fracture we use the method of successive random additions described in \cref{chap:generating_surfaces,subsec:SRA_implementation} to generate random surfaces with a known Hurst exponent. We then displace the surfaces in the $z$-direction, so one is above the other, and let the space between the surfaces be the \hl{fracture/void}\footnote{Since we are using periodic systems, we could also have let the space outside the surfaces be the fracture and get the same result. \hl{But for easier visualization.}}.
 
 In practice we make a fractured \hl{silica} structure using the following procedure\hl{:}
 \begin{itemize}
-    \item Make a liquid SiO$_2$ system.
+    \item Prepare a slab of amorphous SiO$_2$.
     \item Generate two surfaces.
-    \item Rescale the $(x,y)$-positions of surfaces so they span the size of the system.
+    \item Rescale the $(x,y)$-positions of surfaces so they span the molecular system.
     \item Rescale the $z$-values of the surfaces so all points are inside the system.
-    \item Remove all atoms between the upper and lower surfaces.
+    \item Remove all atoms between the upper and lower surface.
 \end{itemize}
 
-Removing all atoms between the two surfaces isn't a trivial task. But since all points in both surfaces lie on a regular grid in the $x$-$y$-plane, there is a simple way of dividing the volume between the surface into tetrahedra, and checking if a point is inside a tetrahedra is a \hl{simple} geometrical exercize that can be solved \hl{programmatically}. If the two surfaces are not intersecting, we see that we can divide the volume between them into convex hexahedra\todo{explain convex hexahedra?}, each spanned out by the points
+The biggest \hl{problem} with this procedure is removing the atoms between two surfaces. But since all points in both surfaces lie on a regular grid in the $x$-$y$-plane, there is a simple way of dividing the volume between the surfaces into tetrahedra. And checking if a point is inside a tetrahedra is a \hl{simple} geometrical exercize that can be solved \hl{programmatically}. If the two surfaces are not intersecting, we can divide the volume between them into \hl{(convex)} hexahedra\todo{explain convex hexahedra?}\ spanned out by the points
+% \begin{align*}
+%     (x^1_{i}, y^1_{i}), (x^1_{i+1}, y^1_{i}), (x^1_{i}, y^1_{i+1}), (x^1_{i+1}, y^1_{i+1}), \\
+%     (x^2_{i}, y^2_{i}), (x^2_{i+1}, y^2_{i}), (x^2_{i}, y^2_{i+1}), (x^2_{i+1}, y^2_{i+1}),
+% \end{align*}
 \begin{align*}
-    (x^1_{i}, y^1_{i}), (x^1_{i+1}, y^1_{i}), (x^1_{i}, y^1_{i+1}), (x^1_{i+1}, y^1_{i+1}), \\
-    (x^2_{i}, y^2_{i}), (x^2_{i+1}, y^2_{i}), (x^2_{i}, y^2_{i+1}), (x^2_{i+1}, y^2_{i+1}),
+    z(i,j)&, & &z(i+1,j),& & &z(i,j+1)&, &\text{and}& & &z(i+1,j+1)& & &\text{for} & &i,j \in [0,N)
 \end{align*}
-for
-\begin{align*}
-    0 \leq i,j < N,
-\end{align*}
-where $(x^1_i,y^1_j)$ are points in one surface and $(x^2_i,y^2_j)$ in the other. We then divide each \hl{convex hexahedra} into five tetrahedron, as illustrated in \cref{fig:hex_to_tetra}, giving a total of $5(N-1)^2$ tetrahedra.
+in the two surfaces (four points in each surface). We then divide each \hl{convex hexahedra} into five tetraheda, as illustrated in \cref{fig:hex_to_tetra}, giving a total of $5(N-1)^2$ tetrahedra spanning the total volume between the two surfaces.
 %
 % We do this by utilizing the fact that the points in each heighmap lie on a regular grid in the $x$-$y$-plane. This means that we can divide the volume into tetrahedra, . If the two heightmaps are not intersecting, we see that we can divide the volume between them into convex hexahedra, one for each set of points
 % ($x_{i}, y_{i}$), ($x_{i}, y_{i+1}$), ($x_{i+1}, y_{i}$), and ($x_{i+1}, y_{i+1}$) 
@@ -66,7 +65,7 @@ where $(x^1_i,y^1_j)$ are points in one surface and $(x^2_i,y^2_j)$ in the other
 \end{figure}%
 
 \subsection{Finding a point inside a tetrahedron}
-A tetrahedron consists of four points $\bvec a$, $\bvec b$, $\bvec c$, and $\bvec d$, and four faces spanned by the four possible combinations of the four points. For a face spanned by the points $\bvec a$, $\bvec b$, and $\bvec c$ we can find if a point $\bvec P$ is on the same side of the face as the point $\bvec d$ (the point not used to construct the face) by doing some geometry. We find the normal vector to the surface $\bvec n$ by the cross product 
+A tetrahedron consists of four points $\bvec a$, $\bvec b$, $\bvec c$, and $\bvec d$, and four faces spanned by the four possible combinations of the four points. For a face spanned by the points $\bvec a$, $\bvec b$, and $\bvec c$ we can find if a point $\bvec P$ is on the same side of the face as the point $\bvec d$ (the point not used to construct the face) by doing some geometry. We first find the normal vector to the surface $\bvec n$ by the cross product 
 \begin{align*}
     \bvec n = (\bvec a-\bvec c)(\bvec b-\bvec c).
 \end{align*}
@@ -80,6 +79,8 @@ where $\bvec k$ is any point in the plane, should have the same sign. So we find
     &\text{sgn}\big(\bvec n\cdot(\bvec d - \bvec k)\big),
 \end{align*}
 and if the sign of these dot products is the same, we know that the point $\bvec P$ is on the same side of the face as the point $\bvec d$. We now see that if we do this for all four faces of the tetrahedra, we know that the point $\bvec P$ is inside the tetrahedra if the signs of all pairs of dot products are equal.
+
+To implement this for checking which atoms are between two surfaces (with the volume between the surfaces divided into tetrahedra), we express it as a matrix equation. This reduces the calculation of wether a point is inside a tetrahedron to comparing the signs of five matrix determinants.
 
 % Calculating wether a point is inside a tetrahedron can be reduced to comparing the sign of five different matrix determinants. If we have a point $P = (x,y,z)$ and the four vertices of the tetrahedron are $(x_i, y_i, z_i)$ for $i\in \{1,2,3,4\}$, we can find if the point is inside the tetrahedron by checking if the the following five matrix determinants have the same sign
 % \begin{align*}
