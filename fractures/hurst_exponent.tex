@@ -1,9 +1,9 @@
 \section{Hurst exponent}
-One of the earliest methods for measuring the Hurst exponent is a statistical method developed by Hurst in his studies of the Nile river\cite{hurst1965longterm}\cite{hurst1951longterm}. This method is called \emph{rescaled range analysis} and was designed for use on 1-dimensional time series $f(t)$. The method has been generalized to higher dimensions\cite{fan2013rescaled}, but the original 1D form is shown here.
+One of the earliest methods for measuring the Hurst exponent is a statistical method developed by Hurst in his studies of the Nile river\cite{hurst1965longterm}\cite{hurst1951longterm}. This method is called \emph{rescaled range analysis} and was designed for use on 1-dimensional time series. The method has been generalized to higher dimensions\cite{fan2013rescaled}, but the original 1D form is shown here.
 \todobo{Something about that it's hard to measure, and why.}%
 
 \subsection{Rescaled range analysis}
-First the time series is divided into \todo{overlapping/non-overlapping?} intervals of length $\tau$. The average over each interval of length $\tau$ is
+We have a 1-dimensional time series $f(t)$. The time series is first divided into \todo{overlapping/non-overlapping?} intervals of length $\tau$. The average over each interval of length $\tau$ is
 \begin{align*}
     \langle f \rangle_\tau = \frac{1}{\tau} \sum_{t=1}^\tau f(t).
 \end{align*}

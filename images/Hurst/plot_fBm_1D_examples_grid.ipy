@@ -60,6 +60,7 @@ for i in range(n_rows):
 
 from mpl_toolkits.axes_grid.anchored_artists import AnchoredText
 locs = [3, 3, 3, 3]
+# Hlabels = ["H ≈ 0.0", "H ≈ 0.25"]
 for idx, H in enumerate(Hvec):
     
     fBm = np.genfromtxt("fBm_1D_H%1.2f.txt" % H)
@@ -76,7 +77,7 @@ for idx, H in enumerate(Hvec):
         # prop=dict(size=8), frameon=True,
         # loc='upper left',
     # )
-    at = AnchoredText(s = "H = %1.2f" % H, loc = locs[idx], prop = dict())
+    at = AnchoredText(s = "\\sa %1.2f" % H, loc = locs[idx], prop = dict())
     at.patch.set_boxstyle("round,pad=0.,rounding_size=0.2")
     ax.add_artist(at)
 
@@ -117,4 +118,4 @@ fig.text(s = "fBm", x=0.04, y=0.5, rotation = "vertical", transform = axes[0][0]
 if backend == default_backend:
     plt.show()
 else:
-    fig.savefig("fbm_1d_examples_grid.svg", bbox_inches='tight')
+    fig.savefig("fbm_1d_examples_grid01.svg", bbox_inches='tight')

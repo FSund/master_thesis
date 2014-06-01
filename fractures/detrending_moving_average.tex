@@ -1,5 +1,6 @@
 \section{Detrending moving average}
-To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) first described by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
+\todobo{Transition from rescaled range to surface?}
+To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) developed for 1-dimensional data by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
 
 After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is \hl{easy} to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in\cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.%
 \todo{good results, easy to implement? }%
@@ -131,7 +132,7 @@ We can use this dependence to estimate the Hurst exponent $H$, by calculating $\
 
 In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
-A modification of the method mentioned is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todoa{not correct, fix this}
+A modification of the method mentioned is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todoao{check this equation}
 \begin{align*}
     \bar {f_n}^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \bar {f_n}(i-1,j-1),
 \end{align*}
@@ -141,15 +142,20 @@ where
 \]
 and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). To use this modification we also have to change the limits in \cref{eq:dma_variance} from ${i,j\in [1,N-n+1]}$ to $i,j\in [2,N-n+1]$. This modification has been shown to give better results for small systems\cite{carbone2007algorithm}\todo{why?}, and since we are usually generating surfaces with a \hl{resolution/$N$ of 100-200}, we use this modified method in our implementation of the method. \todo{maybe implement both methods?}
 
-\orangebox{The method is implemented in Matlab/Octave}
+\todob{The method is implemented in Matlab/Octave}
 
 \subsection{The performance of detrending moving average}
-To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic (1D) time series and (2D) surfaces \hl{of fractional Brownian motion} with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it's both hard to accurately measure the exponent, and it's hard to synthesize data with a given exponent. \hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
+To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic \hl{(1D)} time series and \hl{(2D)} surfaces \hl{of fractional Brownian motion} with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it's both hard to accurately measure the exponent, and it's hard to synthesize data with a given exponent. \hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
 
-To reduce the sources of errors we used a lot of different ready-made methods for synthesizing data with a given Hurst exponent, and measured the exponent using the detrending moving average method for each of these methods. For synthesizing 1D data we used the built-in Matlab-function \hl{cite matlab?} \Verb!wfbm! which uses the algorithm proposed by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method propoesed in\cite{wood1994simulation}, and \Verb!fbmlevinson! which uses a method from\cite{levinson1947wiener}. \hl{Readymade} programs for generating 2D data with a given Hurst exponent is hard to find \hl{(which is part of the reason why we implemented the SRA method)}, but we used another function from FracLab called \Verb!synth2!, which, according to the documentation of the function:%
+To test the \hl{DMA method} we synthesized data with a given Hurst exponent using 4 different \hl{methods/programs}, and measured the exponent using the detrending moving average method for each of these methods. 
+
+For synthesizing 1D data we used the built-in Matlab-function \hl{cite matlab?} \Verb!wfbm! which uses a wavelet-based synthesis method described by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method proposed by Wood and Chan in \cite{wood1994simulation}, and \Verb!fbmlevinson! which uses Cholesky/Levinson factorization from \cite{levinson1947wiener}. 
+
+There are many methods and algorithms for generating \hl{2D/3D/surfaces} data with a given Hurst exponent, but we had problems finding working implementations of any of them. We will later implement a midpoint displacement method for this (see \cref{chap:generating_surfaces,subsec:SRA_implementation}), but having external reference is very useful, so we used a function from FracLab called \Verb!synth2!, which, according to the documentation of the function:%
 \begin{quote}
-    ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
-\end{quote}
+    \textit{Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0).}
+\end{quote}\todobo{No sources are given in FracLab documentation...}
+We will later also test our own implementation of a method for generating \hl{2d/3d} data against \hl{DMA}.
 % ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
 
 See \cref{fig:dma_performace} for a plot of Hurst exponent measured using \hl{DMA} as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$.
@@ -172,7 +178,7 @@ From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the
 %         \label{fig:dma_performace}%
 %     }%
     \caption{%
-        Plot of the Hurst exponent as estimated by the detrending moving average method, used on data from four different synthetic signals, against the exponent used as input when generating the signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. All methods except \mono{synth2} generate 1-dimensional signals, while \mono{synth2} generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
+        Plot of the Hurst exponent against the exponent used as input when generating the signals, as estimated by the detrending moving average method, used on data from four different synthetic signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. All methods except \mono{synth2} generate 1-dimensional signals, while \mono{synth2} generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
         \label{fig:dma_performace}%
     }%
 \end{figure}%
