@@ -311,8 +311,9 @@ To test the method for generating random surfaces, and to check that the Hurst e
         \label{fig:diamond_square_testing}%
     }%
 \end{figure}%
-\footnotetext{In reality we can't have Hurst exponents greater than 1, but as we see, the midpoint displacement methods generally creates surfaces with a measured exponent ($H_\text{out}$) lower than the input exponent ($H_\text{in}$) for $H_\text{in}>0.5$, so to we use some samples of $H_\text{in}>1$.}
 
-From the plot in \cref{fig:diamond_square_testing} we see that surfaces with periodic boundaries generally get a lower \hl{measured} $H$ than non-periodic surfaces, at least for the surfaces with $H >0.5$. We also see that the surfaces generated using the midpoint displacement method (MDM) have very similar Hurst exponents as the ones generated using successive random additions (SRA). We see that the Hurst exponent of all surfaces is generally lower than the input exponent for input $H>0.5$, and lower than the input exponent for input $H<0.5$. We should take note of this when generating surfaces for our experiments, and make sure to measure the actual exponent, since we see that the standard deviation is relatively high.
+From the plot in \cref{fig:diamond_square_testing} we see that surfaces with periodic boundaries generally get a lower \hl{measured} $H$ than non-periodic surfaces, at least for the surfaces with $H>0.5$. We also see that the surfaces generated using the midpoint displacement method (MDM) have very similar Hurst exponents as the ones generated using successive random additions (SRA). We see that the Hurst exponent of all surfaces is generally lower than the input exponent for input $H>0.5$, and lower than the input exponent for input $H<0.5$. We should take note of this when generating surfaces for our experiments, and make sure to measure the actual exponent, since we see that the standard deviation is relatively high.
+%
+\footnotetext{In reality we can't have Hurst exponents greater than 1, but as we see, the midpoint displacement methods generally creates surfaces with a measured exponent ($H_\text{out}$) lower than the input exponent ($H_\text{in}$) for $H_\text{in}>0.5$, so to we use some samples of $H_\text{in}>1$.}%
 
 \todob{Something about why periodic surfaces have lower exponent?}

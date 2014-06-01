@@ -78,7 +78,7 @@ where $\bvec k$ is any point in the plane, should have the same sign. So we find
     &\text{sgn}\big(\bvec n\cdot(\bvec P - \bvec k)\big), \\
     &\text{sgn}\big(\bvec n\cdot(\bvec d - \bvec k)\big),
 \end{align*}
-and if the sign of these dot products is the same, we know that the point $\bvec P$ is on the same side of the face as the point $\bvec d$. We now see that if we do this for all four faces of the tetrahedra, we know that the point $\bvec P$ is inside the tetrahedra if the signs of all pairs of dot products are equal.
+and if the sign of these dot products is the same, we know that the point $\bvec P$ is on the same side of the face as the point $\bvec d$. We now see that if we do this for all four faces of the tetrahedra, we know that the point $\bvec P$ is inside the tetrahedra if the signs of \emph{all} pairs of dot products are equal.
 
 To implement this for checking which atoms are between two surfaces (with the volume between the surfaces divided into tetrahedra), we express it as a matrix equation. This reduces the calculation of wether a point is inside a tetrahedron to comparing the signs of five matrix determinants.
 

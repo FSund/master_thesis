@@ -6,7 +6,7 @@
 
 \input{preamble/preamble.tex}
 \input{preamble/layout_lengths_floats.tex}
-\input{preamble/other_packages.tex}
+\input{preamble/other_packages.tex} % other packages should maybe be loaded before hyperref --- tried this, but it broke all references
 \input{preamble/custom_commands_and_settings.tex}
 
 \author{Filip Sund}
@@ -29,6 +29,7 @@
 % Decide on code background
 % Check distance before and after \AA and \cpp and similar commands
 % Check ``htpb'' on all figures that need it (fracture frontpage thing need something else) -- search for begin\{figure\}
+% Ensure that footnote for fig:diamond_square_testing end up on correct page (\protect\footnotemark and \footnotetext doesn't know where to place the text)
 
 % TODO: Before handing in
 % Replace \include with \input 
@@ -67,7 +68,7 @@
 % \includeonly{molecular_dynamics/introduction,molecular_dynamics/simple_md_program,molecular_dynamics/optimizations,molecular_dynamics/observables,molecular_dynamics/ensembles,molecular_dynamics/usc_program}
 
 % Part 2
-\includeonly{fractures/fractures,fractures/hurst_exponent,fractures/detrending_moving_average,fractures/generating_surfaces,fractures/generating_fractures}
+% \includeonly{fractures/fractures,fractures/hurst_exponent,fractures/detrending_moving_average,fractures/generating_surfaces,fractures/generating_fractures}
 
 % \includeonly{results/introduction, molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
 % \includeonly{molecular_dynamics/simple_md_program, molecular_dynamics/ensembles, molecular_dynamics/usc_program, appendices/nose_hoover}
