@@ -180,32 +180,61 @@ Not very useful. Much of the same as distance to atom, only worse (but faster).
         width=0.7\textwidth,
         svgpath = ./images/tetrahedral_order_parameter_new/%
     ]{figure01_bulk}%
-    \caption{}%
+    \caption{%
+        Plot of tetrahedral order parameter for bulk water (water molecules further than 10 \AA\ from any silicon atoms), in the systems in \cref{fig:rendering_flat_square_fracture02,fig:rendering_flat_square_fracture03}.%
+    }%
 %     \label{fig:distance_to_atom_r20}%
 \end{figure}%
 %
-\begin{figure}[htpb]%
-    \centering% 
-    \includesvg[%
-%         width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
-        height=\textheight,%
-        svgpath = ./images/tetrahedral_order_parameter_new/%
-    ]{figure01_thin_fractures}%
-    \caption{}%
-%     \label{fig:distance_to_atom_r20}%
-\end{figure}%
-%
-\begin{figure}[htpb]%
+\begin{figure}[!p]%
     \centering%
     \includesvg[%
-%         width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
-        height=\textheight,%
+        width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
+%         height=\textheight,%
         svgpath = ./images/tetrahedral_order_parameter_new/%
-    ]{figure01_normal_fractures}%
-    \caption{}%
+    ]{figure02_regular_and_wide}%
+    {
+        \captionsetup{width=\textwidth} 
+        \caption{%
+            Plot of tetrahedral order parameter for two regular rough fractures, and a flat reference system with a $\sim 86 \AA$ wide fracture. See \cref{fig:renderings_rough_fracture01_abel,fig:renderings_rough_fracture03,fig:renderings_flat_square_fracture03}.%
+        }%
+    }
 %     \label{fig:distance_to_atom_r20}%
 \end{figure}%
-
+%
+\begin{figure}[!p]%
+    \centering% 
+    \includesvg[%
+        width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
+%         height=\textheight,%
+        svgpath = ./images/tetrahedral_order_parameter_new/%
+    ]{figure02_flat_and_wide01}%
+    {
+        \captionsetup{width=\textwidth} 
+        \caption{%
+            Plot of tetrahedral order parameter for a rough fracture with uniform width of $\sim 14.4\AA$, a flat reference system with a $14.4\AA$ wide fracture, and a flat reference system with a $\sim 86 \AA$ wide fracture. See \cref{fig:renderings_rough_fracture04_same_distance,fig:renderings_flat_fracture03,fig:renderings_flat_square_fracture03}.%
+        }%
+    }
+%     \label{fig:distance_to_atom_r20}%
+\end{figure}%
+%
+\begin{figure}[!p]%
+    \centering% 
+    \includesvg[%
+        width=\textwidth,% choose which fits best, width or height (regular includegraphics can use both and add "keepaspectratio", but includesvg can't)
+%         height=\textheight,%
+        svgpath = ./images/tetrahedral_order_parameter_new/%
+    ]{figure02_flat_and_wide02}%
+    {
+        \captionsetup{width=\textwidth} 
+        \caption{%
+            Plot of tetrahedral order parameter for a rough fracture with uniform width of $\sim 28.8\AA$, a flat reference system with a $28.8\AA$ wide fracture, and a flat reference system with a $\sim 86 \AA$ wide fracture. See \cref{fig:renderings_rough_fracture05,fig:renderings_flat_fracture03,fig:renderings_flat_square_fracture03}.%
+        }%
+    }
+%     \label{fig:distance_to_atom_r20}%
+\end{figure}%
+%
+%
 \FloatBarrier
 \section{Area}
 \section{Volume?}

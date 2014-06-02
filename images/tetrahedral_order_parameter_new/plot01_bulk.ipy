@@ -103,8 +103,8 @@ for system in range(n_systems):
 ## Set up axes and ticks
 # Limits
 ax = axes[0] # all axes share x- and y-axes with axes[0]
-ax.set_ylim([-0.002, 0.022])
-ax.set_xlim([-0.6, 1.1])
+ax.set_ylim([-0.001, 0.021])
+ax.set_xlim([-0.55, 1.05])
 
 # Ticks
 from matplotlib.ticker import MultipleLocator

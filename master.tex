@@ -4,6 +4,8 @@
 \usepackage[utf8]{inputenc}
 % \usepackage[top=1.5in, bottom=1.5in, left=1in, right=1in]{geometry} % Correct geometry is in uiofysmaster
 
+\overfullrule=5pt
+
 \input{preamble/preamble.tex}
 \input{preamble/layout_lengths_floats.tex}
 \input{preamble/other_packages.tex} % other packages should maybe be loaded before hyperref --- tried this, but it broke all references
@@ -64,18 +66,14 @@
 % \includeonly{results/future}
 %
 
-% Part 1
+% Part 1 - MD
 % \includeonly{molecular_dynamics/introduction,molecular_dynamics/simple_md_program,molecular_dynamics/optimizations,molecular_dynamics/observables,molecular_dynamics/ensembles,molecular_dynamics/usc_program}
 
-% Part 2
+% Part 2 - Fractures
 % \includeonly{fractures/fractures,fractures/hurst_exponent,fractures/detrending_moving_average,fractures/generating_surfaces,fractures/generating_fractures}
 
-% \includeonly{results/introduction, molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
-% \includeonly{molecular_dynamics/simple_md_program, molecular_dynamics/ensembles, molecular_dynamics/usc_program, appendices/nose_hoover}
-
-% \includeonly{molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/results}
-% \includeonly{molecular_dynamics/simple_md_program,appendices/integrators}
-% \includeonly{fractures/fractures,fractures/detrending_moving_average,fractures/hurst_exponent,fractures/generating_surfaces,fractures/generating_fractures}
+% Part 3 - Experiments
+\includeonly{results/introduction,molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
 
 
 \begin{document}
