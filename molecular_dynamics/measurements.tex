@@ -1,7 +1,7 @@
 \chapter{Other measurements???}
 % \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
 
-\section{Measuring as function of distance from matrix}
+\section{Measuring as function of distance from matrix\label{sec:measuring_distance_to_matrix}}
 \todoa{Finish measuring as function of distance from matrix}
 % Mean distance from matrix in range --> if we limit the standard deviation as well, we're effectively limiting temperature, or diffusion??
 % When measuring things like density, diffusion, and the tetrahedral order parameter in a nanoporous system, we often want to study the behaviour of 
@@ -289,7 +289,9 @@ where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of t
     \end{minipage}%
 \end{figure}%
 
-\todob{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
+\todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
+
+\todoa{Write about averaging over timesteps and atoms}
 
 \todob{Something about removing extreme points/tail in distribution? Caused by vacuum.}
 
@@ -387,7 +389,10 @@ where $d$ is the \hl{spatial} \hl{dimensionality/dimension?}. This means that we
 \end{listing}%
 
 % To improve our statistics when measuring the diffusion constant as function of distance to the surface of the pore we can use different time origins to get different samples. %
-To measure $D$ we see from \cref{eq:diffusion_derivative} that we have to let $t\rightarrow \infty$, but in practice we see that the gradient of $\Braket{r^2(t)}$ usually stabilizes near its final value after ${\sim} 2\text{ k}$ timesteps. We can use this to get more samples for our measurements, by using different time origos. This means that when we have saved a number of states at \todoao{Finish diffusion time origo stuff}
+To measure $D$ we see from \cref{eq:diffusion_derivative} that we have to let $t\rightarrow \infty$, but in practice we see that the gradient of $\Braket{r^2(t)}$ usually stabilizes near its final value after ${\sim} 2\text{ k}$ timesteps. We can use this to get more samples for our measurements, by using different time origos. This means that when we have saved a number of states at %
+\todoao{Finish diffusion time origo stuff}
+\todoa{mention using average distance to matrix, procedure from \cref{sec:measuring_distance_to_matrix}}
+\todob{Plot of $r^2$ using standard settings ($dt$ = 20.67, 100 timesteps between states) to show approx how many origos we need to get stable gradient}
 
 % \FloatBarrier
 \section{Tetrahedral order parameter}
@@ -432,6 +437,8 @@ where $\theta_{ikj}$ is the angle between two vectors from the main point, $k$, 
         \label{fig:top_tetrahedra}%
     }%
 \end{figure}%
+
+\todoa{Write about time and atom average}
 
 % \FloatBarrier
 \section{``Distance to atom''\label{sec:distance_to_atom}}

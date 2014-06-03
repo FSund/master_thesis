@@ -1,5 +1,6 @@
 \chapter{Doing experiments}
 \todob{In experiments: mention smaug}
+\todoa{In experiments: mention phase transitions of silica and water? Water has same phase even if we have high pressure/density}
 \section{(Initialization) A typical experimental procedure\label{sec:experimental_procedure}}
 When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{akin to/mimicing} that used by \hl{actual} experiments. Since the duration of the experiments we are realistically able to simulate on are of the order $10^{-9}$ s / nanoseconds or below, we have to be smart when initializing the system, to avoid having to simulate for a long time to get to the state we want to study. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating \hl{silica/glass} is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering\todo{why do we want this structure?}. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
 %

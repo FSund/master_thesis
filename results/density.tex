@@ -1,0 +1,151 @@
+\section{Water density\label{sec:results_density}}
+% We measure the density as function of distance to the matrix in all our systems. We ended up with ``bulk'' densities in the systems ranging from around 1000 kg/m$^3$ to 1150 kg/m$^3$, so for easier comparison we have normalized the densities against the bulk density in each system. Here we have defined the bulk density as the average density of water molecules more than $\sim 10\text{ \AA}$ from the nearest silicon atom. 
+
+\hl{Measured by averaging over 200 states, with 100 timesteps of 20.67 md units between them}
+
+We first look at the water density as function of distance to the silica matrix in the four reference systems, which is plotted in \cref{fig:density_reference_systems}. We see that the densities all have the same quantitative behaviour as we move further from the silica matrix, even though the net density is very different in the four systems, with the densities stabilizing at values ranging from 1050 to almost 1150 kg/m$^3$. See \cref{tab:bulk_water_density} for the bulk water density in reference system \#1 and \#2. We also see that when we increase the overall density of water, the point where the density stops rising (near 7 \AA) seems to move closer to the silica matrix.
+
+In \cref{fig:density_rough_systems} we have plotted the water density as function of the distance to the silica matrix in the four random fracture systems. We see that the density in all four systems has very similar behaviour, and that the density seems to stabilize between 1000 and 1025 kg/m$^3$ at 10 \AA\ from the silica matrix.%
+\todoao{More}%
+%
+\begin{figure}[htpb]%
+% \centering%
+    \begin{minipage}[t]{0.499\textwidth}%
+        \captionsetup{width=0.925\textwidth}%
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_reference}%
+        \caption{%
+            Water density as function of distance to silica matrix in all four reference systems (all are flat pores). Solid lines are for 86 \AA\ wide pores and dashed lines for 14.4 and 28.8 \AA\ wide pores.\hl{FINISH CAPTION}. %
+            \label{fig:density_reference_systems}%
+        }%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
+        \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_rough}%
+        \caption{%
+            Water density as function of distance to silica matrix in all four random fracture systems. Solid lines are for regular random fractures, and dashed lines for narrow fractures with uniform width of 14.4 and 28.8 \AA\ . \hl{FINISH CAPTION}. %
+            \label{fig:density_rough_systems}%
+        }%
+    \end{minipage}%
+\end{figure}%
+
+We have estimated the bulk water density by the same technique we use for measuring water density as function of distance to the silica matrix, by averaging the Voronoi volumes for all water-oxygen atoms further away from the silica matrix than a certain distance (typically 10 \AA\ or more). This measurement requires that we have a fracture at least twice as wide as this distance, so estimating the bulk density was only possible in reference system \#1 and \#2 with a flat, constant fracture of 86 \AA, and in the two random fractured systems \#1 and \#2, which have fractures with varying width\todobo{how wide?}. We measured the bulk distance using a minimum distance to the matrix of 10 and 30 \AA\, to see if there was a difference between these two limits.
+
+The results are listed in \cref{tab:bulk_water_density}, where we have measured the bulk density for water atoms at least 10 \AA\ and at least 30 \AA\ from the silica matrix. We see that the estimated bulk density does not change if we use 10 or 30 \AA\ in the two reference systems, indicating that a limit of 10 \AA\ is probably safe. If we compare the results to the plots of the density as function of distance from the matrix in \cref{fig:density_reference_systems,fig:density_rough_systems}, we see that the density is close to the bulk density already at around 8-9 \AA.
+%
+% \begin{table}%
+%     \centering%
+%     \begin{tabular}{p{5cm}|cccc}%
+%     \textit{System}                         & Flat \#1  & Flat \#2  & Rough \#1 & Rough \#2 \\\hline%
+%     \parbox{5cm}{Bulk density [kg/m$^3$] \\ for $r>10$ \AA} & 1038.4    & 1092.7    & 1018      & 1003      \\
+%     Number of atoms                         & 49k       & 52k       & -         & -         \\
+%     Bulk density [kg/m$^3$] for $r>30$ \AA  & 1038.5    & 1090.3    & -         & -         \\
+%     Number of atoms                         & 20k       & 21k       & -         & -
+%     \end{tabular}%
+%     \vspace{8pt}%
+%     \caption{%
+%         Estimated bulk water densities. Estimated using Voronoi tesselation, averaged over voronoi volumes for all water-oxygen atoms further away from silica matrix than 10 \AA\ (hydrogen atoms were removed before Voronoi tesselation). %
+%         \label{tab:bulk_water_density}%
+%     }%
+% \end{table}%
+\begin{table}[!htb]%
+    \centering%
+    \begin{tabular}{l|cc|cc}%
+    ~               & \multicolumn{2}{c|}{$r>10$ \AA}& \multicolumn{2}{c}{$r>30$ \AA}    \\
+    \textit{System} & Density [kg/m$^3$]    & N     & Density [kg/m$^3$]    & N   \\ \hline
+    Reference \#1   & 1038.4                & 49k   & 1038.5                & 20k \\
+    Reference \#2   & 1092.7                & 52k   & 1090.4                & 21k \\
+    Rough \#1       & 1017.9                & 5.0k  & -                     & 0   \\
+    Rough \#2       & 1002.8                & 4.2k  & -                     & 0   \\
+    \end{tabular}%
+    \vspace{8pt}%
+    \caption{%
+        Estimated bulk water densities, and the number of water molecules used in calculation. Estimated using Voronoi tesselation, averaged over voronoi volumes for all water-oxygen atoms further away from silica matrix than 10 and 30 \AA\ (hydrogen atoms were removed before Voronoi tesselation). %
+        \label{tab:bulk_water_density}%
+    }%
+\end{table}%
+% bulk density (r>10.0) rough_fracture01_abel = 1018
+% bulk density (r>10.0) rough_fracture03 = 1003
+% bulk density (r>10.0) flat_square_02 = 1038
+% bulk density (r>10.0) flat_square_03 = 1094
+%
+%
+\todoa{Write about normalized densities, why we normalize, vacuum problems..}
+\todoa{Compare reference systems to rough systems}
+
+
+% We then look at the density in the four rough systems, which are plotted in \cref{fig:density_rough_systems}.
+% 
+% See \cref{fig:density_regular_and_wide_not_normalized,fig:density_regular_and_wide} for plots of the density in the two regular rough fractures, and the reference system ``flat fracture \#2'', which has a $\sim 86\text{ \AA}$ wide flat fracture. See \cref{fig:density_flat_and_wide_not_normalized,fig:density_flat_and_wide} for plots of the density in the two rough fractures with uniform widths of 14.4 and 28.8 \AA\, the reference systems with 14.4 and 28.8 \AA\ wide flat fractures, and the reference system with a 86 \AA\ wide fracture. See \cref{}
+
+
+
+% \begin{figure}[!p]%
+%     \centering%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_reference}%
+%     \caption{%
+%         Density in all four reference systems. \hl{FINISH CAPTION}. %
+%         \label{fig:density_reference_systems}%
+%     }%
+% \end{figure}%
+% 
+% \begin{figure}[!p]%
+%     \centering%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_rough}%
+%     \caption{%
+%         Density in all four rough systems. \hl{FINISH CAPTION}. %
+%         \label{fig:density_rough_systems}%
+%     }%
+% \end{figure}%
+
+
+
+%
+\begin{figure}[!p]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_regular_and_wide}%
+    \caption{%
+        Density of water. \hl{FINISH CAPTION}. %
+        \label{fig:density_regular_and_wide_not_normalized}%
+    }%
+\end{figure}%
+
+\begin{figure}[!p]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_flat_and_wide}%
+    \caption{%
+        Density of water. \hl{FINISH CAPTION}. %
+        \label{fig:density_flat_and_wide_not_normalized}%
+    }%
+\end{figure}%
+
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{number_of_molecules02}%
+%     \caption{%
+%         Number of molecules. Bin width = 0.2 \AA?. \hl{FINISH CAPTION}. %
+% %         \label{fig:cell_lists}%
+%     }%
+% \end{figure}%
+
+\begin{figure}[!p]%
+    \centering%
+    \includesvg[width=0.8\textwidth, svgpath=./images/density/]{density_water04_regular_and_wide_normalized}%
+    \caption{%
+        Relative density of water. Normalized against the approximate bulk density in each system. %
+        \label{fig:density_regular_and_wide}%
+    }%
+\end{figure}%
+
+\begin{figure}[!p]%
+    \centering%
+    \includesvg[width=0.8\textwidth, svgpath=./images/density/]{density_water04_flat_and_wide_normalized}%
+    \caption{%
+        Relative density of water. Normalized against the approximate bulk density in each system. %
+        \label{fig:density_flat_and_wide}%
+    }%
+\end{figure}%
+
+
