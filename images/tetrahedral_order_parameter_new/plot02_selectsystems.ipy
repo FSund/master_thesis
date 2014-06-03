@@ -2,18 +2,20 @@ import os.path
 import sys            # sys.exit()
 import numpy as np
 
+yaxis_factor = 100.0
+
 for select in [1,2,3]:
 
     if select == 1:
-        systems_to_plot = [0,1,7]
+        systems_to_plot = [0,1,4]
         suptitle = "Tetrahedral order parameter for\n two rough fractures, and a reference system"
         filename = "figure02_regular_and_wide.svg"
     elif select == 2:
-        systems_to_plot = [2,4,7]
+        systems_to_plot = [2,4,6]
         suptitle = "Tetrahedral order parameter for a fracture of uniform width (14.4 \\AA),\n and two reference systems"
         filename = "figure02_flat_and_wide01.svg"
     elif select == 3:
-        systems_to_plot = [3,5,7]
+        systems_to_plot = [3,4,7]
         suptitle = "Tetrahedral order parameter for a fracture of uniform width (28.8 \\AA),\n and two reference systems"
         filename = "figure02_flat_and_wide02.svg"
 
@@ -83,17 +85,18 @@ for select in [1,2,3]:
         "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/000",               # 1
         "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/000", # 2
         "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/000",               # 3
-        "flat_fracture02/10_01_measuring_every_100th_timestep/000",                         # 4
-        "flat_fracture03/10_01_measuring_every_100th_timestep/000",                         # 5
-        "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/000",         # 6
-        "flat_square_fracture03/10_01_measuring_every_100th_timestep/000",                  # 7
+        "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/000",         # 4
+        "flat_square_fracture03/10_01_measuring_every_100th_timestep/000",                  # 5
+        "flat_fracture02/10_01_measuring_every_100th_timestep/000",                         # 6
+        "flat_fracture03/10_01_measuring_every_100th_timestep/000",                         # 7
     ]
     results_folders = [os.path.join(results_folder, system) for system in systems]
     # n_systems = len(systems_to_plot)
 
     # Legends
     # legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
-    legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Flat \#1", "Flat \#2", "Flat \#3", "Flat \#4"]
+    # legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Flat \#1", "Flat \#2", "Flat \#3", "Flat \#4"]
+    legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Ref. \#1", "Ref. \#2", "Ref. \#3", "Ref. \#4"]
     # linestyles = ["-", "-", "-", "-", "--", "--", "--", "--"]
     linestyles = ["-", "-", "-", "-", "-", "-", "-", "-"]
     z_order = np.array([7,6,5,4,3,2,1,0]) # higher number -> closer to top/screen
@@ -170,7 +173,7 @@ for select in [1,2,3]:
             histogram = np.mean(histograms[idx], 0)
 
             line, = axes[idx].plot(
-                bins[idx], histogram,
+                bins[idx], histogram*yaxis_factor,
                 linestyle = linestyles[system],
                 zorder = z_order[system],
                 # linewidth = 2.0,
@@ -182,7 +185,7 @@ for select in [1,2,3]:
     ## Set up axes and ticks
     # Limits
     ax = axes[0] # all axes share x- and y-axes with axes[0]
-    ax.set_ylim([-0.002, 0.022])
+    ax.set_ylim(np.array([-0.002, 0.022])*yaxis_factor)
     ax.set_xlim([-0.6, 1.1])
 
     # Ticks
@@ -193,8 +196,8 @@ for select in [1,2,3]:
     ax.xaxis.set_major_locator(majorLocator)
     ax.xaxis.set_minor_locator(minorLocator)
 
-    majorLocator = MultipleLocator(0.005)
-    minorLocator = MultipleLocator(0.0025)
+    majorLocator = MultipleLocator(0.005*yaxis_factor)
+    minorLocator = MultipleLocator(0.0025*yaxis_factor)
     ax.yaxis.set_major_locator(majorLocator)
     ax.yaxis.set_minor_locator(minorLocator)
 
@@ -219,7 +222,7 @@ for select in [1,2,3]:
     # Add subplot titles manually, inside plots
     for idx in range(n_plots):
         ax = axes[idx]
-        ax.text(.05, .88,
+        ax.text(.05, .85,
             "\$r = %.1f\$ \\AA" %(distances_to_plot[idx]),
             horizontalalignment = 'left',
             transform = ax.transAxes
@@ -230,8 +233,10 @@ for select in [1,2,3]:
     plt.suptitle(suptitle, x = 0.5, y = 0.935) # two lines (with line break \n)
 
     # Axis labels
-    fig.text(s = "Q \\hl{unit?}", x=0.5, y=0.07, transform = fig.transFigure, ha = "center", va = "center")
-    fig.text(s = "Relative occurrence", x=0.04, y=0.5, rotation = "vertical", transform = fig.transFigure, ha = "center", va = "center")
+    fig.text(s = "Tetrahedral order parameter Q", x=0.5, y=0.07, transform = fig.transFigure, ha = "center", va = "center")
+    # fig.text(s = "Relative occurrence P(Q) [\%]", x=0.04, y=0.5, rotation = "vertical", transform = fig.transFigure, ha = "center", va = "center")
+    # for percentage:
+    fig.text(s = "Relative occurrence P(Q) [\%]", x=0.06, y=0.5, rotation = "vertical", transform = fig.transFigure, ha = "center", va = "center")
 
     ## TODO: Add legends (one for each system/color)
 

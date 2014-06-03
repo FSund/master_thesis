@@ -28,6 +28,7 @@ Q_stop = 1
 num_bins = 150
 
 bulk_distance = 10.0
+yaxis_factor = 100.0
 
 results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/tetrahedral_order_parameter/bulk_results"
 systems = [ \
@@ -39,8 +40,8 @@ n_systems = len(systems)
 
 # Legends
 # legends = ["rough01", "rough03", "rough04", "rough05", "flat02", "flat03", "flatsq02", "flatsq03"]
-legends = ["Bulk, flat \#1", "Bulk, flat \#2"]
-linestyles = ["-", "-", "--", "--"]
+legends = ["Reference \#1", "Reference \#2"]
+linestyles = ["-", "-"]
 
 def load_bulk_results(results_folder, bulk_distance):
 
@@ -94,7 +95,7 @@ for system in range(n_systems):
     idx = 0
     histogram = np.mean(histograms[idx], 0)
 
-    line, = axes[idx].plot(bins[idx], histogram,
+    line, = axes[idx].plot(bins[idx], histogram*yaxis_factor,
         linestyle = linestyles[system],
     )
     lines.append(line)
@@ -103,7 +104,7 @@ for system in range(n_systems):
 ## Set up axes and ticks
 # Limits
 ax = axes[0] # all axes share x- and y-axes with axes[0]
-ax.set_ylim([-0.001, 0.021])
+ax.set_ylim(np.array([-0.001, 0.021])*yaxis_factor)
 ax.set_xlim([-0.55, 1.05])
 
 # Ticks
@@ -114,8 +115,8 @@ minorLocator = MultipleLocator(0.25)
 ax.xaxis.set_major_locator(majorLocator)
 ax.xaxis.set_minor_locator(minorLocator)
 
-majorLocator = MultipleLocator(0.005)
-minorLocator = MultipleLocator(0.0025)
+majorLocator = MultipleLocator(0.005*yaxis_factor)
+minorLocator = MultipleLocator(0.0025*yaxis_factor)
 ax.yaxis.set_major_locator(majorLocator)
 ax.yaxis.set_minor_locator(minorLocator)
 
@@ -129,11 +130,18 @@ ax.text(.05, .88,
 )
 
 # Title
-ax.set_title("Tetrahedral order parameter")
+title = "Tetrahedral order parameter for bulk water"
+ax.set_title(title)
+# ax.text(0.5, 1.08, title,
+#      horizontalalignment='center',
+#      # fontsize=20,
+#      transform = ax.transAxes)
 
 # Axis labels
-ax.set_xlabel("Q \\hl{unit?}")
-ax.set_ylabel("Relative occurrence")
+ax.set_xlabel("Tetrahedral order parameter Q")
+ax.set_ylabel("Relative occurrence P(Q) [\%]")
+
+# ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0)) # scientific y axis
 
 # Legends
 # leg = ax.legend(fancy_legtexts, bbox_to_anchor = (0.79, 0.04), bbox_transform = fig.transFigure, borderaxespad = 0, ncol = 2, fancybox = True)
