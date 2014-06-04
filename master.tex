@@ -32,6 +32,8 @@
 % Check distance before and after \AA and \cpp and similar commands
 % Check ``htpb'' on all figures that need it (fracture frontpage thing need something else) -- search for begin\{figure\}
 % Ensure that footnote for fig:diamond_square_testing end up on correct page (\protect\footnotemark and \footnotetext doesn't know where to place the text)
+% Minimum distance below figures/captions?
+%   - Reset \textfloatsep, \intextsep and \floatsep to defaults in layout_lengths_floats.tex
 
 % TODO: Before handing in
 % Replace \include with \input 
@@ -74,7 +76,7 @@
 
 % Part 3 - Experiments
 % \includeonly{results/introduction,molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
-\includeonly{results/results} % for faster compilation, since results/systems have a lot of images
+% \includeonly{results/results} % for faster compilation, since results/systems have a lot of images
 
 
 \begin{document}
