@@ -2,6 +2,8 @@ import os.path
 import sys            # sys.exit()
 import numpy as np
 
+colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k']
+
 default_backend = 'Qt4Agg'
 default_fig_size = np.array([8.0, 6.0]) # inches
 
@@ -67,17 +69,20 @@ def load_bulk_results(results_folder, bulk_distance):
     return bins, histograms
 
 ## Create figure and axes
-fig = plt.figure(figsize = default_fig_size/1.4)
+fig = plt.figure(figsize = default_fig_size/1.8)
 
 axes = []
 axes.append(fig.add_subplot(111))
 
-# Add vertical dotted line (one single "grid line")
-for ax in axes:
-    ax.axvline(0.5, linestyle=':', color='0.25',
-        dash_capstyle = 'round',
-        linewidth = 0.5,
-    )
+# # Add vertical dotted line (one single "grid line")
+# for ax in axes:
+#     ax.axvline(0.5, linestyle=':', color='0.25',
+#         dash_capstyle = 'round',
+#         linewidth = 0.5,
+#     )
+
+# 
+average_q = np.zeros(n_systems)
 
 ## Loop over systems
 for system in range(n_systems):
@@ -100,6 +105,23 @@ for system in range(n_systems):
     )
     lines.append(line)
 
+    # Mean q
+    average_q[system] = np.sum(bins[idx]*histogram)
+
+print average_q
+
+# Add vertical dotted line where average q is
+for system in range(n_systems):
+    for ax_idx, ax in enumerate(axes):
+        ax.axvline(\
+            average_q[system], 
+            linestyle = '-', 
+            color = colors[system],
+            zorder = 0,
+            alpha = 0.5,
+            # dash_capstyle = 'round',
+            # linewidth = 0.5,
+        )
 
 ## Set up axes and ticks
 # Limits
@@ -131,11 +153,11 @@ ax.text(.05, .88,
 
 # Title
 title = "Tetrahedral order parameter for bulk water"
-ax.set_title(title)
-# ax.text(0.5, 1.08, title,
-#      horizontalalignment='center',
-#      # fontsize=20,
-#      transform = ax.transAxes)
+# ax.set_title(title)
+ax.text(0.5, 1.04, title,   # Raise title a bit
+     horizontalalignment='center',
+     # fontsize=20,
+     transform = ax.transAxes)
 
 # Axis labels
 ax.set_xlabel("Tetrahedral order parameter Q")

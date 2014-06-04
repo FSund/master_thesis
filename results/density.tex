@@ -8,30 +8,53 @@ We first look at the water density as function of distance to the silica matrix 
 In \cref{fig:density_rough_systems} we have plotted the water density as function of the distance to the silica matrix in the four random fracture systems. We see that the density in all four systems has very similar behaviour, and that the density seems to stabilize between 1000 and 1025 kg/m$^3$ at 10 \AA\ from the silica matrix.%
 \todoao{More?}%
 %
+% ---- Minipage version ---- %
+% \begin{figure}[htpb]%
+% % \centering%
+% \setlength{\myfigwidth}{0.58\textwidth}%
+% \makebox[\textwidth][c]{ % to center figures below that are wider than \textwidth
+%     \begin{minipage}[t]{\myfigwidth}%
+%         \captionsetup{width=0.925\textwidth}%
+%         \centering%
+%         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_reference}%
+%         \caption{%
+%             Water density ($\rho$) as function of distance to silica matrix ($r$) in all four reference systems (all are flat pores). Solid lines are 86 \AA\ wide flat pores and dashed lines are 14.4 and 28.8 \AA\ wide flat pores.\hl{FINISH CAPTION}. %
+%             \label{fig:density_reference_systems}%
+%         }%
+%     \end{minipage}%
+%     \hfill%
+%     \begin{minipage}[t]{\myfigwidth}% % change "b" to "t" to anchor top instead of bottom
+%         \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+%         \centering%
+%         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_rough}%
+%         \caption{%
+%             Water density ($\rho$) as function of distance to silica matrix ($r$) in all four random fracture systems. Solid lines are regular random fractures, and dashed lines are 14.4 and 28.8 \AA\ narrow fractures. \hl{FINISH CAPTION}. %
+%             \label{fig:density_rough_systems}%
+%         }%
+%     \end{minipage}%
+% }
+% \end{figure}%
+%
+% ---- Subcaption/subfigure version ---- %
 \begin{figure}[htpb]%
 % \centering%
 \setlength{\myfigwidth}{0.58\textwidth}%
 \makebox[\textwidth][c]{ % to center figures below that are wider than \textwidth
     \begin{minipage}[t]{\myfigwidth}%
-        \captionsetup{width=0.925\textwidth}%
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_reference}%
-        \caption{%
-            Water density as function of distance to silica matrix in all four reference systems (all are flat pores). Solid lines are for 86 \AA\ wide pores and dashed lines for 14.4 and 28.8 \AA\ wide pores.\hl{FINISH CAPTION}. %
-            \label{fig:density_reference_systems}%
-        }%
+        \subcaption{\label{fig:density_reference_systems}}%
     \end{minipage}%
     \hfill%
     \begin{minipage}[t]{\myfigwidth}% % change "b" to "t" to anchor top instead of bottom
-        \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_rough}%
-        \caption{%
-            Water density as function of distance to silica matrix in all four random fracture systems. Solid lines are for regular random fractures, and dashed lines for narrow fractures with uniform width of 14.4 and 28.8 \AA\ . \hl{FINISH CAPTION}. %
-            \label{fig:density_rough_systems}%
-        }%
+        \subcaption{\label{fig:density_rough_systems}}%
     \end{minipage}%
-}
+}%
+\caption{%
+    Water density ($\rho$) as function of distance to silica matrix ($r$) in \textbf{a)} all four reference systems (flat pores) and \textbf{b)} rough fracture systems. Dashed lines are 14.4 and 28.8 \AA\ \textbf{a)} flat pores and \textbf{b)} narrow, uniform width fractures. \hl{FINISH CAPTION}.
+}%
 \end{figure}%
 
 We have estimated the bulk water density by the same technique we use for measuring water density as function of distance to the silica matrix, by averaging the Voronoi volumes for all water-oxygen atoms further away from the silica matrix than a certain distance (typically 10 \AA\ or more). This measurement requires that we have a fracture at least twice as wide as this distance, so estimating the bulk density was only possible in reference system \#1 and \#2 with a flat, constant fracture of 86 \AA, and in the two random fractured systems \#1 and \#2, which have fractures with varying width\todobo{how wide?}. We measured the bulk distance using a minimum distance to the matrix of 10 and 30 \AA\, to see if there was a difference between these two limits.
@@ -106,7 +129,7 @@ The results are listed in \cref{tab:bulk_water_density}, where we have measured 
 
 
 %
-\begin{figure}[!p]%
+\begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_regular_and_wide}%
     \caption{%
@@ -115,7 +138,7 @@ The results are listed in \cref{tab:bulk_water_density}, where we have measured 
     }%
 \end{figure}%
 
-\begin{figure}[!p]%
+\begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_flat_and_wide}%
     \caption{%
@@ -133,7 +156,7 @@ The results are listed in \cref{tab:bulk_water_density}, where we have measured 
 %     }%
 % \end{figure}%
 
-\begin{figure}[!p]%
+\begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.8\textwidth, svgpath=./images/density/]{density_water04_regular_and_wide_normalized}%
     \caption{%
@@ -142,7 +165,7 @@ The results are listed in \cref{tab:bulk_water_density}, where we have measured 
     }%
 \end{figure}%
 
-\begin{figure}[!p]%
+\begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.8\textwidth, svgpath=./images/density/]{density_water04_flat_and_wide_normalized}%
     \caption{%

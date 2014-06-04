@@ -1,21 +1,25 @@
-\section{``Generation matrix''}
-\todo{replace these with results from actual fracture system?}
-Not very useful. Much of the same as distance to atom, only worse (but faster). Quantitatively much the same as distance to atom?
+\section{Manhattan distance to nearest atom}
+% \todo{replace these with results from actual fracture system?}
+%Not very useful. Much of the same as distance to atom, only worse (but faster). Quantitatively much the same as distance to atom?
 %
-\setlength{\myfigwidth}{0.90\textwidth}%
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r0745_n256}%
-    \caption{7.45 generations, Manhattan distance of $\sim 5$ \AA.}%
-    \label{fig:generation_matrix_r05}%
-\end{figure}%
+We have made 3d maps of the system labelled ``rough fracture \#2'', of the Manhattan distance to the nearest atom to each point on a grid, using the method from \cref{sec:generation_matrix}. See \cref{fig:generation_matrix_r05,fig:generation_matrix_r11} for the results.
+
+We see that the 3d maps made using this method shows a lot of the same details as the maps in \cref{fig:distance_to_atom_r05,fig:distance_to_atom_r20}, but we see that using the Manhattan distance can make the results harder to interpret, since the Manhattan distance between two points is generally shorter than the Euclidean distance.
 %
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r308_n256}%
-    \caption{30.8 generations, Manhattan distance of $\sim 20$ \AA \hl{really 20.7 because I used 30.8 instead of 29.8 generations....}.}%
-    \label{fig:generation_matrix_r11}%
-\end{figure}%
+% \setlength{\myfigwidth}{0.90\textwidth}%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r0745_n256}%
+%     \caption{7.45 generations, Manhattan distance of $\sim 5$ \AA.}%
+%     \label{fig:generation_matrix_r05}%
+% \end{figure}%
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r308_n256}%
+%     \caption{30.8 generations, Manhattan distance of $\sim 20$ \AA \hl{really 20.7 because I used 30.8 instead of 29.8 generations....}.}%
+%     \label{fig:generation_matrix_r11}%
+% \end{figure}%
 % %
 % \begin{figure}[htpb]%
 %     \centering%
@@ -23,3 +27,23 @@ Not very useful. Much of the same as distance to atom, only worse (but faster). 
 %     \caption{40 generations}%
 %     \label{fig:generation_matrix_r40}%
 % \end{figure}%
+%
+\begin{figure}[htpb]%
+    \centering%
+    \setlength{\myfigwidth}{0.9\textwidth}%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r0745_n256}%
+        \caption{Max distance $r=5.0$ \AA.%
+        \label{fig:generation_matrix_r05}}%
+    \end{subfigure}%
+    \vspace{10pt}
+    \begin{subfigure}[b]{\myfigwidth}%
+        \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r308_n256}%
+        \caption{Max distance $r=20$ \AA.%
+        \label{fig:generation_matrix_r11}}%
+    \end{subfigure}%
+    \caption{%
+        Slices of 3d maps of the system labelled ``rough fracture \#2'', made using the method from \cref{sec:generation_matrix}. The method generates a 3d map of the Manhattan distance to the nearest atom, in each point on a grid. In \textbf{a)} we have used a max distance of $\sim 8$ \AA, and in \textbf{b)} we used a max distance of $\sim 30$ \AA.%
+        \hl{CAPTION}%
+    }%
+\end{figure}%
