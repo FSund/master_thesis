@@ -22,7 +22,7 @@ for the intermolecular potential $U(\rvec)$ there are a lot of different methods
 \todob{a bit more intro about integration}
 % \todoa{Rewrite integration chapter to properly integrate appendix}
 
-It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a \hl{global/accumulated} error of the order $\mathcal{O}(\Delta t^2)$, as shown in \cref{subsec:verlet_error_liouville}, and time-reversible. 
+It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a accumulated error in energy of the order $\mathcal{O}(\Delta t^2)$ (as shown in \cref{subsec:verlet_error_liouville}), and is time-reversible. 
 
 \hl{It can be shown that the Verlet algorithm is so-called area-preserving}\cite[section 4.3.3]{frenkel2001understanding}, \hl{which means that the algorithm is compatible with energy conservation, but doesn't guarantee the absence of long-term energy drift.}
 
@@ -41,7 +41,7 @@ The Verlet method has many variations, but the simplest form (the one used by Ve
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
     \label{eq:regular_verlet}
 \end{align}
-where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$, as shown in \hl{???}.
+where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ (see \cref{appendix:verlet_taylor}).
 
 The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
 
@@ -49,9 +49,9 @@ We see that the velocity isn't explicitly calculated or used in this form of the
 \begin{align*}
     \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t},
 \end{align*}
-which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ \hl{show this}. 
+which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ (see \cref{appendix:verlet_taylor}). 
 
-The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually \hl{simply} approximated using the initial velocity, as follows
+The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually approximated using the initial velocity, as follows
 \begin{align*}
     \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
 \end{align*}
@@ -83,13 +83,13 @@ The most used form of the Velocity integration scheme is called the velocity Ver
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}, \label{eq:velocity_verlet_position}\\
     \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}, \label{eq:velocity_verlet_velocity}
 \end{align}
-with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the \hl{global/accumulated} error being of the order $\mathcal{O}(\Delta t^2)$\hl{cite/show equivalent to regular Verlet} \hl{already said that regular verlet has this error}. 
+with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the accumulated error in energy being of the order $\mathcal{O}(\Delta t^2)$ (see \cref{appendix:verlet_taylor,appendix:liouville_verlet} for more information). It can be shown that this form is equivalent to the regular Verlet method.
 
 One advantage of this form is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
 
-\hl{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
+\todobo{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
 
-The velocity Verlet algorithm is usually rewritten in the following way, \hl{to optimize the implementation on a computer}. We see that the new velocities can be written as
+The velocity Verlet algorithm is usually rewritten in the following way, to optimize the implementation on a computer. The new velocities $\vvec(t+\Delta t)$ can be written as
 \begin{align}
     \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2}, \label{eq:verlet_velocity_with_halfstep}
 \end{align}

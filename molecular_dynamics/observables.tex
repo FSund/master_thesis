@@ -1,6 +1,9 @@
-\chapter{Observables? Measurements? Pysical quantities?}
-\todoa{Move observables part to md chapter, since it's so short after moving diffusion?, or move diffusion and density back to observables chapter?}
-\todoa{Intro to observables? Some stat mech stuff?}
+% \chapter{Observables? Measurements? Pysical quantities?}
+\section{Observables}
+% \todoa{Move observables part to md chapter, since it's so short after moving diffusion?, or move diffusion and density back to observables chapter?}
+% \todoa{Intro to observables? Some stat mech stuff?}
+% We now have an efficient molecular dynamics code, that can simulate simple atoms like Argon.
+%
 % To measure an observable quantity in a simulation we must be able to express it as a function of the positions, velocities and forces on the particles in the system. 
 % 
 % According to the equipartition principle, the average total kinetic energy $\langle E_k \rangle$ is
@@ -17,6 +20,9 @@
 %
 %
 %
+%
+\todoa{Write introduction to observables. Statistical mechanics?}
+We are now ready to start doing some simple measurements on the systems we simulate. One of the most basic things we measure is the temperature and pressure in a system
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void sample(System &system) {
@@ -34,10 +40,7 @@
 }%
 \end{listing}%
 
-\todoa{Write introduction to observables}
-
-
-\section{Temperature}
+\subsection{Temperature}
 \todob{derivation of temperature?}
 According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
 \begin{align*}
@@ -76,7 +79,7 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
 
 \todod{Something about temperature in system with flow? (not that relevant for me though...)}
 
-\section{Pressure\label{subsec:pressure}}
+\subsection{Pressure\label{subsec:pressure}}
 \todoa{Mention that it's hard to measure pressure since we don't know the program, and thus can't easily calculate forces?}
 \todob{derivation of pressure? See Anderhaf}
 \todoc{we haven't measured pressure, so maybe remove this section?}

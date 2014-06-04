@@ -72,7 +72,7 @@ where $\sigma$ is the distance between where the potential is zero \hl{(the equi
 
 Even though the potential is simple, it describes many properties noble gases like Argon well, and its simplicity also means that the computational cost of calculating the forces between atoms is low. For these reasons it has been used in a lot of studies\todoco{to study what? Examples}. See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
 %
-\todob{find section for Argon parameters ref in \cref{fig:lennard-jones_potential}}%
+\tododone{find section for Argon parameters ref in \cref{fig:lennard-jones_potential}}%
 %
 \begin{figure}[htpb]%
     \centering%
@@ -154,18 +154,20 @@ If we are using higher-order potentials we can use the same optimization for the
 
 \section{Boundary conditions}
 \tododo{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
-In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center\hl{, and, depending on the potential, will not behave as intended?}. When simulating \hl{bulk} liquids and solids we remedy this by using periodic boundary conditions. This means that we repeat the \hl{simulation box} \hl{virtually} an infinite number of times in each direction, so that all atoms \hl{have a bulk-like environment}. Atom $l$ will then have what we call an \hl{\emph{image}/``image''} in all other neighbor boxes, with position
+In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center, and will most likely not behave as intended. To remedy this we use periodic boundary conditions. This means that we repeat the simulation box at the boundaries of the system, so that the atoms near the boundaries feel forces from atoms on the opposite side of the system, and in a uniform system all atoms will have a bulk-like environment. 
+
+Atom $l$ has what we call an \emph{image} in all other neighbor boxes, with position
 \begin{align}
     \rvec_l^{ijk} = \rvec_l + (iL_x, jL_y, kL_z),
     \label{eq:pbc_positions}
 \end{align}
-where $(L_x, L_y, L_z)$ is the dimensions of the box, and $(i, j, k)$ is the index of the \hl{neighbor box/periodic image box}. In reality we still have the same number of atoms, but the atoms on near the boundaries of the \hl{simulation box} will now be \hl{affected} by the atoms on the opposite side of the \hl{box}.
+where $(L_x, L_y, L_z)$ is the dimensions of the simulation box, and $(i, j, k)$ is the index of the neighbor box. We usually choose box $(0,0,0)$ as our ``origin'' box, with the corner of the box in the point $(0,0,0)$. In reality we still have the same number of atoms, but the atoms on near the boundaries of the simulation box will now feel forces from the atoms on the opposite side of the box.
 
-The first thing we have to do to implement periodic boundary conditinos is to check if any atoms have moved outside the \hl{boundaries} of the system after each time we update the position. If they have moved outside the boundaries of the system we see from \cref{eq:pbc_positions} that we can translate them back into the system by adding or subtracting \hl{system sizes} in each direction. If the boundaries of our system is $x_i \in [0, L_i]$ we can translate the atomic positions outside the boundaries to the correct positions inside the boundaries by using the modulo operator. By finding the remainder of dividing the coordinates of an atom with the system size, we get back the position of the atom translated back inside the boundaries, as follows (for the $x$-coordinate)
+The first thing we have to do to implement periodic boundary conditions is to check if any atoms have moved outside the boundaries of the system after each timestep, after updating the positions of the atoms. If they have moved outside the boundaries of the system we see from \cref{eq:pbc_positions} that we can translate them back into the system by adding or subtracting an appropriate number of system sizes $L_i$ from the coordinates that are outside the box. If the boundaries of our system is $x_i \in [0, L_i]$ we can translate the atomic positions outside the boundaries to the correct positions inside the boundaries by using the modulo operator. By finding the remainder of dividing the coordinates of an atom with the system size, we get back the position of the atom translated back inside the boundaries, as follows (for the $x$-coordinate)
 \begin{align*}
     x_i^{000} = x_i^{ijk} \bmod L_x.
 \end{align*}
-When implementing this we have to be wary of what happens if we have negative coordinates, as the modulo of a negative number has different implementations in different programming languages. To avoid this problem we usually just add one system size to each coordinate before using the modulo operator, to ensure that the coordinates are positive. In doing this we assume that no atoms have moved more than one system size in negative direction, but this shouldn't happen if we use an appropriate timestep and our integrator is working like it should.
+When implementing this we have to be wary of what happens if we have negative coordinates, as the modulo of a negative number has different implementations in different programming languages. To avoid this problem we usually just add one system size to each coordinate before using the modulo operator, to ensure that the coordinates are positive. In doing this we assume that no atoms have moved more than one system size in negative direction, but this shouldn't happen if we use an appropriate timestep and our integrator is working like it should\footnote{If we want to ensure that atoms that have moved further than one system size in any direction gets translated back into the box we can add $n$ system sizes to each coordinate before performing the modulo operation.}. 
 
 An example of how to ensure that all atomic positions are inside the boundaries of the system using the modulo operator can be seen in \cref{list:pbc}.
 \begin{listing}[!htb]%
@@ -202,9 +204,9 @@ An example of how to ensure that all atomic positions are inside the boundaries 
 }%
 \end{listing}%
 
-A consequence of using periodic boundary conditions is that each atom is now \hl{affected} by an infinite number of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \hl{\emph{minimum image convention}/``minimum image convention''} \todobo{cite mimimum image convetion}. This \hl{means/implies} that we only calculate the force between atom $i$ and the \hl{\emph{nearest/closest}} image of each atom $j$, effectively limiting the \hl{reach} of the potential to \hl{half?} the size of the system. \todo{really $L\sqrt{3}$, diagonally} \hl{In doing this we do an approximation, but this is ok??.}
+A consequence of using periodic boundary conditions is that each atom now feels the force from an infinite number of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \emph{minimum image convention} \todobo{cite mimimum image convetion?}. This implies that we only calculate the force between atom $i$ and the \emph{nearest} image of each atom $j$, effectively limiting the potential to \hl{half?} the size of the system. \todo{really $L\sqrt{3}$, diagonally} \hl{In doing this we do an approximation, but this is ok??.}
 
-To find the distance between atom $i$ and the closest image of atom $j$ we can calculate the distance between $i$ and any image of $j$, $\rvec_{ij}$, and then check if any of the components of this vector is more than half the system size in that direction. See \cref{list:minimum_image_convention} for an example of a function that finds the distance between a point $u$ and the closest image of a point $v$ using the minimum image convention.%
+To find the distance between atom $i$ and the closest image of atom $j$ we can calculate the distance between $i$ and any image of $j$, $\rvec_{ij}$, and then check if any of the components of this vector is more than half the system size in that direction\todobo{explain why?}. See \cref{list:minimum_image_convention} for an example of a function that finds the distance between a point $u$ and the closest image of a point $v$ using the minimum image convention.%
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -233,22 +235,23 @@ To find the distance between atom $i$ and the closest image of atom $j$ we can c
 \section{Optimization via force truncation\label{sec:cell_lists}}
 % \todoa{Move optimizations to main md part?}
 % \section{Verlet- and cell-lists\label{sec:cell_lists}}
-\todoa{What name should cell-lists have?}
+% \todoa{What name should cell-lists have?}
+\todob{We call it cell-lists, but the example program use ``box''}
 If we try to simulate systems with a lot of atoms using the program we now have developed, we see that the number of evaluations of the potential quickly grow with the number of atoms, scaling as $\mathcal{O}(N^2)$. To optimize the program we can limit the number of evaluations by realizing that the Lennard-Jones potential decays as $r^{-12}$, meaning that the force between most atoms will be neglible (see \cref{fig:lennard-jones_potential} for a plot of the potential). 
 
 From \cref{eq:lennard-jones_potential} we find that the equilibrium distance of the potential is $r_{\text{eq}} =  2^{1/6}\sigma \approx 3.8 \text{~\AA}$. We also find that the value of the potential has decreased to $21\%$ of the equilibrium value at a distance $r_{ij} =  5.5$, and to $0.5\%$ of the equilibrium value at a distance $r_{ij} =  3\sigma \approx 10.2\text{~\AA}$. From this we decide to truncate the potential at a cutoff distance $r_\text{cutoff} = 3\sigma$.
 
-The naive implementation of this cutoff length is to do a test inside the force calculation (for example in \mono{calculateForces} in \cref{list:calculate_forces}) and see if the distance between atom $i$ and $j$ is greater than the cutoff distance, $r_{ij} > r_\text{cutoff}$. This approach this still requires the calculation of a lot of interatomic distances, so what we do instead is to implement something called \hl{\emph{cell-lists}}. This is done by dividing the system into boxes of length 
+The naive implementation of this cutoff length is to do a test inside the force calculation (for example in \mono{calculateForces} in \cref{list:calculate_forces}) and see if the distance between atom $i$ and $j$ is greater than the cutoff distance, $r_{ij} > r_\text{cutoff}$. This approach this still requires the calculation of a lot of interatomic distances, so what we do instead is to implement something we call \emph{cell-lists}. This is done by dividing the system into (3d) cells of length 
 \begin{align*}
     l &= L/n,
 \end{align*}
-where $n$ is the number of boxes in a direction, which we calculate using the floor function $\lfloor x \rfloor$ as follows
+where $n$ is the number of cells in a direction, which we calculate using the floor function $\lfloor x \rfloor$ as follows
 \begin{align*}
     n &= \lfloor  L/r_\text{cutoff} \rfloor.
 \end{align*}
 Using the floor function guarantees that $l \geq r_\text{cutoff}$. 
 
-We then only calculate the force between atom $i$ and all atoms in the box it belongs to, and between it all atoms in the 26 neighboring boxes. Since $l\geq r_\text{cutoff}$, this means that we include all atoms within a distance of at least $r_\text{cutoff}$ in the force calculations. See \cref{fig:cell_lists} for a 2 dimensional illustration of this.
+We then only calculate the force between atom $i$ and all atoms in the cell it belongs to, and between it all atoms in the 26 neighboring cells. Since $l\geq r_\text{cutoff}$, this means that we include all atoms within a distance of at least $r_\text{cutoff}$ in the force calculations. See \cref{fig:cell_lists} for a 2-dimensional illustration of this.
 \begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.6\textwidth, svgpath=./images/lennard-jones/]{cell_list02}%
@@ -263,7 +266,7 @@ We then only calculate the force between atom $i$ and all atoms in the box it be
     }%
 \end{figure}%
 
-One issue that arises when using the cell lists is how to utilize Newton's third law. We see that after calculating the force between all atoms in cell $(i,j,k)$ and all atoms in the 26 neighboring cells, while adding the calculated forces to the other atoms using Newton's third law, we must not include that cell \hl{(cell ($(i,j,k)$))} in any other force calculations \hl{this timestep}, or else we will get double contributions from atoms in that cell. One simple way of solving this is to keep a list of all cells we have calculated the forces on so far, and then check against that every time we are calculating the force from a neighbor cell. But if we loop through the cells in the same order every time, we see that it would perhaps be more efficent to make a list over neighbor cells for each cell, so that we can just loop through a list of neighbors. \hl{But this is neglible compared to computing forces?}
+One issue that arises when using the cell lists is how to utilize Newton's third law. We see that after calculating the force between all atoms in cell $(i,j,k)$ and all atoms in the 26 neighboring cells, while adding the calculated forces to the other atoms using Newton's third law, we must not include that cell \hl{(cell $(i,j,k)$)} in any other force calculations this timestep, or else we will get double contributions from atoms in that cell. One simple way of solving this is to keep a list of all cells we have calculated the forces on so far, and then check against that every time we are calculating the force from a neighbor cell. But if we loop through the cells in the same order every time, we see that it would perhaps be more efficent to make a list over neighbor cells for each cell, so that we can just loop through a list of neighbors. \hl{But this is neglible compared to computing forces?}
 
 An implementation of the calculation of forces using cell lists can be seen in \cref{list:cutoff_forcecalculation,list:sort_atoms_into_cells,list:calculateForceFromNeighborCells}. In these examples we don't use Newton's third law for optimization, to shorten the code and make the example simpler.
 %
