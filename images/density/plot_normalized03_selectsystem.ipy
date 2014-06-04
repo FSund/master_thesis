@@ -1,0 +1,283 @@
+import numpy as np
+import math
+
+default_backend = 'Qt4Agg'
+backend = default_backend
+backend = 'SVG'
+# backend = 'AGG'
+
+if backend == "SVG":
+    import matplotlib
+    matplotlib.use(backend)
+    matplotlib.rcParams['svg.fonttype'] = 'none'    # To make text in the resulting svg actual text, instead of a path.
+    matplotlib.rcParams['savefig.dpi'] = 120        # Doesn't affect svg backend
+    matplotlib.rcParams['text.usetex'] = False      # To stop matplotlib from interpreting latex. Still interprets some stuff inside $$ though... Escape with \$ to get dollar signs in text.
+
+import matplotlib.pyplot as plt
+
+if backend == default_backend:
+    plt.ion()
+
+
+def load_results_and_calculate_mean(data_files):
+
+    # Load first file to find dimensions and r_vector. All files should have same r_vector, or the programmer has done something wrong
+    data = np.genfromtxt( # makes np.ndarray
+            data_files[0],
+            comments = '#', # Skip characters after #
+    )
+    # Columns in data files:
+    # r  n_atoms  number_density[atoms/Angstrom^3]  density[kg/m^3]
+    r_vector        = data[:,0]
+    n_atoms         = data[:,1]
+    number_density  = data[:,2]
+    density         = data[:,3]
+
+    # Load data from the rest of the files, and add to sum for mean
+    for idx, data_file in enumerate(data_files[1:]):
+    
+        data = np.genfromtxt( # makes np.ndarray
+            data_file,
+            # names = True, #  If `names` is True, the field names are read from the first valid line
+            comments = '#', # Skip characters after #
+            # delimiter = '\t', # tab separated values
+            # dtype = None # guess the dtype of each column
+        )
+        density += data[:,3]
+    
+    density /= len(data_files)
+
+    return r_vector, density
+
+def average_over_timesteps(results, n, n_timesteps_between_states):
+    
+    number_of_timesteps_to_average_over = math.floor(len(results)/float(n))
+    
+    shape = np.array(np.shape(results[:,:,0]))
+    new_shape = shape
+    new_shape[0] = n
+    
+    average_density = np.zeros(new_shape)
+    average_n_tagged_atoms = np.zeros(new_shape)
+    density_row_index = 3
+    n_tagged_atoms_row_index = 1
+    for i in range(n):
+        first = i*number_of_timesteps_to_average_over
+        last = (i+1)*number_of_timesteps_to_average_over
+        
+        average_density[i] = np.mean(results[first:last, :, density_row_index], axis=0, dtype=np.float64)
+        average_n_tagged_atoms[i] = np.mean(results[first:last, :, n_tagged_atoms_row_index], axis=0, dtype=np.float64)
+    
+    r_row_index = 0
+    r_vector = results[0, :, r_row_index] # all r values are (should be) the same in each file, so we just take the one from file # 0
+    
+    n_states = np.shape(results)[0]
+    total_n_timesteps = n_states*n_timesteps_between_states
+    timesteps_per_average = total_n_timesteps/float(n)
+    
+    timestep_vector = np.linspace(0, total_n_timesteps, n+1)
+    timestep_vector = timestep_vector.astype(int)
+    
+    return average_density, average_n_tagged_atoms, r_vector, timestep_vector
+
+def find_indices_in_range(vector, min_distance, max_distance):
+    indices = np.where((vector >= min_distance) & (vector <= max_distance))[0]
+    n_min, n_max = indices[[0,-1]]
+    
+    return n_min, n_max, indices
+
+
+for select in [1,2,3,4]:
+
+    suptitle = "Suptitle"
+    filename = "test.svg"
+    ylim_subtract = [-150, 20]
+    ylim_normal = [860, 1150]
+    min_distances = [3.0]*8
+    max_distances = [25.0]*8
+    max_distances[2] = 8.0
+    max_distances[6] = 8.0
+
+    z_order = np.array([7,6,5,4,3,2,1,0]) # higher number -> closer to top/screen
+    legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Ref \#1", "Ref \#2", "Ref \#3", "Ref \#4"]
+    linestyles = ["-", "-", "-", "-", "--", "--", "--", "--"]
+
+    suptitle = "Density of water"
+    relative_density_title = "Relative density of water"
+    reduction_factor = 1.1
+
+    if select == 1:
+        systems_to_plot = [0,1,4,5]
+        suptitle = "Density of water in random fractures, and reference systems"
+        relative_density_title = "Relative density of water in random fractures, and reference systems"
+        filename = "density_water04_regular_and_wide"
+        ylim_subtract = [-150, 20]
+
+    elif select == 2:
+        systems_to_plot = [2,3,4,5,6,7]
+        suptitle = "Density of water in narrow fractures, and reference systems"
+        relative_density_title = "Relative density of water in narrow fractures, and reference systems"
+        filename = "density_water04_flat_and_wide"
+        ylim_subtract = [-135, 20]
+
+    elif select == 3:
+        systems_to_plot = [4,5,6,7]
+        suptitle = "Density of water in reference systems"
+        filename = "density_water04_reference"
+        ylim_subtract = [-125, 20]
+        ylim_normal = [920, 1155]
+        # linestyles = ["-"]*8
+        linestyles = ["-"]*2 + ["--"]*2
+        linestyles += linestyles
+        reduction_factor = 1.7
+        legends = ["\#1", "\#2", "\#3", "\#4", "\#1", "\#2", "\#3", "\#4"]
+
+    elif select == 4:
+        systems_to_plot = [0,1,2,3]
+        suptitle = "Density of water in rough systems"
+        filename = "density_water04_rough"
+        ylim_subtract = [-150, 20]
+        ylim_normal = [860, 1050]
+        # linestyles = ["-"]*8
+        linestyles = ["-"]*2 + ["--"]*2
+        linestyles += linestyles
+        reduction_factor = 1.7
+        legends = ["\#1", "\#2", "\#3", "\#4", "Flat \#1", "Flat \#2", "Flat \#3", "Flat \#4"]
+
+    z_order = [z_order[i] for i in systems_to_plot]
+    legends = [legends[i] for i in systems_to_plot]
+    linestyles = [linestyles[i] for i in systems_to_plot]
+    min_distances = [min_distances[i] for i in systems_to_plot]
+    max_distances = [max_distances[i] for i in systems_to_plot]
+
+    ## Parameters
+    n_timesteps_between_states = 100
+    input_folders = [ \
+        "rough_fracture01_abel/12_04_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+        "rough_fracture03/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+        "rough_fracture04_same_distance/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+        "rough_fracture05/10_01_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+        "flat_square_fracture02/10_05_measuring_every_100th_timestep_200steps/new_dr0.25_n40_000/",
+        "flat_square_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+        "flat_fracture02/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+        "flat_fracture03/10_01_measuring_every_100th_timestep/new_dr0.25_n40_000/",
+    ]
+
+    results_folder = "/home/fsund/Dropbox/Masteroppgave/master/analysis/density/new_results/"
+    input_folders = [results_folder + input_folders[i] for i in systems_to_plot]
+
+    ## Load results
+    r_vectors = []
+    mean_densities = []
+
+    for input_folder in input_folders:
+        data_files = !find $input_folder -maxdepth 1 -name 'output_*.txt' | sort
+        r_vector, mean_density = load_results_and_calculate_mean(data_files)
+        r_vectors.append(r_vector)
+        mean_densities.append(mean_density)
+
+
+    ## Plot
+    default_fig_size = np.array([8.0, 6.0]) # inches
+    # inchtomm = 25.4 # mm per inch
+    # a4width = 210   # mm
+    # left = 28       # mm, margin
+    # right = 37.5    # mm, margin
+    # textwidth = a4width - (left+right)
+    # # print "textwidth = " + str(textwidth) + "mm"
+    # figwidth = 0.8*textwidth
+    # reduction_factor = default_fig_size[0]/(figwidth/inchtomm)
+    # reduction_factor = 1.1
+    # # print "reduction_factor = " + str(reduction_factor)
+
+    # Create objects
+    n_figs = 2
+    figs = []
+    axes = []
+    for i in range(n_figs):
+        figs.append(plt.figure(figsize = default_fig_size/reduction_factor))
+        axes.append(figs[i].add_subplot(111))
+
+
+    normalization_factors = np.array([ \
+        1022,
+        1014,
+        1034,
+        1019,
+        1045,
+        1097,
+        1083,
+        1138,
+    ])
+    normalization_factors = [normalization_factors[i] for i in systems_to_plot]
+
+    # Loop over systems
+    for system, density in enumerate(mean_densities):
+        r = r_vectors[system]
+
+        # Only plot data in certain r-range
+        # min_distance = 0.0
+        min_distance = 3.00000000001
+        max_distance = 25.0
+        min_distance = min_distances[system]
+        max_distance = max_distances[system]
+
+        istart = np.where(r >= min_distance)[0][0]
+        istop = np.where(r <= max_distance)[0][-1] + 1  # add 1 to include end of range
+        
+        # Densities
+        axes[0].plot(r[istart:istop], density[istart:istop],
+            label = legends[system],
+            linestyle = linestyles[system],
+        )
+
+        # Normalize against bulk
+        axes[1].plot(r[istart:istop], 
+            density[istart:istop] - normalization_factors[system],
+            label = legends[system],
+            linestyle = linestyles[system],
+        )
+
+        # axes[2].plot(r[istart:istop], 
+        #     density[istart:istop]/normalization_factors[system],
+        #     label = legends[system],
+        #     linestyle = linestyles[system],
+        # )
+
+    from matplotlib.ticker import MultipleLocator
+    minorLocator = MultipleLocator(25)
+
+    ax = axes[0]
+    ax.yaxis.set_minor_locator(minorLocator)
+    ax.set_ylim(ylim_normal)
+    ax.legend(loc = "best", fancybox = True)
+
+    ax.set_xlabel("\$r\\text{ [\AA]}\$")
+    ax.set_ylabel("\$\\rho\$ [kg/m\$^3\$]")
+    ax.set_title(suptitle)
+
+    ax = axes[1]
+    ax.set_ylim(ylim_subtract)
+    ax.legend(loc = "best", fancybox = True)
+
+    ax.set_xlabel("\$r\\text{ [\AA]}\$")
+    ax.set_ylabel("\$\\Delta \\rho\$ [kg/m\$^3\$]")
+    ax.set_title("Relative density of water")
+    ax.set_title(relative_density_title)
+
+
+    # ax = axes[2]
+    # ax.set_ylim([0.85, 1.025])
+    # ax.legend(loc = "best", fancybox = True)
+
+    # ax.set_xlabel("\$r\\text{ [\AA]}\$")
+    # ax.set_ylabel("\$\\rho/\\rho_0\$ [kg/m\$^3\$]")
+    # ax.set_title("Relative density of water")
+
+
+
+    if backend == default_backend:
+        plt.show()
+    else:
+        figs[0].savefig(filename + ".svg", bbox_inches = "tight")
+        figs[1].savefig(filename + "_normalized.svg", bbox_inches = "tight")
