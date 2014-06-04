@@ -10,7 +10,9 @@ In \cref{fig:density_rough_systems} we have plotted the water density as functio
 %
 \begin{figure}[htpb]%
 % \centering%
-    \begin{minipage}[t]{0.499\textwidth}%
+\setlength{\myfigwidth}{0.58\textwidth}%
+\makebox[\textwidth][c]{ % to center figures below that are wider than \textwidth
+    \begin{minipage}[t]{\myfigwidth}%
         \captionsetup{width=0.925\textwidth}%
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_reference}%
@@ -20,7 +22,7 @@ In \cref{fig:density_rough_systems} we have plotted the water density as functio
         }%
     \end{minipage}%
     \hfill%
-    \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
+    \begin{minipage}[t]{\myfigwidth}% % change "b" to "t" to anchor top instead of bottom
         \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_rough}%
@@ -29,6 +31,7 @@ In \cref{fig:density_rough_systems} we have plotted the water density as functio
             \label{fig:density_rough_systems}%
         }%
     \end{minipage}%
+}
 \end{figure}%
 
 We have estimated the bulk water density by the same technique we use for measuring water density as function of distance to the silica matrix, by averaging the Voronoi volumes for all water-oxygen atoms further away from the silica matrix than a certain distance (typically 10 \AA\ or more). This measurement requires that we have a fracture at least twice as wide as this distance, so estimating the bulk density was only possible in reference system \#1 and \#2 with a flat, constant fracture of 86 \AA, and in the two random fractured systems \#1 and \#2, which have fractures with varying width\todobo{how wide?}. We measured the bulk distance using a minimum distance to the matrix of 10 and 30 \AA\, to see if there was a difference between these two limits.

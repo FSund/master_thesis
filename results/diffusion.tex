@@ -15,7 +15,8 @@
 
 To produce these results we have averaged over 200 states, with 100 timesteps of 20.67 md units between each timestep ($\sim 0.5$ picoseconds\hl{???}), divided into 5 non-overlapping origos, with 40 states per origo.
 
-We first look at the diffusion as function of distance to the silica matrix in the four reference systems, which we have plotted in \cref{fig:diffusion_reference_systems}. 
+We first look at the diffusion as function of distance to the silica matrix in the four reference systems, which we have plotted in \cref{fig:diffusion_reference_systems}. We see that the diffusion constant, $D$, has similar quantitative behaviour as we move further from the silica matrix in all four reference systems, but that the actual $D$ is different in each system. The two systems with 86 \AA\ wide flat pores have diffusion constants that differ by around 10-30\%, even though those two systems should be pretty similar. The main difference between those two systems is the density, as we saw in \cref{sec:results_density}. We have listed the bulk $D$ in \cref{tab:bulk_water_diffusion}, and we see that the bulk diffusion for the two reference systems with 86 \AA\ wide flat pores is {0.202 \AA$^2$/ps}, while system \#2 has {0.179 \AA$^2$/ps}, with a difference of {13 \%}.
+%
 %
 % \begin{figure}[htpb]%
 %     \centering%
@@ -26,9 +27,8 @@ We first look at the diffusion as function of distance to the silica matrix in t
 %     }%
 % \end{figure}%
 
-We see that the diffusion constant has the similar quantitative behaviour as we move further from the silica matrix, but that the actual constant is different for each system. The four systems with 86 \AA\ wide fractures have diffusion constants that differ by around 10-30\%, even though those two systems should be pretty similar. The main difference between those two systems is the density, as we saw in \cref{sec:results_density}. We see the same thing for the bulk density, which is listed in \cref{tab:bulk_water_diffusion}, where reference system \#1 has a bulk diffusion constant of {0.202 \AA$^2$/ps}, while system \#2 has {0.179 \AA$^2$/ps}.
-
-In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as function of distance from the silica matrix for the four random fracture systems, ``rough \#1'' through 4. We again see a quantitative similar behaviour, and we see that all systems except the 14.4 \AA\ narrow fracture (``rough \#3'') have very similar diffusion constants. In \cref{tab:bulk_water_diffusion} see that the bulk diffusion constants in the two regular random fractures (\#1 and \#2) are similar, with a difference of $~6$\%, and close to the values at 8-10 \AA\ from the silica matrix in \cref{fig:diffusion_rough_systems}.%
+In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant %as function of distance from the silica matrix 
+for the four random fracture systems, ``rough \#1'' through 4. We again see a quantitative similar behaviour, and we see that all systems except the 14.4 \AA\ narrow fracture (``rough \#3'') have very similar diffusion constants. In \cref{tab:bulk_water_diffusion} see that the bulk diffusion constants in the two regular random fractures (\#1 and \#2) are similar, with a difference of {6 \%}. We also see that the $D$ for water at 7-10 \AA\ from the silica matrix is close to the bulk constant for these two systems.
 \todoao{More about diffusion?}
 %
 % \begin{figure}[htpb]%
@@ -43,7 +43,9 @@ In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as 
 %
 \begin{figure}[htpb]%
 % \centering%
-    \begin{minipage}[t]{0.499\textwidth}%
+\setlength{\myfigwidth}{0.58\textwidth}%
+\makebox[\textwidth][c]{ % to center figures below that are wider than \textwidth
+    \begin{minipage}[t]{\myfigwidth}%
         \captionsetup{width=0.925\textwidth}%
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_reference01}%
@@ -53,7 +55,7 @@ In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as 
         }%
     \end{minipage}%
     \hfill%
-    \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
+    \begin{minipage}[t]{\myfigwidth}% % change "b" to "t" to anchor top instead of bottom
         \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_rough01}%
@@ -62,6 +64,7 @@ In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as 
             \label{fig:diffusion_rough_systems}%
         }%
     \end{minipage}%
+}
 \end{figure}%
 
 % \begin{figure}[htpb]%
@@ -88,6 +91,7 @@ In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as 
 %     }%
 % \end{figure}%
 
+The bulk diffusion constants have been estimated in the two reference systems with 86 \AA\ wide flat pores (reference \#1 and \#2), and in rough system \#1 and \#2, by measuring $D$ for all water molecules further away from the silica matrix than 10 \AA. The results can be seen in \cref{tab:bulk_water_diffusion}. The other four systems have very narrow pores and fractures, with most of the water molecules closer to the silica matrix than 10 \AA\, so we haven't measured the bulk diffusion in those systems, and we don't expect much of the water to have bulk behaviour\todobo{explain this better?}.
 %
 \begin{table}[!htb]%
     \centering%
@@ -106,31 +110,57 @@ In \cref{fig:diffusion_rough_systems} we have plotted the diffusion constant as 
 \end{table}
 
 \begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=0.8\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_normal01}%
-    \caption{%
-        Diffusion for random rough fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
-%         \label{fig:cell_lists}%
-    }%
+% \centering%
+\setlength{\myfigwidth}{0.58\textwidth}%
+\makebox[\textwidth][c]{ % to center figures below that are wider than \textwidth
+    \begin{minipage}[t]{\myfigwidth}%
+        \captionsetup{width=0.925\textwidth}%
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_normal01}%
+        \caption{%
+            Diffusion for random rough fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
+    %         \label{fig:cell_lists}%
+        }%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{\myfigwidth}% % change "b" to "t" to anchor top instead of bottom
+        \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_narrow01}%
+        \caption{%
+            Diffusion for random narrow fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
+    %         \label{fig:cell_lists}%
+        }%
+    \end{minipage}%
+}
 \end{figure}%
 
-\begin{figure}[htpb]%
-    \centering%
-    \includesvg[width=0.8\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_narrow01}%
-    \caption{%
-        Diffusion for random narrow fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
-%         \label{fig:cell_lists}%
-    }%
-\end{figure}%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=0.8\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_normal01}%
+%     \caption{%
+%         Diffusion for random rough fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
+% %         \label{fig:cell_lists}%
+%     }%
+% \end{figure}%
+% 
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=0.8\textwidth, svgpath=./images/diffusion/]{diffusion_constant_move_origin_narrow01}%
+%     \caption{%
+%         Diffusion for random narrow fractures and reference systems. \hl{reference figure or remove} \hl{FINISH CAPTION}. %
+% %         \label{fig:cell_lists}%
+%     }%
+% \end{figure}%
 
-\begin{figure}[htpb]%
-    \centering%
-    \includegraphics[width=0.5\textwidth]{images/diffusion/mean_square_displacement_interesting.png}%
-    \caption{%
-        Something interesting (msd stops increasing for a couple of angstrom near 4.5-5, 5-5.5, 5.5-6.0) \hl{reference figure or remove} \hl{FINISH CAPTION}. %
-%         \label{fig:cell_lists}%
-    }%
-\end{figure}%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includegraphics[width=0.5\textwidth]{images/diffusion/mean_square_displacement_interesting.png}%
+%     \caption{%
+%         Something interesting (msd stops increasing for a couple of angstrom near 4.5-5, 5-5.5, 5.5-6.0) \hl{reference figure or remove} \hl{FINISH CAPTION}. %
+% %         \label{fig:cell_lists}%
+%     }%
+% \end{figure}%
 
 % \begin{figure}[htpb]%
 %     \centering%

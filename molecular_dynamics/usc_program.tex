@@ -1,12 +1,12 @@
 \chapter{Molecular dynamics program/code used for experiments}
 \todoa{Finish writing about sio2/water program}
-To study an advanced system like silica (SiO$_2$) and water (H$_2$O) we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. Structures like that usually will not appear if we use a simple diatomic potential like Lennard-Jones, so we use a higher order potential. We would also like to be able to simulate chemical reactions like transfer of oxygen atoms from silica to water, which requires \hl{something?}.
+To study an advanced system like silica (SiO$_2$) and water (H$_2$O) we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. To simulate the forces that make structures like that appear we need to use something more advanced than a diatomic potential Lennard-Jones, so we use a higher order potential. We would also like to be able to simulate chemical reactions like transfer of oxygen atoms from silica to water, which requires \hl{something?}.
 
 The potential implemented in the program we use in this thesis has been developed at the University of Southern California (USC) by P. Vashishta, Rajiv K. Kalia, José P. Rino and Ingvar Ebbsj\"o\cite{vashishta1990interaction}, see also\cite{shekhar2013nanobubble,shekhar2013nanobubble_supplements}. The potential contains two-body and three-body terms, and allows oxygen atoms to be transferred between silica and water. See \cref{sec:sio2_potential} for more details on the potential.
 
-The potential is implemented in a FORTRAN 77, and it has been parallellized an highly optimized for running on high-performance computing clusters like Abel. \hl{The program is unfortunately closed-source}.
+The potential is implemented in a FORTRAN 77 program, which has been parallellized an highly optimized for running on high-performance computing clusters like Abel. \hl{The program is unfortunately closed-source}.
 
-The program implements both the fast and simple Berendsen thermostat, and the more sophisticated Nos\'e-Hoover chains thermostat \hl{but we usually just use Berendsen, since we only want to change temperature, not measure NPT ensemble}.
+The program implements both the fast and simple Berendsen thermostat, and the more sophisticated Nos\'e-Hoover chains thermostat \hl{but we usually just use Berendsen, since we only want to change temperature, not measure NPT ensemble}. It also implements so-called variable time-step integrators, which saves CPU-time when we have silica and water in the same system. See \cref{sec:sio2_integrator} for more information about this.
 
 An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
@@ -161,13 +161,13 @@ The parameters used in our simulations were chosen by first determing good param
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
 \todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
-\section{Integrator}
+\section{Integrator\label{sec:sio2_integrator}}
 \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
 \todob{Plot of energy conservation here?}
 
 The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way.
 
-The integrator utilizes the fact that the vibrational frequency in water is much higher than the frequency of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. This is what is called a multiple time-scale integrator.
+The multiple time-scale integrator utilizes the fact that the vibrational frequencies in water is much higher than the frequencies of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. When using the program we use timesteps that are calculated from these vibrational frequencies, to make sure we have small enough timesteps.\todobo{more about how timestep was chosen?}
 % %
 % \begin{figure}[htpb]%
 %     \centering%
