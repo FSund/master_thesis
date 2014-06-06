@@ -1,269 +1,183 @@
 \section{Visualizations}
-We have made some renderings of the systems we have studied, as can be seen in \crefrange{fig:renderings_rough_fracture01_abel}{fig:renderings_flat_fractures}\todoao{Check that this range is correct before handing in}. All renderings and visualizations were made using the program Ovito\cite{stukowski2010ovito}, using the built-in open-source ``Tachyon'' rendering engine.
+We have made some renderings of the systems we have studied, as can be seen in \crefrange{fig:renderings_rough_fracture01_abel}{fig:renderings_flat_fractures02}\todoao{Check that this range is correct before handing in}. All renderings and visualizations were made using the program Ovito\cite{stukowski2010ovito}, using the built-in open-source ``Tachyon'' rendering engine.
 
 In the renderings in this section we have colored the silicon atoms yellow, the oxygen atoms blue, and the hydrogen atoms white. The silicon atoms have been given a radius of 1 \AA, the oxygen atoms 0.6 \AA, and the hydrogen atoms 0.3 \AA.
+
+% ---- rough_fracture01_abel ---- %
 %
 \begin{figure}[!p]%
-    \centering%
-    \setlength{\myfigwidth}{0.49\textwidth}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
-        \caption{The whole system.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
+%     \centering%
+    \setlength{\myfigwidth}{0.55\textwidth}%
+    \setlength{\myhfillwidth}{5mm}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+    %
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
+    %
+    \makebox[\textwidth][c]{%
         \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
-        \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \vspace{10pt}\\%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
-        \caption{20 \AA\ thick slice.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
-    %
-    % ---- Rendering just water atoms ---- %
-%     \begin{subfigure}[t]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_17}%
-%         \caption{Just the water molecules, viewed from above.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-    % ----
-    %
-    % ---- Rendering of the water volume ---- %
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_22}%
-        \caption{The pore volume.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    % ----
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
+            \caption{The whole system.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
+            \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
+        \end{subfigure}%
+    }%
+        \vspace{10pt}\\%
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
+            \caption{20 \AA\ thick slice.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_22}%
+            \caption{The pore volume.}%
+        \end{subfigure}%
+    }%
     \vspace{10pt}\\%
     \caption{%
-        ``Rough fracture \#1'', a randomly generated fracture with varying width. \hl{Caption} %
+        ``Rough fracture \#1'', a randomly generated fracture with varying width. Generated from two random surfaces.%
         \label{fig:renderings_rough_fracture01_abel}%
     }%
 \end{figure}%
 
+
+% ---- rough_fracture03 ---- %
 %
 \begin{figure}[!p]%
     \centering%
     \setlength{\myfigwidth}{0.55\textwidth}%
     \setlength{\myhfillwidth}{5mm}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-% Use makebox to center figures below that are wider than \textwidth
-%
-\makebox[\textwidth][c]{%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
-        \caption{The whole system.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    %\hfill%
-    \hspace{\myhfillwidth}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+    %
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
+    %
+    \makebox[\textwidth][c]{%
         \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
-        \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-}%
-    \vspace{10pt}\\%
-\makebox[\textwidth][c]{%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
-        \caption{20 \AA\ thick slice.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-%     \hfill%
-    \hspace{\myhfillwidth}%
-    %
-    % ---- Rendering just water atoms ---- %
-%     \begin{subfigure}[t]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_17}%
-%         \caption{Just the water molecules, viewed from above.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-    % ----
-    %
-    % ---- Rendering of the water volume ---- %
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_22}%
-        \caption{The pore volume.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    % ----
-}%
-    \vspace{10pt}\\%
-    \caption{%
-        ``Rough fracture \#1'', a randomly generated fracture with varying width. \hl{Caption} %
-        \label{fig:renderings_rough_fracture01_abel}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_06}%
+            \caption{The whole system.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_05}%
+            \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
+        \end{subfigure}%
     }%
-\end{figure}%
-
-%
-\begin{figure}[!p]%
-    \centering%
-    \setlength{\myfigwidth}{0.49\textwidth}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_06}%
-        \caption{The whole system.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_05}%
-        \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
     \vspace{10pt}\\%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_07}%
-        \caption{20 \AA\ thick slice.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
-    %
-    % ---- Rendering just water atoms ---- %
-%     \begin{subfigure}[t]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_08}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-    % ----
-    %
-    % ---- Rendering just water atoms ---- %
+    \makebox[\textwidth][c]{%
         \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_11}%
-        \caption{The pore volume.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    % ----
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_07}%
+            \caption{20 \AA\ thick slice.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture03_11}%
+            \caption{The pore volume.}%
+        \end{subfigure}%
+    }%
     \vspace{10pt}\\%
     \caption{%
-        ``Rough fracture \#2'', a randomly generated fracture with varying width. \hl{Caption} %
+        ``Rough fracture \#2'', a randomly generated fracture with varying width. Generated from two random surfaces.%
         \label{fig:renderings_rough_fracture03}%
     }%
 \end{figure}%
 
+
+% ---- rough_fracture04_same_distance ---- %
 %
 \begin{figure}[!p]%
     \centering%
-    \setlength{\myfigwidth}{0.49\textwidth}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_06}%
-        \caption{The whole system.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_07}%
-        \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \vspace{10pt}\\%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_05_20ang}%
-        \caption{20 \AA\ thick slice.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
+    \setlength{\myfigwidth}{0.55\textwidth}%
+    \setlength{\myhfillwidth}{5mm}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
     %
-    % ---- Rendering just water atoms ---- %
-%     \begin{subfigure}[t]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_08}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-    % ----
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
     %
-    % ---- Rendering just water atoms ---- %
+    \makebox[\textwidth][c]{%
         \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_11}%
-        \caption{The pore volume.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    % ----
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_06}%
+            \caption{The whole system.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_07}%
+            \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
+        \end{subfigure}%
+    }%
+    \vspace{10pt}\\%
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_05_20ang}%
+            \caption{20 \AA\ thick slice.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture04_11}%
+            \caption{The pore volume.}%
+        \end{subfigure}%
+    }%
     \vspace{10pt}\\%
     \caption{%
-        ``Rough fracture \#3'', a randomly generated fracture generated from one surface repeated for the top and bottom half, with 14.4 \AA\ between the surfaces, giving approximately uniform width of the pore. \hl{Caption} %
+        ``Rough fracture \#3'', a randomly generated fracture generated from one surface repeated for the top and bottom half, with 14.4 \AA\ between the surfaces, giving approximately uniform width of the pore.%
         \label{fig:renderings_rough_fracture04_same_distance}%
     }%
 \end{figure}%
 
-%
+
+% ---- rough_fracture05 ---- %
 \begin{figure}[!p]%
     \centering%
-    \setlength{\myfigwidth}{0.49\textwidth}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_05}%
-        \caption{The whole system.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_04}%
-        \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \vspace{10pt}\\%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_02_20ang}%
-        \caption{20 \AA\ thick slice.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    \hfill%
+    \setlength{\myfigwidth}{0.55\textwidth}%
+    \setlength{\myhfillwidth}{5mm}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
     %
-    % ---- Rendering just water atoms ---- %
-%     \begin{subfigure}[t]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_06}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-    % ----
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
     %
-    % ---- Rendering just water atoms ---- %
+    \makebox[\textwidth][c]{%
         \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_09}%
-        \caption{The pore volume.}%
-%         \label{fig:hex_to_tetra}%
-    \end{subfigure}%
-    % ----
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_05}%
+            \caption{The whole system.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_04}%
+            \caption{The whole system, with the size of the silicon and silica-oxygen atoms reduced to 0.1 \AA.}%
+        \end{subfigure}%
+    }%
+    \vspace{10pt}\\%
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_02_20ang}%
+            \caption{20 \AA\ thick slice.}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture05_09}%
+            \caption{The pore volume.}%
+        \end{subfigure}%
+    }%
     \vspace{10pt}\\%
     \caption{%
         ``Rough fracture \#4'', a randomly generated fracture generated from one surface repeated for the top and bottom half, with 28.8 \AA\ between the surfaces, giving approximately uniform width of the pore. \hl{Caption} %
@@ -271,51 +185,70 @@ In the renderings in this section we have colored the silicon atoms yellow, the 
     }%
 \end{figure}%
 
+
+% ---- Reference systems ---- %
 %
-\begin{figure}[htpb]%
-    \centering%
-    \setlength{\myfigwidth}{0.49\textwidth}%
-%     \setlength{\mycaptionwidth}{0.3\textwidth}%
-%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture02_03}%
-        \caption{%
-            ``Reference \#1'', a 86 \AA\ wide flat pore.  \hl{Caption} %
-        }%
-        \label{fig:renderings_flat_square_fracture02}%
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture03_04}%
-        \caption{%
-            ``Reference \#2'', a 86 \AA\ wide flat pore, with higher water density than \textbf{a)}. \hl{Caption} %
-        }%
-        \label{fig:renderings_flat_square_fracture03}%
-    \end{subfigure}%
-    \vspace{10pt}\\%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture02_03}%
-        \caption{%
-            ``Reference \#3'', a 14.4 \AA\ wide flat pore. \hl{Caption} %
-        }%
-        \label{fig:renderings_flat_fracture02}%
-    \end{subfigure}%
-    \hfill%
-    \begin{subfigure}[t]{\myfigwidth}%
-        \centering% % Need to center to get image centered over caption
-        \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture03_03}%
-        \caption{%
-            ``Reference \#4'', a 28.8 \AA\ wide flat pore. \hl{Caption} %
-        }%
-        \label{fig:renderings_flat_fracture03}%
-    \end{subfigure}%
+\begin{figure}[!p]%
+%     \centering%
+    \setlength{\myfigwidth}{0.55\textwidth}%
+    \setlength{\myhfillwidth}{5mm}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+    %
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
+    %
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture02_03}%
+            \caption{``Reference \#1''.}%
+            \label{fig:renderings_flat_square_fracture02}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-flat_square_fracture03_04}%
+            \caption{``Reference \#2''.}%
+            \label{fig:renderings_flat_square_fracture03}%
+        \end{subfigure}%
+    }%
     \vspace{10pt}\\%
     \caption{%
-        Reference systems \#1-4.
-        \label{fig:renderings_flat_fractures}%
+        Reference systems \#1 and \#2, 86 \AA\ wide flat pores.%
+        \label{fig:renderings_flat_fractures01}%
     }%
 \end{figure}%
+
+
+% ---- Reference systems ---- %
 %
+\begin{figure}[!p]%
+%     \centering%
+    \setlength{\myfigwidth}{0.55\textwidth}%
+    \setlength{\myhfillwidth}{5mm}%
+    %     \setlength{\mycaptionwidth}{0.3\textwidth}%
+    %
+    % Use makebox to center figures below that are wider than \textwidth
+    % Use \centering inside subfigure to center image over caption
+    %
+    \makebox[\textwidth][c]{%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture02_03}%
+            \caption{``Reference \#3''.}%
+            \label{fig:renderings_flat_fracture02}%
+        \end{subfigure}%
+        \hspace{\myhfillwidth}%
+        \begin{subfigure}[t]{\myfigwidth}%
+            \centering%
+            \includegraphics[width=\textwidth]{images/systems/trimmed-flat_fracture03_03}%
+            \caption{``Reference \#4''.}%
+            \label{fig:renderings_flat_fracture03}%
+        \end{subfigure}%
+    }%
+    \vspace{10pt}\\%
+    \caption{%
+        Reference systems \#3 and \#4, respective a 14.4 and a 28.8 \AA\ wide flat pore.
+        \label{fig:renderings_flat_fractures02}%
+    }%
+\end{figure}%
