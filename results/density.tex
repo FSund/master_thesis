@@ -72,36 +72,32 @@ The estimated bulk densities are listed in \cref{tab:bulk_water_density}, where 
 
 When we compare rough and flat we see that the peak/fall-off appears further from the silica in rough than flat.
 
+In \cref{fig:density_all} we have plotted the density in all eight systems we have simulated. For easier comparisons we have also tried normalizing the density against an estimated bulk density, plotted in \cref{fig:density_all_normalized}. In both figures we see the same trend as before, where the falloff for the density seems to move closer to the matrix as we increase the overall density. We see a hint of a similar trend for the minimum point of the density, but not nearly as clear as for the falloff point.
+
 %
 \begin{figure}[!p]%
     \centering%
-    \setlength{\myfigwidth}{0.88\textwidth}
-    \setlength{\mycaptionwidth}{0.09999\textwidth}
-%         \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_all}%
-%         \subcaption{}%
-%     \vspace{8pt}%
+    \setlength{\myfigwidth}{0.88\textwidth}%
+    \setlength{\mycaptionwidth}{0.09999\textwidth}%
+    %
     \begin{minipage}[c]{\myfigwidth}%
-        \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_all}%
+%         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_all}%
+        \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_all_trends}%
     \end{minipage}%
     \begin{minipage}[c]{\mycaptionwidth}%
-        \subcaption{}%
-%         \label{fig:simple_square_step}%
+        \subcaption{\label{fig:density_all}}%
     \end{minipage}%
     \\%
     \begin{minipage}[c]{\myfigwidth}%
         \includesvg[width=\textwidth, svgpath=./images/density/]{density_water04_all_normalized_divide}%
     \end{minipage}%
     \begin{minipage}[c]{\mycaptionwidth}%
-        \subcaption{}%
-%         \label{fig:simple_square_step}%
+        \subcaption{\label{fig:density_all_normalized}}%
     \end{minipage}%
     %
-%         \includesvg[width=0.7\textwidth, svgpath=./images/density/]{density_water04_all_normalized_divide}%
-%         \subcaption{}%
     \captionsetup{width=\textwidth}% since it's a floatpage figure
     \caption{%
         Density of water in all systems, as function of distance from the silica matrix. Dashed lines are reference systems, and solid lines rough fracture systems. In \textbf{(b)} the density has been normalized against the approximate bulk density, estimated from the density at 10 \AA\ from the silica matrix. %
-%         \hl{reference figure or remove} \hl{FINISH CAPTION}. %
-%         \label{fig:density_flat_and_wide_not_normalized}%
+        \label{fig:last_density_fig}%
     }%
 \end{figure}%

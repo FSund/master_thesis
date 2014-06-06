@@ -87,7 +87,7 @@ def find_indices_in_range(vector, min_distance, max_distance):
     return n_min, n_max, indices
 
 
-for select in [4,5]:
+for select in [5]:
 
     suptitle = "Suptitle"
     filename = "test.svg"
@@ -260,6 +260,13 @@ for select in [4,5]:
             linestyle = linestyles[system],
         )
 
+    # Horizontal line in normalized plot
+    axes[2].plot([0,12], [1.0,1.0],
+        linestyle = ':',
+        color = 'grey',
+        zorder = 1000,
+    )
+
     from matplotlib.ticker import MultipleLocator
     minorLocator = MultipleLocator(25)
 
@@ -297,6 +304,7 @@ for select in [4,5]:
 
 
     ax = axes[2]
+    ax.set_xlim([3,10])
     ax.set_ylim([0.85, 1.025])
     if tight_legends:
         ax.legend(loc = "best", fancybox = True, 

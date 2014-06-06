@@ -592,6 +592,12 @@ L413.664 316.329" style="fill:none;stroke:#0000ff;stroke-dasharray:6.000000,6.00
      <text style="font-family:DejaVu Sans;font-size:14.4px;font-style:normal;text-anchor:start;" transform="rotate(-0.000000, 420.864307, 321.368818)" x="420.864306818" y="321.368818182">\#4</text>
     </g>
    </g>
+   <g id="line2d_49">
+    <path clip-path="url(#p7582577d61)" d="
+M-120.644 68.0249
+M-1 68.0249
+L473.874 68.0249" style="fill:none;stroke:#808080;stroke-dasharray:1.000000,3.000000;stroke-dashoffset:0.0;"/>
+   </g>
   </g>
  </g>
  <defs>
