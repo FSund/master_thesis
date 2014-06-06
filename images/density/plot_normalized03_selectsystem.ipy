@@ -87,7 +87,7 @@ def find_indices_in_range(vector, min_distance, max_distance):
     return n_min, n_max, indices
 
 
-for select in [1,2,3,4]:
+for select in [4,5]:
 
     suptitle = "Suptitle"
     filename = "test.svg"
@@ -100,6 +100,7 @@ for select in [1,2,3,4]:
 
     z_order = np.array([7,6,5,4,3,2,1,0]) # higher number -> closer to top/screen
     legends = ["Rough \#1", "Rough \#2", "Rough \#3", "Rough \#4", "Ref \#1", "Ref \#2", "Ref \#3", "Ref \#4"]
+    tight_legends = False
     linestyles = ["-", "-", "-", "-", "--", "--", "--", "--"]
 
     suptitle = "Density of water"
@@ -143,6 +144,17 @@ for select in [1,2,3,4]:
         linestyles += linestyles
         reduction_factor = 1.7
         legends = ["\#1", "\#2", "\#3", "\#4", "Flat \#1", "Flat \#2", "Flat \#3", "Flat \#4"]
+
+    elif select == 5:
+        systems_to_plot = [0,1,2,3,4,5,6,7]
+        suptitle = "Density of water in all systems"
+        filename = "density_water04_all"
+        legends = ["\#1", "\#2", "\#3", "\#4", "\#1", "\#2", "\#3", "\#4"]
+        ylim_normal = [850, 1150]
+        tight_legends = True
+        reduction_factor = 1.1
+        relative_density_title = "Relative density of water in all systems"
+
 
     z_order = [z_order[i] for i in systems_to_plot]
     legends = [legends[i] for i in systems_to_plot]
@@ -191,7 +203,7 @@ for select in [1,2,3,4]:
     # # print "reduction_factor = " + str(reduction_factor)
 
     # Create objects
-    n_figs = 2
+    n_figs = 3
     figs = []
     axes = []
     for i in range(n_figs):
@@ -201,7 +213,8 @@ for select in [1,2,3,4]:
 
     normalization_factors = np.array([ \
         1022,
-        1014,
+        # 1014,
+        1012,
         1034,
         1019,
         1045,
@@ -224,6 +237,9 @@ for select in [1,2,3,4]:
 
         istart = np.where(r >= min_distance)[0][0]
         istop = np.where(r <= max_distance)[0][-1] + 1  # add 1 to include end of range
+
+        if systems_to_plot[system] == 1: # remove nasty point in rough_fracture03
+            istart = np.where(r >= min_distance)[0][1]
         
         # Densities
         axes[0].plot(r[istart:istop], density[istart:istop],
@@ -238,11 +254,11 @@ for select in [1,2,3,4]:
             linestyle = linestyles[system],
         )
 
-        # axes[2].plot(r[istart:istop], 
-        #     density[istart:istop]/normalization_factors[system],
-        #     label = legends[system],
-        #     linestyle = linestyles[system],
-        # )
+        axes[2].plot(r[istart:istop], 
+            density[istart:istop]/normalization_factors[system],
+            label = legends[system],
+            linestyle = linestyles[system],
+        )
 
     from matplotlib.ticker import MultipleLocator
     minorLocator = MultipleLocator(25)
@@ -250,7 +266,14 @@ for select in [1,2,3,4]:
     ax = axes[0]
     ax.yaxis.set_minor_locator(minorLocator)
     ax.set_ylim(ylim_normal)
-    ax.legend(loc = "best", fancybox = True)
+    if tight_legends:
+        ax.legend(loc = "best", fancybox = True, 
+            ncol = 2,
+            columnspacing = 1., 
+            handletextpad = 0.2,
+        )
+    else:
+        ax.legend(loc = "best", fancybox = True)
 
     ax.set_xlabel("\$r\\text{ [\AA]}\$")
     ax.set_ylabel("\$\\rho\$ [kg/m\$^3\$]")
@@ -258,7 +281,14 @@ for select in [1,2,3,4]:
 
     ax = axes[1]
     ax.set_ylim(ylim_subtract)
-    ax.legend(loc = "best", fancybox = True)
+    if tight_legends:
+        ax.legend(loc = "best", fancybox = True, 
+            ncol = 2,
+            columnspacing = 1., 
+            handletextpad = 0.2,
+        )
+    else:
+        ax.legend(loc = "best", fancybox = True)
 
     ax.set_xlabel("\$r\\text{ [\AA]}\$")
     ax.set_ylabel("\$\\Delta \\rho\$ [kg/m\$^3\$]")
@@ -266,13 +296,20 @@ for select in [1,2,3,4]:
     ax.set_title(relative_density_title)
 
 
-    # ax = axes[2]
-    # ax.set_ylim([0.85, 1.025])
-    # ax.legend(loc = "best", fancybox = True)
+    ax = axes[2]
+    ax.set_ylim([0.85, 1.025])
+    if tight_legends:
+        ax.legend(loc = "best", fancybox = True, 
+            ncol = 2,
+            columnspacing = 1., 
+            handletextpad = 0.2,
+        )
+    else:
+        ax.legend(loc = "best", fancybox = True)
 
-    # ax.set_xlabel("\$r\\text{ [\AA]}\$")
-    # ax.set_ylabel("\$\\rho/\\rho_0\$ [kg/m\$^3\$]")
-    # ax.set_title("Relative density of water")
+    ax.set_xlabel("\$r\\text{ [\AA]}\$")
+    ax.set_ylabel("\$\\rho/\\rho_0\$ [kg/m\$^3\$]")
+    ax.set_title(relative_density_title)
 
 
 
@@ -281,3 +318,4 @@ for select in [1,2,3,4]:
     else:
         figs[0].savefig(filename + ".svg", bbox_inches = "tight")
         figs[1].savefig(filename + "_normalized.svg", bbox_inches = "tight")
+        figs[2].savefig(filename + "_normalized_divide.svg", bbox_inches = "tight")
