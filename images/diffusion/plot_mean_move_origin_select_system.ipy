@@ -5,7 +5,7 @@ import os.path
 default_backend = 'Qt4Agg'
 
 backend = default_backend
-# backend = 'SVG'
+backend = 'SVG'
 
 import matplotlib
 matplotlib.use(backend)
@@ -21,7 +21,7 @@ def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_sta
     atomic_unit_of_time = 2.418884326505e-17 # seconds
     timestep = dt*atomic_unit_of_time
     time_between_statefiles = timestep*n_timesteps_between_statefiles/(1.0e-12) # picoseconds
-    print time_between_statefiles
+    # print time_between_statefiles
     
     results = np.genfromtxt( # makes np.ndarray
         results_file,
@@ -206,6 +206,10 @@ for select in [1,2,3,4,]:
         mean_diff_constant /= float(n_origins)
         first_idx_to_plot = np.where(r>=min_distance*0.99999)[0][0]
 
+        last_idx_to_plot = -1
+        if systems_to_plot[system] in [2,6]:
+            last_idx_to_plot = np.where(r>8.0)[0][0]
+
         # ax2.plot(r[first_idx:], diff[first_idx:])
 
         # print "data shape: " + str(np.shape(data))
@@ -215,8 +219,8 @@ for select in [1,2,3,4,]:
 
         # Plot lines
         ax.plot(
-            r[first_idx_to_plot:-1],   # r_vectors is one longer than data
-            mean_diff_constant[first_idx_to_plot:-1],             # last one is bulk
+            r[first_idx_to_plot:last_idx_to_plot],   # r_vectors is one longer than data
+            mean_diff_constant[first_idx_to_plot:last_idx_to_plot],             # last one is bulk
             color = colors[system%len(colors)], 
             linestyle = linestyles[system],
             label = legends[system],

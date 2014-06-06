@@ -1,7 +1,7 @@
 \section{Density of water\label{sec:results_density}}
 % We measure the density as function of distance to the matrix in all our systems. We ended up with ``bulk'' densities in the systems ranging from around 1000 kg/m$^3$ to 1150 kg/m$^3$, so for easier comparison we have normalized the densities against the bulk density in each system. Here we have defined the bulk density as the average density of water molecules more than $\sim 10\text{ \AA}$ from the nearest silicon atom. 
 
-We have measured the density of water as function of distance to the silica matrix in all of our systems, averaged over 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). The results are plotted in \crefrange{fig:first_density_fig}{fig:last_density_fig}. We measured for distances ranging from 0 to 10 \AA\ from the silica matrix, in steps of 0.25 \AA. We have also measured the bulk density in the systems where this was possible, the results of which are listed in \cref{tab:bulk_water_density}.%
+We have measured the density of water as function of distance to the silica matrix in all of our systems, averaged over 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). The results are plotted in \crefrange{fig:first_density_fig}{fig:last_density_fig}. We measured for distances ranging from 0 to 10 \AA\ from the silica matrix, in steps of 0.25 \AA. We have also measured the bulk density in the systems where this was possible, the results of which are listed in \cref{tab:bulk_water_density}. The plots start at 3.0 \AA, since water molecules closer to the silica matrix than this are most likely bound to silica atoms, and are part of the passivating silanol groups, as we saw in \cref{sec:distance_to_matrix_issues}.%
 %
 % ---- Subcaption/subfigure version ---- %
 \begin{figure}[!htb]%
@@ -67,13 +67,8 @@ We have estimated the bulk water density by the same technique we use for measur
 
 The estimated bulk densities are listed in \cref{tab:bulk_water_density}, where we have measured the bulk density for water atoms at least 10 \AA\ and at least 30 \AA\ from the silica matrix. We see that the estimated bulk density does not change if we use 10 or 30 \AA\ as the minimum distance from the matrix, indicating that a limit of 10 \AA\ is probably safe. If we compare the bulk densities to the plots of the density as function of distance from the matrix in \cref{fig:density_reference_systems,fig:density_rough_systems}, we see that the density seems to be stable close to the bulk density at around 10 \AA.
 
-\todoa{Write about normalized densities, why we normalize, vacuum problems..}
-\todoa{Compare reference systems to rough systems}
-
-When we compare rough and flat we see that the peak/fall-off appears further from the silica in rough than flat.
-
-In \cref{fig:density_all} we have plotted the density in all eight systems we have simulated. For easier comparisons we have also tried normalizing the density against an estimated bulk density, plotted in \cref{fig:density_all_normalized}. In both figures we see the same trend as before, where the falloff for the density seems to move closer to the matrix as we increase the overall density. We see a hint of a similar trend for the minimum point of the density, but not nearly as clear as for the falloff point.
-
+In \cref{fig:density_all} we have plotted the density in all eight systems we have simulated. For easier comparisons we have also tried normalizing the density against an estimated bulk density, plotted in \cref{fig:density_all_normalized}. In both figures we see the same trend as before, where the falloff for the density seems to move closer to the matrix as we increase the overall density. We see a hint of a similar trend for the minimum point of the density, but not nearly as clear as for the falloff point. We also notice that the falloff seems to be closer to the silica matrix for the rough fracture systems than for the flat pores, with the falloff being near 8 \AA\ in the rough fracture systems, but from 7 to 8 \AA\ for the flat pores, depending on the density.
+\todoa{More about these two figures}
 %
 \begin{figure}[!p]%
     \centering%
@@ -101,3 +96,28 @@ In \cref{fig:density_all} we have plotted the density in all eight systems we ha
         \label{fig:last_density_fig}%
     }%
 \end{figure}%
+
+\subsubsection*{Injection density vs. actual density}
+To check the accuracy of the method we use for filling the fractures and pores with water, we want to compare the input densities used when filling the pores to the actual resulting density in the systems. We have already found the bulk density in four of the systems, but in the other systems we are not able to measure the density in the same way. What we do in these systems (``rough fracture'' \#3 and \#4, and reference system \#3 and \#4) is to approximate the bulk density by looking at the value of the density near 10 \AA\ from the silica matrix. This should give us a somewhat useable approximation to the bulk density in the system\footnote{In rough fracture system \#3 and reference system \#3 we don't have any measurements for water molecules around 10 \AA\ from the matrix, since these systems have pores that are narrower than 20 \AA. For these systems we extrapolate the the density at 10 \AA\ from the values we have.}.
+
+The results can be seen in \cref{tab:estimate_bulk_density}. We see that using the value at 10 \AA\ gives a good approximation to the measured bulk density for the system where we are able to measure the bulk density, and that the method for filling the fractures and pores with water performs well when the pores and fracures are very large. But we also see that in the systems with very narrow pores, the method for filling the pore with water seems to struggle with acheving the wanted density. This is cause by the voxelation method we use when finding room for water molecules, as expected and noted previously.
+%
+\begin{table}[!htb]%
+    \centering%
+    \begin{tabular}{l|ccc}%
+    \textit{System} & Input $D$ [kg/m$^3$]  & Measured $D$ [kg/m$^3$]   & Approx. $D$ at 10 \AA \\ \hline
+    Reference \#1   & 1050                  & 1038                      & 1045 \\
+    Reference \#2   & 1126                  & 1093                      & 1098 \\
+    Reference \#3   & 1273                  & -                         & 1085 \\
+    Reference \#4   & 1273                  & -                         & 1135 \\
+    Rough \#1       & 1050                  & 1018                      & 1022 \\
+    Rough \#2       & 1050                  & 1003                      & 1010 \\
+    Rough \#3       & 1273                  & -                         & 1025 \\
+    Rough \#4       & 1273                  & -                         & 1016 \\
+    \end{tabular}%
+    \vspace{8pt}%
+    \caption{%
+        A comparison of the estimated and measured bulk water density in the systems we have simulated, with the input density we used when filling the fractures with water.
+        \label{tab:estimate_bulk_density}%
+    }%
+\end{table}%

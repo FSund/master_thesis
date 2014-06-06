@@ -23,7 +23,7 @@ if backend == default_backend:
 
 yaxis_factor = 100.0
 
-for select in [1,2,3,4]:
+for select in [5,6,7,8]:
 
     linestyles = ["-", "-", "-", "-", "-", "-", "-", "-"]
     # distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 8.5]) # 9.5 not available for flat_fracture02
@@ -39,6 +39,8 @@ for select in [1,2,3,4]:
     title_y_pos = 0.94
     # legend_y_pos = 0.05
     legend_y_pos = 0.04
+
+    average_vertical_line = False
 
     if select == 1:
         systems_to_plot = [0,1,4]
@@ -61,14 +63,46 @@ for select in [1,2,3,4]:
     elif select == 4:
         systems_to_plot = [0,1,2,3,4]
         suptitle = "Tetrahedral order parameter for all rough fractures \n and one reference system"
-        filename = "figure02_all_rough.svg"
+        filename = "figure02_all_rough_and_reference.svg"
         linestyles[4] = "--"
-        distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5]) # 9.5 not available for flat_fracture02
-        fig_size_factor = np.array([1.0, 1.8/2.0])
+        # distances_to_plot = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5]) # 9.5 not available for flat_fracture02
+        # fig_size_factor = np.array([1.0, 1.8/2.0])
         n_legend_cols = 3
-        x_label_y_pos = 0.03
-        title_y_pos = 0.97
-        legend_y_pos = 0.0
+        # x_label_y_pos = 0.03
+        # title_y_pos = 0.97
+        # legend_y_pos = 0.0
+
+    elif select == 5:
+        systems_to_plot = [4,5,6,7]
+        suptitle = "Tetrahedral order parameter for all reference systems"
+        filename = "figure02_all_references.svg"
+        linestyles[6] = "--"
+        linestyles[7] = "--"
+        title_y_pos = 0.92
+
+    elif select == 6:
+        systems_to_plot = [0,1,2,3]
+        suptitle = "Tetrahedral order parameter for all rough fracture systems"
+        filename = "figure02_all_rough.svg"
+        linestyles[2] = "--"
+        linestyles[3] = "--"
+        title_y_pos = 0.92
+
+    elif select == 7:
+        systems_to_plot = [0,1,4,5,6,7]
+        suptitle = "Tetrahedral order parameter for two random rough fractures\n and all reference systems"
+        filename = "figure02_normal_and_reference.svg"
+        linestyles[4:8] = ["--", "--", "--", "--"]
+        # title_y_pos = 0.92
+        n_legend_cols = 3
+
+    elif select == 8:
+        systems_to_plot = [2,3,4,5,6,7]
+        suptitle = "Tetrahedral order parameter for two uniform width random fractures\n and all reference systems"
+        filename = "figure02_narrow_and_reference.svg"
+        linestyles[4:8] = ["--", "--", "--", "--"]
+        # title_y_pos = 0.92
+        n_legend_cols = 3
 
 
     ## Settings/load
@@ -229,24 +263,27 @@ for select in [1,2,3,4]:
 
 
     # Add vertical dotted line where average q is
-    for system_idx, system in enumerate(systems_to_plot):
-        for ax_idx, ax in enumerate(axes):
-            ax.axvline(\
-                average_q[system_idx][ax_idx], 
-                linestyle = '-', 
-                color = colors[system_idx],
-                zorder = 0,
-                alpha = 0.5,
-                # dash_capstyle = 'round',
-                linewidth = 0.75,
-            )
+    if average_vertical_line:
+        for system_idx, system in enumerate(systems_to_plot):
+            for ax_idx, ax in enumerate(axes):
+                ax.axvline(\
+                    average_q[system_idx][ax_idx], 
+                    linestyle = '-', 
+                    color = colors[system_idx],
+                    zorder = 0,
+                    alpha = 0.5,
+                    # dash_capstyle = 'round',
+                    linewidth = 0.75,
+                )
     # print average_q
 
     ## Set up axes and ticks
     # Limits
     ax = axes[0] # all axes share x- and y-axes with axes[0]
-    ax.set_ylim(np.array([-0.002, 0.022])*yaxis_factor)
-    ax.set_xlim([-0.6, 1.1])
+    # ax.set_ylim(np.array([-0.002, 0.022])*yaxis_factor)
+    ax.set_ylim(np.array([-0.0005, 0.022])*yaxis_factor)
+    # ax.set_xlim([-0.6, 1.1])
+    ax.set_xlim([-0.25, 1.0])
 
     # Ticks
     from matplotlib.ticker import MultipleLocator
@@ -308,7 +345,9 @@ for select in [1,2,3,4]:
         bbox_to_anchor = (0.5, legend_y_pos), bbox_transform = fig.transFigure, borderaxespad = 0, 
         ncol = n_legend_cols, 
         fancybox = True,
-        columnspacing = 0.0, handletextpad = 0.2)
+        columnspacing = 0.0, handletextpad = 0.2,
+        fontsize = 13,
+    )
 
     if backend == default_backend:
         plt.show()

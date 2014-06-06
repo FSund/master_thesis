@@ -10,17 +10,15 @@ The program implements both the fast and simple Berendsen thermostat, and the mo
 
 An article where the program has been used to study silica and water can be seen in\cite{shekhar2013nanobubble}. See also the supplements to the article\cite{shekhar2013nanobubble_supplements}.
 
-\todob{Timestep set according to vibrational frequency of water?}
+% \todob{Timestep set according to vibrational frequency of water?}
 
-
-
-\orangebox{
-    \begin{itemize}
-        \item Variable time step integrator (hydrogen vibrations/oscillations much faster than Si-O movement/vibration)
-        \item Advanced thermostat
-        \item SiO2-oxygen vs. H2O-oxygen
-    \end{itemize}
-}
+% \orangebox{
+%     \begin{itemize}
+%         \item Variable time step integrator (hydrogen vibrations/oscillations much faster than Si-O movement/vibration)
+%         \item Advanced thermostat
+%         \item SiO2-oxygen vs. H2O-oxygen
+%     \end{itemize}
+% }
 
 % \begin{cppcode}
 % c  Reversible extended (NVT or NPT) molecular dynamics (MD) for 
@@ -51,14 +49,15 @@ An article where the program has been used to study silica and water can be seen
 % \end{cppcode}
 
 \section{Potential\label{sec:sio2_potential}}
-\orangebox{
-    \begin{itemize}
-        \item Which of the parameters given below are constants?
-        \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
-    \end{itemize}
-}
-
-The interatomic potential\cite{vashishta1990interaction} \todoco{not exactly same as vashishta, see nanobubble supplements} we use for for both silica and water consists of a two-body and a three-body part, and has the form
+% \orangebox{
+%     \begin{itemize}
+%         \item Which of the parameters given below are constants?
+%         \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
+%     \end{itemize}
+% }
+%
+The interatomic potential\cite{vashishta1990interaction} % \todoco{not exactly same as vashishta, see nanobubble supplements} 
+we use for for both silica and water consists of a two-body and a three-body part, and has the form
 \begin{align*}
     E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
 \end{align*}
@@ -67,7 +66,7 @@ for
     1\leq \{i,j,k\} \leq N.
 \end{align*}
 
-$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions. The two-body term \hl{(as lies in the name)} only depends on the interatomic distance between atom $i$ and $j$, $|\rvec_{ij}| = r_{ij} = r$, and it has the form%
+$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions. The two-body term only depends on the interatomic distance between atom $i$ and $j$, $|\rvec_{ij}| = r_{ij} = r$, and it has the form%
 \begin{align*}
     V_{ij}^{(2)} (r) = 
     \underbrace{
@@ -118,7 +117,7 @@ where the parameters are%
 \end{itemize}
 % $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
 
-$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds. This term depends on the distances between atom $i$, $j$ and $k$, and also the angle $\theta_{ijk}$ between the atoms. The term has the form\todoco{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
+$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds. This term depends on the distances between atom $i$, $j$ and $k$, and also the angle $\theta_{ijk}$ between the atoms. The term has the form %\todoco{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
 \begin{align*}
     V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
     B_{ijk} 
@@ -155,23 +154,23 @@ The parameters of the three-body term are as follows
 \end{itemize}
 
 The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then interpolating between these parameters to allow transfer of oxygen atoms between silica and water. See for example \cite{vashishta1990interaction} for more details on this. The actual details of how oxygen can be transferred between silica and water is based on the number of silicon and hydrogen neighbors an oxygen atom has.
-\todoa{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
+% \todoa{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
 
-The potential is further optimized by linearising it, meaning that the potential is calculated for example for different distances $r_{ij}$ and angles $\theta_{ijk}$, and then we can look up the values for the potential directly, without having to evaluate the potential.\todobo{refine this}
+The potential is further optimized by linearizing it, meaning that the potential is calculated for example for different distances $r_{ij}$ and angles $\theta_{ijk}$, and then we can look up the values for the potential directly, without having to evaluate the potential.\todobo{refine this}
 
 % where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
 % \todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
 \section{Integrator\label{sec:sio2_integrator}}
-\todoa{Write about integrator in USC program here (already have something about it above), or remove section}
-\todob{Plot of energy conservation here?}
-
+% \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
+% \todob{Plot of energy conservation here?}
+%
 The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. 
 
 See \cref{fig:energy_conservation_plot} for a plot of the energy over 100 000 timesteps. We see that the energy is very well conserved, with a change of 2e-6 over 100 000 timesteps.
 %
-\begin{figure}[htpb]%
+\begin{figure}[!htb]%
     \centering%
     \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
     \caption{%
@@ -180,7 +179,7 @@ See \cref{fig:energy_conservation_plot} for a plot of the energy over 100 000 ti
     }%
 \end{figure}%
 
-The multiple time-scale integrator utilizes the fact that the vibrational frequencies in water is much higher than the frequencies of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. When using the program we use timesteps that are calculated from these vibrational frequencies, to make sure we have small enough timesteps.\todobo{more about how timestep was chosen?}
+The multiple time-scale integrator utilizes the fact that the vibrational frequencies in water is much higher than the frequencies of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. When using the program we use timesteps that are calculated from these vibrational frequencies, to make sure we have small enough timesteps.%\todobo{more about how timestep was chosen?}
 
 % %
 % \begin{figure}[htpb]%
