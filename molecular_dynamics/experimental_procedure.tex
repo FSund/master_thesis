@@ -1,8 +1,8 @@
-\chapter{Doing experiments}
+\chapter{Simulation procedure}
 \todob{In experiments: mention smaug}
 \todoa{In experiments: mention phase transitions of silica and water? Water has same phase even if we have high pressure/density}
-\section{(Initialization) A typical experimental procedure\label{sec:experimental_procedure}}
-When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{akin to/mimicing} that used by \hl{actual} experiments. Since the duration of the experiments we are realistically able to simulate on are of the order $10^{-9}$ s / nanoseconds or below, we have to be smart when initializing the system, to avoid having to simulate for a long time to get to the state we want to study. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating \hl{silica/glass} is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering\todo{why do we want this structure?}. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
+\section{Initialization\label{sec:experimental_procedure}}
+When doing simulations using molecular dynamics we use a procedure akin that used by actual experiments. Since the duration of the simulations we are realistically able to simulate on are of the order $10^{-9}$ s / nanoseconds or below, we have to be smart when initializing the system, to avoid having to simulate for a long time to get to the state we want to study. This means that we should start out with the system in a configuration/state as close to the one we want to study as possible. The problem with this when simulating \hl{silica/glass} is that the silica structure formed when rapidly cooling molten silica doesn't have any long-range ordering\todo{why do we want this structure?}. Silica in the glass form has an amorph structure, which doesn't have any long-range ordering, but has short-range ordering ``well beyond the Si-O bond length''. This structure is hard to set up with an algorithm.
 %
 % \orangebox{}{
 %     \begin{itemize}
@@ -22,7 +22,7 @@ When doing \hl{``experiments''} using molecular dynamics we use a procedure \hl{
 %     \end{quote}
 % }
 
-To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, the unit cell of which can be seen in figure \cref{fig:beta_cristobalite-unit_cell}, and a larger crystal in \cref{fig:cristobalite01} \todo{Why?}. This this crystalline form consists of corner-bonded SiO$_4$ tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms. \hl{transition?} We give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}.
+To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, the unit cell of which can be seen in figure \cref{fig:beta_cristobalite-unit_cell}, and a larger crystal in \cref{fig:cristobalite01} \todo{Why?}. This this crystalline form consists of corner-bonded SiO$_4$-tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms. \hl{transition?} We give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}.
 % %
 % \begin{figure}[htpb]%
 %     \centering%
@@ -51,46 +51,137 @@ To generate silica in the glass form we first create a perfect silica crystal in
 %
 \begin{figure}[htpb]%
     \centering%
-    \includegraphics[width=0.5\textwidth]{images/beta_cristobalite/unit_cell05_cropped.png}%
+    \includegraphics[width=0.4\textwidth]{images/beta_cristobalite/unit_cell05_cropped.png}%
     \caption{%
-        $\beta$-cristobalite unit cell, with 8 silicon atoms and 16 oxygen atoms. \hl{FINISH CAPTION}%
+        $\upbeta$-cristobalite unit cell, with 8 silicon atoms and 16 oxygen atoms. \hl{FINISH CAPTION}%
     }%
     \label{fig:beta_cristobalite-unit_cell}%
 \end{figure}%
 
-We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. Since we are mainly interested in controlling the temperature at this stage, the Berendsen thermostat is used for these temperature changes. We alternate between using a thermostat to adjust the temperature, and simulating with the thermostat off, to let the system thermalize and react to the temperature change after applying the thermostat. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse. \todob{Reference figures below, say something about energy conservation \cref{fig:plot_heat_melt_sio2,fig:plot_energy_conservation}}
-\todob{Silica phase diagram? for melting, phases etc.}
-
-We now have a thermalized and \hl{(hopefully)} realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
-
-We are now ready to do measurements.
+We then heat the system to 4500 K in steps of 700 K to melt the silica crystal. Since we are mainly interested in controlling the temperature at this stage, the Berendsen thermostat is used for these temperature changes. We alternate between using a thermostat to adjust the temperature, and simulating with the thermostat off, to let the system thermalize and react to the temperature change after applying the thermostat. The number of timesteps we used for the thermostat period is around 2 500, and for the thermalization period around 10 000. We then cool the system by doing the previous procedure in reverse. See \cref{fig:plot_heat_melt_sio2} for a plot of the temperature as function of time while we melt and cool down the system, and \cref{fig:initialization_step00} for a visualization of a perfect crystal of $\upbeta$-cristobalite, and \cref{fig:initialization_step02} for amorphous, solid silica.%
 %
 \begin{figure}[htpb]%
     \centering%
-    \begin{subfigure}[c]{0.45\textwidth}%
-%         \begin{minipage}[c]{\textwidth}%
-        \includegraphics[width=\textwidth]{images/melt_glass/perfect_crystal02_cropped}%
-%         \end{minipage}%
-%         \caption{\cite{wikiCristobalite01}}%
+    \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+    \caption{%
+        Plot of the temperature (in kilo-Kelvin) as function of timesteps when melting and cooling down a silica system, using the Berendsen thermostat. We use timesteps of 0.050 picoseconds, and use 2 500 timesteps with the thermostat turned on, and then 10 000 timesteps to let the system thermalize (with the thermostat off), for each step in temperature. 
+%         in kilo-Kelvin. Caption Caption Caption Caption Caption Caption Caption Caption %
+        \label{fig:plot_heat_melt_sio2}%
+    }%
+\end{figure}%
+%
+% \todob{Reference figures below, say something about energy conservation \cref{fig:plot_heat_melt_sio2,fig:plot_energy_conservation}}
+\todoco{Silica phase diagram? for melting, phases etc. - Not needed according to Malthe}
+
+The initialization procedure is visualized in \cref{fig:initialization_steps}, and can be summed up as follows
+\begin{itemize}
+    \item Generate a perfect crystal of $\beta$-cristobalite of the wanted size (\cref{fig:initialization_step00}).
+    \item Heat the system to well above the melting point of silica (we usually use 4 500 Kelvin, using a thermostat (Berendsen) (\cref{fig:initialization_step01}).
+    \item Cool down the system to well below the glass-transition temperature (we use 300 Kelvin), using a thermostat (Berendsen) (\cref{fig:initialization_step02}).
+    \item Cut out the fracture (\cref{fig:initialization_step03}).
+    \item Passivate the dangling ends and apply steepest descent to let the passivation atoms find their optimal positions (\cref{fig:initialization_step04}).
+    \item Fill the pore with water, and thermalize the system at 300 K (\cref{fig:initialization_step05}).
+\end{itemize}
+%
+\begin{figure}[htpb]%
+%     \captionsetup{width=1.4\textwidth}%
+    \setlength{\myfigwidth}{0.35\textwidth}%
+    %
+    \setlength{\myhfillwidth}{1.5cm}%
+    \centering%
+    \begin{subfigure}[t]{\myfigwidth}
+        \captionsetup{width=1.1\textwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/00_10}%
         \caption{%
-            \label{fig:cristobalite01}%
+            Perfect $\upbeta$-cristobalite crystal.%
+            \label{fig:initialization_step00}%
+        }%
+        \hspace{8pt}
+    \end{subfigure}%
+    \hspace{\myhfillwidth}%
+    \begin{subfigure}[t]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/01_10}%
+        \caption{%
+            Silica heated to 4500 K.%
+            \label{fig:initialization_step01}%
+        }%
+        \hspace{8pt}
+    \end{subfigure}%
+    \\%
+    \begin{subfigure}[t]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/02_10}%
+        \caption{%
+            Silica cooled to 300 K.%
+            \label{fig:initialization_step02}%
         }%
     \end{subfigure}%
-    \hspace{0.07\textwidth}%
-    \begin{subfigure}[c]{0.45\textwidth}%
-%         \begin{minipage}[c]{\textwidth}%
-        \includegraphics[width=\textwidth]{images/melt_glass/melted02_cropped}%
-%         \end{minipage}%
-%         \caption{\cite{wikiCristobalite02}}%
-        \caption{}%+
-%         \label{fig:cristobalite02}%
+    \hspace{\myhfillwidth}%
+    \begin{subfigure}[t]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/03_10}%
+        \caption{%
+            Fracture cut out.%
+            \label{fig:initialization_step03}%
+        }%
+        \hspace{8pt}
     \end{subfigure}%
+    \\%
+    \begin{subfigure}[t]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/04_10}%
+        \caption{%
+            Dangling ends passivated.%
+            \label{fig:initialization_step04}%
+        }%
+        \hspace{8pt}
+    \end{subfigure}%
+    \hspace{\myhfillwidth}%
+    \begin{subfigure}[t]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/experimental_procedure/05_10}%
+        \caption{%
+            Pore filled with water.%
+            \label{fig:initialization_step05}%
+        }%
+        \hspace{8pt}
+    \end{subfigure}%
+    \captionsetup{width=\textwidth}%
     \caption{%
-        Fig%
-        \label{fig:melted_glass}%
+        Visualizations of the different stages of initialization of a fracture in silica filled with water. We show a $75\times 75\times 25$ \AA\ slice of a much larger system $(172 \text{ \AA})^3$. The silicon atoms are yellow, the silica-oxygen blue, and hydrogen and water-oxygen red. %
+        \label{fig:initialization_steps}%
     }%
 \end{figure}%
 
+\todoa{Write about steepest descent?}
+We now have a thermalized and (hopefully) realistic silica crystal at near room temperature. From this crystal we cut out the fracture, passivate using one of the passivation methods, and fill the fracture with water molecules, \hl{and use steepest descent}. After filling the fracture with water we need to thermalize the system again, since the energy (and thereby the temperature) changes when we remove and insert atoms.
+
+%
+% \begin{figure}[htpb]%
+%     \centering%
+%     \begin{subfigure}[c]{0.45\textwidth}%
+% %         \begin{minipage}[c]{\textwidth}%
+%         \includegraphics[width=\textwidth]{images/melt_glass/perfect_crystal02_cropped}%
+% %         \end{minipage}%
+% %         \caption{\cite{wikiCristobalite01}}%
+%         \caption{%
+%             Perfect $\upbeta$-cristobalite crystal.
+%             \label{fig:cristobalite01}%
+%         }%
+%     \end{subfigure}%
+%     \hspace{0.07\textwidth}%
+%     \begin{subfigure}[c]{0.45\textwidth}%
+% %         \begin{minipage}[c]{\textwidth}%
+%         \includegraphics[width=\textwidth]{images/melt_glass/melted02_cropped}%
+% %         \end{minipage}%
+% %         \caption{\cite{wikiCristobalite02}}%
+%         \caption{%
+%             Amorphous, solid silica.
+%             \label{fig:cristobalite02}%
+%         }%
+%     \end{subfigure}%
+%     \caption{%
+%         Visualizations of \textbf{a)} a perfect $\upbeta$-cristobalite crystal, and \textbf{b)} amorphous, solid silica.%
+%         \label{fig:melted_glass}%
+%     }%
+% \end{figure}%
+%
 % %
 % \begin{figure}[htpb]%
 %     \centering%
@@ -115,30 +206,31 @@ We are now ready to do measurements.
 %     }%
 % \end{figure}%
 %
-\begin{figure}[htpb]%
-% \centering%
-    \begin{minipage}[t]{0.499\textwidth}%
-        \captionsetup{width=0.925\textwidth}%
-        \centering%
-%         \includesvg[width=0.8\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
-        \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
-        \caption{%
-            Temperature in kilo-Kelvin. Caption Caption Caption Caption Caption Caption Caption Caption %
-            \label{fig:plot_heat_melt_sio2}%
-        }%
-    \end{minipage}%
-    \hfill%
-    \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
-    \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
-        \centering%
-%         \includegraphics[width=0.8\textwidth]{images/voronoi/3d_diagram04_crop.png}%
-        \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
-        \caption{%
-            Relative difference in energy from mean (mean was $-5.56$ in MD units) for simulation over 100k timesteps ($\sim 50$ picoseconds).%
-            \label{fig:plot_energy_conservation}%
-        }%
-    \end{minipage}%
-\end{figure}%
+% \begin{figure}[htpb]%
+% % \centering%
+%     \begin{minipage}[t]{0.499\textwidth}%
+%         \captionsetup{width=0.925\textwidth}%
+%         \centering%
+% %         \includesvg[width=0.8\textwidth, svgpath=./images/voronoi/]{2d_diagram03}%
+%         \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system00_temperature_melt_cool}%
+%         \caption{%
+%             Temperature in kilo-Kelvin. Caption Caption Caption Caption Caption Caption Caption Caption %
+%             \label{fig:plot_heat_melt_sio2}%
+%         }%
+%     \end{minipage}%
+%     \hfill%
+%     \begin{minipage}[t]{0.499\textwidth}% % change "b" to "t" to anchor top instead of bottom
+%     \captionsetup{width=0.925\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+%         \centering%
+% %         \includegraphics[width=0.8\textwidth]{images/voronoi/3d_diagram04_crop.png}%
+%         \includesvg[width=\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
+%         \caption{%
+%             Relative difference in energy from mean (mean was $-5.56$ in MD units) for simulation over 100k timesteps ($\sim 50$ picoseconds).%
+%             \label{fig:plot_energy_conservation}%
+%         }%
+%     \end{minipage}%
+% \end{figure}%
+
 
 % %
 % \begin{figure}[htpb]%
@@ -161,19 +253,19 @@ Since we are going to inject water into the pore later on, we want to use the co
 meaning that hydrogen (H) and hydroxide (OH) will be freely available in the system after filling the pore with water. On this background we choose to passivate the system using hydrogen and hydroxide. To avoid getting an \hl{acidic or alkaline / charged?} system after the passivation procedure we should make sure to use equal parts hydrogen and hydroxide when passivating.\todo{we don't whink of this when cutting though...}
 
 \subsection{Passivating using hydrogen and hydroxide}
-After thermalizing our silica system we end up with a system consisting almost exclusively of SiO$_2$ tetrahedra\todo{source? what is the rest?}. These tetrahedra are each formed by four oxygen atoms, one in each corner, and a silicon atom in the center. Each of these tetrahedra are then bonded to four other tetrahedra, by sharing the oxygen atoms in the corners. This way each oxygen atom is bonded to two silicon atoms, and each silicon atom to four oxygen atoms, giving an average chemical \hl{formula} of SiO$_2$. 
+After thermalizing our silica system we end up with a system consisting almost exclusively of SiO$_2$ tetrahedra\todo{source? what is the rest?}. These tetrahedra are each formed by four oxygen atoms, one in each corner, and a silicon atom in the center. Each of these tetrahedra are then bonded to four other tetrahedra, by sharing the oxygen atoms in the corners. This way each oxygen atom is bonded to two silicon atoms, and each silicon atom to four oxygen atoms, giving an average chemical formula of SiO$_2$. 
 
-Since we don't take \hl{chemical bonds (we have no bonds...)} into consideration when removing atoms to create a fracture, we end up with some incomplete tetrahedra, with some silicon atoms bonded to less than four oxygen atoms, and some oxygen atoms bonded to less than two silicon atoms. See \cref{fig:passivation} for an illustration of three different incomplete tetrahedra. This creates what we call dangling ends/unsaturated bonds, which we want to \hl{remove/passivate}.
+Since we don't take chemical bonds into consideration when removing atoms to create a fracture, we end up with some incomplete tetrahedra, with some silicon atoms bonded to less than four oxygen atoms, and some oxygen atoms bonded to less than two silicon atoms. See \cref{fig:passivation} for an illustration of three different incomplete tetrahedra. This creates what we call dangling ends or unsaturated bonds, which we want to passivate.
 
 % When inserting hydrogen and hydroxide we want to insert them in positions that are close to their equilibrium positions, so we don't have to do a lot of simulating to get a stabilized system after passivating. It's possible to calculate the optimal positions based on the potential and the positions of the existing atoms, but this is a complicated computation, that we can avoid, by instead realizing that the optimal positions for the oxygen atoms we insert will most likely \hl{(source?)} be close to the positions that complete the SiO$_2$ tetrahedra. These positions can be calculated, using simple geometry, from the positions of the oxygen atoms each silicon atom is bonded to.
 
-To passivate the silicon atoms that are \hl{bonded} to less than four oxygen atoms, we see that we need to complete the incomplete SiO$_4$ tetrahedra that have been created in the system. But if we only insert oxygen atoms in the positions of the missing oxygen atoms, we end up with new dangling \hl{ends/bonds}, since the inserted oxygen atoms will only be bonded to one silicon atom. But, as we just saw, we will have hydroxide (OH) groups available in the system after filling the fracture with water. So instead of inserting oxygen atoms and creating new unsaturated bonds, we insert hydroxide groups and create saturated Si-O-H \hl{bonds}. \hl{ SiO$_n$(OH)$_{4-n}$ tetrahedra.} We put the hydrogen atom so that the Si-O-H angle is close to the angle in water molecules, 107.5 degrees. \hl{The hydrogen atoms moves very rapidly compared to the rest of the species in the system, so they will quicly find the equilibrium position.}
+To passivate the silicon atoms that are bonded to less than four oxygen atoms, we see that we need to complete the incomplete SiO$_4$ tetrahedra that have been created in the system. But if we only insert oxygen atoms in the positions of the missing oxygen atoms, we end up with new dangling ends, since the inserted oxygen atoms will only be bonded to one silicon atom. But, as we just saw, we will have hydroxide (OH) groups available in the system after filling the fracture with water. So instead of inserting oxygen atoms and creating new unsaturated bonds, we insert hydroxide groups and create saturated Si-O-H bonds. \hl{ SiO$_n$(OH)$_{4-n}$ tetrahedra.} We put the hydrogen atom so that the Si-O-H angle is close to the angle in water molecules, 107.5 degrees. \hl{The hydrogen atoms moves very rapidly compared to the rest of the species in the system, so they will quicly find the equilibrium position, meaning that the exact position of the hydrogen atoms is not that important.}
 
 To passivate the oxygen atoms that are bonded to only one silicon atom, we can use the hydrogen atoms that are avilable after filling the fracture with water, turning unsaturated SiO-groups into the same saturated Si-O-H-groups as before. We here too insert the hydrogen atoms with the Si-O-H angle close to 107.5 degrees.
 
 In total we use the following procedure to passivate a system after creating a fracture:
 \begin{itemize}
-    \item Remove all silicon and oxygen atoms that aren't bonded to any atoms, since they are \hl{essentially} not part of the silica \hl{crystal/matrix}.
+    \item Remove all silicon and oxygen atoms that aren't bonded to any atoms, since they are essentially not part of the silica matrix.
     \item Add one hydrogen atom to all oxygen atoms bonded to only one silicon atom. The hydrogen atoms are inserted approximately $0.95\text{ \AA}$ from the oxygen atoms, with the hydrogen atom pointing away from the silicon atom, and with the Si-O-H angle close to 107.5 degrees.
     \item Add ($4-n$) hydroxide \hl{molecules/groups} to silicon atoms bonded to $(1\leq n<4)$ oxygen atoms. We assume that the most stable position for the oxygen in the hydroxide groups are close to the tetrahedral positions of the missing oxygen atoms, and insert the hydroxide groups in these positions. %
     %See \cref{fig:pass_tet01,fig:pass_tet02,fig:pass_tet03} for the three different cases. 
@@ -183,35 +275,36 @@ The lengths used are approximate experimental lengths found in naturally occurin
 %
 \begin{figure}[htpb]%
     \centering%
-    \begin{subfigure}[b]{0.24\textwidth}%
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01.png}%
+    \setlength{\myfigwidth}{0.17\textwidth}
+    \begin{subfigure}[c]{0.8\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra01_01.png}%
         \caption{}%
 %         \caption{Illustration of how to divide a convex hexahedron into five tetraheda.}%
         \label{fig:pass_tet01}%
     \end{subfigure}%
-%     \hspace{5mm}%
-    \begin{subfigure}[b]{0.24\textwidth}%
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02.png}%
+    \hspace{1cm}%
+    \begin{subfigure}[c]{\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra02_01.png}%
         \caption{}%
 %         \caption{A random fracture made from two periodic heightmaps.}%
         \label{fig:pass_tet02}%
     \end{subfigure}%
-%     \hspace{5mm}%
-    \begin{subfigure}[b]{0.24\textwidth}%
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03.png}%
+    \hspace{1cm}%
+    \begin{subfigure}[c]{1.1\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra03_01.png}%
         \caption{}%
 %         \caption{A random fracture made from two periodic heightmaps.}%
         \label{fig:pass_tet03}%
     \end{subfigure}%
-%     \hspace{5mm}%
-    \begin{subfigure}[b]{0.24\textwidth}%
-        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04.png}%
+    \hspace{1cm}%
+    \begin{subfigure}[c]{1.1\myfigwidth}%
+        \includegraphics[width=\textwidth]{images/passivation/tetrahedra04_01.png}%
         \caption{}%
 %         \caption{A random fracture made from two periodic heightmaps.}%
 %         \label{fig:fracture_model}\caption{}%
     \end{subfigure}%
     \caption{%
-        Illustration of four different incomplete silica tetrahedra, with respectively one, two, and three missing oxygen atoms. \hl{UNNECESSARY FIGURE?}
+        Illustration of four different incomplete silica tetrahedra, with respectively one, two, three and no missing oxygen atoms (\textbf{(d)} is a complete silica tetrahedra).%
     }%
     \label{fig:passivation}%
 \end{figure}%
@@ -286,13 +379,14 @@ To do this we \hl{yet again} use the voxelation method from \ref{sec:voxelation}
 \begin{figure}[htpb]%
     \centering%
     \includesvg[width=0.5\textwidth, svgpath = ./images/passivation/]{select_surface_voxels06}%
-    \caption{
-        Illustration of a method for finding atoms and voxels at the surface of a fracture. All gray voxels are occupied voxels (with at least one atom in them), and the dark gray voxels are the voxels with at least one unoccupied neighbor voxel. \hl{FINISH} \hl{change to v1 of illustration?} \hl{what size shoud fig be? 0.4 maybe a bit small?}
+    \caption{%
+        Illustration of a method for finding atoms and voxels at the surface of a fracture. All gray voxels are occupied voxels (with at least one atom in them), and the dark gray voxels are the voxels with at least one unoccupied neighbor voxel. %
+        %\hl{FINISH} \hl{change to v1 of illustration?} \hl{what size shoud fig be? 0.4 maybe a bit small?}%
     }%
     \label{fig:find_surface_atoms}%
 \end{figure}%
 
-\subsection{Results/examples}
+\subsection{Passivation examples}
 An example of a system after passivation can be seen in \cref{fig:passivation_example}. Here we see hydrogen and ???
 %
 \begin{figure}[htpb]%
@@ -428,7 +522,8 @@ To solve this we assign a radius to each atom type\todo{which is hard, Si-O, ???
     \caption[
         To find voxels that make up the void/pore in we can either \textbf{a)} mark the voxel each existing atom belongs in as occupied, or \textbf{b)} mark all voxels within a radius from each atom as occupied. We can assign a different radius to each atom. We have illustrated using part of a silica tetrahedra, with one silicon atom (the large blue dot) and two oxygen atoms (the smaller red dot). The center of each voxel is marked by a dot 
     ]{%
-        To find voxels that make up the void/pore in we can either \textbf{a)} mark the voxel each existing atom belongs in as occupied, or \textbf{b)} mark all voxels within a radius from each atom as occupied. We can assign a different radius to each atom. We have illustrated using part of a silica tetrahedra, with one silicon atom (\includegraphics[scale=0.8]{./images/inject_water/silicon.pdf}) and two oxygen atoms (\raisebox{0.3ex}{\includegraphics[scale=0.8]{./images/inject_water/oxygen.pdf}}). The center of each voxel is marked by a dot. \hl{Maybe change to v01 of images?} \hl{This voxel size is pretty tiny...}
+        To find voxels that make up the void/pore in we can either \textbf{a)} mark the voxel each existing atom belongs in as occupied, or \textbf{b)} mark all voxels within a radius from each atom as occupied. We can assign a different radius to each atom. We have illustrated using part of a silica tetrahedra, with one silicon atom (\includegraphics[scale=0.8]{./images/inject_water/silicon.pdf}) and two oxygen atoms (\raisebox{0.3ex}{\includegraphics[scale=0.8]{./images/inject_water/oxygen.pdf}}). The center of each voxel is marked by a dot. %
+        %\hl{Maybe change to v01 of images?} \hl{This voxel size is pretty tiny...}%
     }%
     \label{fig:inject_empty_voxel}%
 \end{figure}%

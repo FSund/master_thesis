@@ -111,7 +111,7 @@ The simplest form of the Nosé-Hoover type thermostats is the Nosé-Hoover therm
     \dot \rvec &= \vvec \label{eq:nose_hoover_velocity}\\
     \Fvec &= -\nabla U(\rvec) - \xi m \vvec, \label{eq:nose_hoover_force}
 \end{align}
-where the friction coefficient generally depends on time, $\xi = \xi(t)$, and the choice of $\xi(t)$ determines the characteristics of the thermostat. See \cref{appendix:appendix:nose_hoover} for a derivation of this. \todoao{write more about this time dependence? transition to below}
+where the friction coefficient generally depends on time, $\xi = \xi(t)$, and the choice of $\xi(t)$ determines the characteristics of the thermostat. See \cref{appendix:nose_hoover} for a derivation of this. \todoao{write more about this time dependence? transition to below}
 
 If we try to integrate these equations of motion using our integrator of choice, the velocity Verlet algorithm, a problem with using this thermostat will become apparent. The velocity Verlet integrator has the followin form (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
 \begin{align*}

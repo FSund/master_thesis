@@ -1,8 +1,11 @@
-\chapter{Other measurements???}
+\chapter{Measurements}
 % \section{Voxelation, calculating distances, finding neighbors, neighbor lists, periodicity tricks\label{sec:voxelation}}
-
-\section{Measuring as function of distance from matrix\label{sec:measuring_distance_to_matrix}}
-\todoa{Finish measuring as function of distance from matrix}
+% \section{}
+%
+%
+\section{Measuring as function of distance to matrix\label{sec:measuring_distance_to_matrix}}
+\todoa{Why measure as function of distance to matrix?}
+% \todoa{Finish measuring as function of distance from matrix}
 % Mean distance from matrix in range --> if we limit the standard deviation as well, we're effectively limiting temperature, or diffusion??
 % When measuring things like density, diffusion, and the tetrahedral order parameter in a nanoporous system, we often want to study the behaviour of 
 
@@ -262,7 +265,9 @@ where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of
 \[
     \rho_j = \dfrac{m_jM}{\sum_{i=0}^M V_i^j},
 \]
-where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. \hl{We identify as the $\rho_j/m_j$ number density.} We can find the mass of an atom type from standard tables of molar masses, but we still need to find the volumes $V_i^j$ associated with each atom. To do this we use something called \hl{Voronoi cells/Voronoi tesselation}\todo{citation? Dirchlet 1850 and Voronoi 1908, so very old...}. Voronoi tesselation is done by dividing the system into non-overlapping convex polyhedra (or convex polygons in 2 dimensions), with one atom in each polyhedra. The volume inside the polyhedron surrounding each atom consists of all points in space closer to that atom than any other atom. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig:3d_voronoi_diagram} for a rendering of a 3D Voronoi diagram.
+where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. \hl{We identify as the $\rho_j/m_j$ number density.} We can find the mass of an atom type from standard tables of molar masses, but we still need to find the volumes $V_i^j$ associated with each atom. To do this we use something called \hl{Voronoi cells/Voronoi tesselation}\todobo{citation? Dirchlet 1850 and Voronoi 1908, so very old...}. Voronoi tesselation is done by dividing the system into non-overlapping convex polyhedra (or convex polygons in 2 dimensions), with one atom in each polyhedra. The volume inside the polyhedron surrounding each atom consists of all points in space closer to that atom than any other atom. 
+
+We use the \cpp-library \texttt{Voro++} to find the Voronoi cells, and calculate the volumes of the cells. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig:3d_voronoi_diagram} for a rendering of a 3D Voronoi diagram.
 %
 \begin{figure}[htpb]%
 % \centering%
@@ -466,15 +471,15 @@ Although the Manhattan distance isn't as useful as the regular Euclidean distanc
 \todoc{Voxel counter code example?}
 
 % \FloatBarrier
-\section{``Voxel counter''}
-\todob{Write about voxel counter}
-\todod{Voxel counter code example?}
-    A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
-    
-% \FloatBarrier
-\section{Cage cage correlation}
-    \todod{Measure cage cage correlation}
-
-% \FloatBarrier
-\section{Surface area of pores}
-    Only one large pore in my system, so not useful?
+% \section{``Voxel counter''}
+% \todob{Write about voxel counter}
+% \todod{Voxel counter code example?}
+%     A histogram of the fraction of voxels that has one or more atom in them vs. the voxel size in x-, y-, and z-direction.
+%     
+% % \FloatBarrier
+% \section{Cage cage correlation}
+%     \todod{Measure cage cage correlation}
+% 
+% % \FloatBarrier
+% \section{Surface area of pores}
+%     Only one large pore in my system, so not useful?

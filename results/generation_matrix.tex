@@ -33,17 +33,17 @@ We see that the 3d maps made using this method shows a lot of the same details a
     \setlength{\myfigwidth}{0.9\textwidth}%
     \begin{subfigure}[b]{\myfigwidth}%
         \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r0745_n256}%
-        \caption{Max distance $r=5.0$ \AA.%
+        \caption{Max distance $r_\text{max}=5.0$ \AA.%
         \label{fig:generation_matrix_r05}}%
     \end{subfigure}%
     \vspace{10pt}
     \begin{subfigure}[b]{\myfigwidth}%
         \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r308_n256}%
-        \caption{Max distance $r=20$ \AA.%
+        \caption{Max distance $r_\text{max}=20$ \AA.%
         \label{fig:generation_matrix_r11}}%
     \end{subfigure}%
     \caption{%
-        Slices of 3d maps of the system labelled ``rough fracture \#2'', made using the method from \cref{sec:generation_matrix}. The method generates a 3d map of the Manhattan distance to the nearest atom, in each point on a grid. In \textbf{a)} we have used a max distance of $\sim 8$ \AA, and in \textbf{b)} we used a max distance of $\sim 30$ \AA.%
+        Slices of 3d maps of the system labelled ``rough fracture \#2'', made using the method from \cref{sec:generation_matrix}. The method generates a 3d map of the Manhattan distance to the nearest atom, in each point on a grid. We have used colormaps from 0 to $r_\text{max}$, with \textbf{a)} $r_\text{max} = 8$ \AA, and \textbf{b)} $r_\text{max} = 30$ \AA.%
         \hl{CAPTION}%
     }%
 \end{figure}%

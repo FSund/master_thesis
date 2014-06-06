@@ -13,7 +13,7 @@
 %   N = mean(3414, 3396, 3419, 3431, 3393)
 
 
-To produce these results we have averaged over 200 states, with 100 timesteps of 20.67 md units between each timestep ($\sim 0.5$ picoseconds\hl{???}), divided into 5 non-overlapping origos, with 40 states per origo.
+We have measured the diffusion constant for water in the in all our systems, as function of distance to the silica matrix. We used 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). To improve the statistics we divided each set of states into 5 non-overlapping origos, with 40 states per origo.\todoao{have we explained origo move anywhere?} The results are plotted in \crefrange{fig:first_diffusion_figure}{fig:last_diffusion_figure}. We have also measured the bulk diffusion constant, the results of which are listed in \cref{tab:bulk_water_diffusion}.
 
 We first look at the diffusion as function of distance to the silica matrix in the four reference systems, which we have plotted in \cref{fig:diffusion_reference_systems}. We see that the diffusion constant, $D$, has similar quantitative behaviour as we move further from the silica matrix in all four reference systems, but that the actual $D$ is different in each system. The two systems with 86 \AA\ wide flat pores have diffusion constants that differ by around 10-30\%, even though those two systems should be pretty similar. The main difference between those two systems is the density, as we saw in \cref{sec:results_density}. We have listed the bulk $D$ in \cref{tab:bulk_water_diffusion}, and we see that the bulk diffusion for the two reference systems with 86 \AA\ wide flat pores is {0.202 \AA$^2$/ps}, while system \#2 has {0.179 \AA$^2$/ps}, with a difference of {13 \%}. \hl{So it seems like the increased density in reference system \#2 have had an impact on the diffusion -- so we use ref \#1 when comparing to other systems?}
 %
@@ -87,6 +87,7 @@ for the four random fracture systems, ``rough \#1'' through 4. We again see a qu
 }%
 \caption{%
     Diffusion constant ($D$) as function of distance from silica matrix ($r$), for \textbf{a)} all reference systems and \textbf{b)} all rough fractures. Dashed lines are 14.4 and 28.8 \AA\ \textbf{a)} flat pores and \textbf{b)} narrow, uniform width fractures. \hl{FINISH CAPTION}. %
+    \label{fig:first_diffusion_figure}%
 }%
 \end{figure}%
 
@@ -183,6 +184,7 @@ In \cref{fig:diffusion_narrow_and_reference} we have plotted the diffusion for t
 }%
 \caption{%
     Diffusion constant ($D$) as function of distance from silica matrix ($r$), for \textbf{a)} rough fracture system \#1 and \#2 (normal rough fractures) and all reference systems, and \textbf{b)} the narrow uniform width fractures (fracture system \#3 and \#4) and all reference systems. Dashed lines are reference systems. %
+    \label{fig:last_diffusion_figure}%
 }%
 \end{figure}%
 

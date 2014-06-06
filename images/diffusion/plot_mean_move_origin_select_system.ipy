@@ -5,7 +5,7 @@ import os.path
 default_backend = 'Qt4Agg'
 
 backend = default_backend
-backend = 'SVG'
+# backend = 'SVG'
 
 import matplotlib
 matplotlib.use(backend)
@@ -21,6 +21,7 @@ def load_results(results_file, r_start, r_step, n_steps, n_timesteps_between_sta
     atomic_unit_of_time = 2.418884326505e-17 # seconds
     timestep = dt*atomic_unit_of_time
     time_between_statefiles = timestep*n_timesteps_between_statefiles/(1.0e-12) # picoseconds
+    print time_between_statefiles
     
     results = np.genfromtxt( # makes np.ndarray
         results_file,

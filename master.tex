@@ -34,6 +34,8 @@
 % Ensure that footnote for fig:diamond_square_testing end up on correct page (\protect\footnotemark and \footnotetext doesn't know where to place the text)
 % Minimum distance below figures/captions?
 %   - Reset \textfloatsep, \intextsep and \floatsep to defaults in layout_lengths_floats.tex
+% Check for isn't, don't, etc.
+% Check for \textbf{a)} for subcaptions, replace with \textbf{(a)} ???
 
 % TODO: Before handing in
 % Replace \include with \input 
@@ -76,6 +78,7 @@
 
 % Part 3 - Experiments
 % \includeonly{results/introduction,molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
+\includeonly{results/systems}
 % \includeonly{results/results} % for faster compilation, since results/systems have a lot of images
 
 
@@ -85,17 +88,13 @@
 \includepdf{frontpage.pdf}
 \cleardoublepage
 
-\include{abstract}
-\include{dedications}
-\include{acknowledgements}
+\input{abstract}
+\input{dedications}
+\input{acknowledgements}
 
 \tableofcontents
 
-\listoffigures
-\listoftables
-\listoflistings
-
-\include{introduction}
+\input{introduction}
 
 \part{Molecular dynamics}
     \include{molecular_dynamics/introduction}
@@ -113,16 +112,16 @@
     \include{fractures/generating_surfaces}
     \include{fractures/generating_fractures}
 
-\part{Experiments}
+\part{Simulations}
     \include{results/introduction}
     \include{molecular_dynamics/experimental_procedure}
     \include{molecular_dynamics/measurements}
     \include{results/systems}
     \include{results/results}
 
-\part{Conclusion}
+\part{Conclusion and future}
     \include{results/conclusion}
-    \include{results/future}
+%     \include{results/future}
 
 \part{Appendices}
 \begin{appendix}
@@ -132,6 +131,9 @@
 %     \include{appendices/pressure} % haven't measure pressure, and haven't derived it either
 \end{appendix}
 
+\listoffigures
+\listoftables
+\listoflistings
 \printbibliography
 
 \listoftodos

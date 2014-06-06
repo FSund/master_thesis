@@ -1,11 +1,15 @@
 \section{Water density\label{sec:results_density}}
 % We measure the density as function of distance to the matrix in all our systems. We ended up with ``bulk'' densities in the systems ranging from around 1000 kg/m$^3$ to 1150 kg/m$^3$, so for easier comparison we have normalized the densities against the bulk density in each system. Here we have defined the bulk density as the average density of water molecules more than $\sim 10\text{ \AA}$ from the nearest silicon atom. 
 
-\hl{Measured by averaging over 200 states, with 100 timesteps of 20.67 md units between them}
+We have measured the density as function of distance to the silica matrix in all of our systems, averaged over 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). The results are plotted in \crefrange{fig:first_density_fig}{fig:last_density_fig}. We measured for distances ranging from 0 to 10 \AA\ from the silica matrix, in steps of 0.25 \AA. We have also measured the bulk density in the systems where this was possible, the results of which are listed in \cref{tab:bulk_water_density}.
 
-We first look at the water density as function of distance to the silica matrix in the four reference systems, which is plotted in \cref{fig:density_reference_systems}. We see that the densities all have the same quantitative behaviour as we move further from the silica matrix, even though the net density is very different in the four systems, with the densities stabilizing at values ranging from 1050 to almost 1150 kg/m$^3$. See \cref{tab:bulk_water_density} for the bulk water density in reference system \#1 and \#2. We also see that when we increase the overall density of water, the point where the density stops rising (near 7 \AA) seems to move closer to the silica matrix.
+The most significant thing we notice is that we see a clear lowering of the density as we move closer than 7-8 \AA\ from the silica matrix. When we go from 10 \AA\ and move closer to the matrix we see in all systems that the density first is reduced by almost 10\% at around 5 \AA, and then increases to densities higher than the initial densities (the ones at 10 \AA) when we move towards 3 \AA.
 
-In \cref{fig:density_rough_systems} we have plotted the water density as function of the distance to the silica matrix in the four random fracture systems. We see that the density in all four systems has very similar behaviour, and that the density seems to stabilize between 1000 and 1025 kg/m$^3$ at 10 \AA\ from the silica matrix.%
+% \hl{Measured by averaging over 200 states, with 100 timesteps of 20.67 md units between them}
+
+We first look at the water density as function of distance to the silica matrix in the four reference systems, which is plotted in \cref{fig:density_reference_systems}. We see that the densities all have the same quantitative behaviour as we move further from the silica matrix, even though the net density is very different in the four systems, with the densities stabilizing at values ranging from 1050 to almost 1150 kg/m$^3$. One trend we notice is that the point where the density stabilizes, at around 7 \AA, seems to appear closer to the matrix when we increase the overall density.
+
+In \cref{fig:density_rough_systems} we have plotted the water density as function of the distance to the silica matrix in the four random fracture systems. We see that the density in all four systems are very similar at all distances to the matrix, and that the density seems to stabilize between 1000 and 1025 kg/m$^3$ at 10 \AA\ from the silica matrix.  %
 \todoao{More?}%
 %
 % ---- Minipage version ---- %
@@ -53,13 +57,13 @@ In \cref{fig:density_rough_systems} we have plotted the water density as functio
     \end{minipage}%
 }%
 \caption{%
-    Water density ($\rho$) as function of distance to silica matrix ($r$) in \textbf{a)} all four reference systems (flat pores) and \textbf{b)} rough fracture systems. Dashed lines are 14.4 and 28.8 \AA\ \textbf{a)} flat pores and \textbf{b)} narrow, uniform width fractures. \hl{FINISH CAPTION}.
+    Water density ($\rho$) as function of distance to silica matrix ($r$) in \textbf{a)} all four reference systems (flat pores) and \textbf{b)} rough fracture systems. Dashed lines are 14.4 and 28.8 \AA\ \textbf{a)} flat pores and \textbf{b)} narrow, uniform width fractures.\label{fig:first_density_fig} \hl{FINISH CAPTION}.%
 }%
 \end{figure}%
 
-We have estimated the bulk water density by the same technique we use for measuring water density as function of distance to the silica matrix, by averaging the Voronoi volumes for all water-oxygen atoms further away from the silica matrix than a certain distance (typically 10 \AA\ or more). This measurement requires that we have a fracture at least twice as wide as this distance, so estimating the bulk density was only possible in reference system \#1 and \#2 with a flat, constant fracture of 86 \AA, and in the two random fractured systems \#1 and \#2, which have fractures with varying width\todobo{how wide?}. We measured the bulk distance using a minimum distance to the matrix of 10 and 30 \AA\, to see if there was a difference between these two limits.
+We have estimated the bulk water density by the same technique we use for measuring water density as function of distance to the silica matrix, but now by averaging the Voronoi volumes for \emph{all} water-oxygen atoms further away from the silica matrix than a certain distance (typically 10 \AA\ or more), instead of using bins. This measurement requires that we have a fracture at least twice as wide as this distance, so estimating the bulk density was only possible in reference system \#1 and \#2 with a flat, constant fracture of 86 \AA, and in the two random fractured systems \#1 and \#2, which have fractures with varying width\todobo{how wide?}. We measured the bulk distance using a minimum distance to the matrix of 10 and 30 \AA\, to see if there was a difference between these two limits.
 
-The results are listed in \cref{tab:bulk_water_density}, where we have measured the bulk density for water atoms at least 10 \AA\ and at least 30 \AA\ from the silica matrix. We see that the estimated bulk density does not change if we use 10 or 30 \AA\ in the two reference systems, indicating that a limit of 10 \AA\ is probably safe. If we compare the results to the plots of the density as function of distance from the matrix in \cref{fig:density_reference_systems,fig:density_rough_systems}, we see that the density is close to the bulk density already at around 8-9 \AA.
+The results are listed in \cref{tab:bulk_water_density}, where we have measured the bulk density for water atoms at least 10 \AA\ and at least 30 \AA\ from the silica matrix. We see that the estimated bulk density does not change if we use 10 or 30 \AA\ in the two reference systems, indicating that a limit of 10 \AA\ is probably safe. If we compare the results to the plots of the density as function of distance from the matrix in \cref{fig:density_reference_systems,fig:density_rough_systems}, we see that the density is close to the bulk density already at around 8 \AA.
 %
 % \begin{table}%
 %     \centering%
@@ -170,7 +174,7 @@ The results are listed in \cref{tab:bulk_water_density}, where we have measured 
     \includesvg[width=0.8\textwidth, svgpath=./images/density/]{density_water04_flat_and_wide_normalized}%
     \caption{%
         Relative density of water. Normalized against the approximate bulk density in each system. \hl{reference figure or remove} %
-        \label{fig:density_flat_and_wide}%
+        \label{fig:density_flat_and_wide}\label{fig:last_density_fig}%
     }%
 \end{figure}%
 

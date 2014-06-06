@@ -1,10 +1,10 @@
-\chapter{Molecular dynamics program/code used for experiments}
+\chapter{Molecular dynamics program used for simulations}
 \todoa{Finish writing about sio2/water program}
-To study an advanced system like silica (SiO$_2$) and water (H$_2$O) we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. To simulate the forces that make structures like that appear we need to use something more advanced than a diatomic potential Lennard-Jones, so we use a higher order potential. We would also like to be able to simulate chemical reactions like transfer of oxygen atoms from silica to water, which requires \hl{something?}.
+To study an advanced system like silica (SiO$_2$) and water (H$_2$O) we need a more advanced potential than the Lennard-Jones potential. We know water likes to have a H-O-H angle of around 105, and similarly we know that silica usually appears in tetrahedral structures. To simulate the forces that make structures like that appear we need to use something more advanced than a diatomic potential Lennard-Jones, so we use a higher order potential. We would also like to be able to simulate chemical reactions like transfer of oxygen atoms from silica to water, which requires further modifications of the simulations.
 
 The potential implemented in the program we use in this thesis has been developed at the University of Southern California (USC) by P. Vashishta, Rajiv K. Kalia, José P. Rino and Ingvar Ebbsj\"o\cite{vashishta1990interaction}, see also\cite{shekhar2013nanobubble,shekhar2013nanobubble_supplements}. The potential contains two-body and three-body terms, and allows oxygen atoms to be transferred between silica and water. See \cref{sec:sio2_potential} for more details on the potential.
 
-The potential is implemented in a FORTRAN 77 program, which has been parallellized an highly optimized for running on high-performance computing clusters like Abel. \hl{The program is unfortunately closed-source}.
+The potential is implemented in a FORTRAN 77 program, which has been parallellized an highly optimized for running on high-performance computing clusters like Abel. The program is unfortunately closed-source, and we are not allowed to distribute this openly.
 
 The program implements both the fast and simple Berendsen thermostat, and the more sophisticated Nos\'e-Hoover chains thermostat \hl{but we usually just use Berendsen, since we only want to change temperature, not measure NPT ensemble}. It also implements so-called variable time-step integrators, which saves CPU-time when we have silica and water in the same system. See \cref{sec:sio2_integrator} for more information about this.
 
@@ -154,20 +154,34 @@ The parameters of the three-body term are as follows
     \vspace{10pt}
 \end{itemize}
 
-The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then gm
+The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then interpolating between these parameters to allow transfer of oxygen atoms between silica and water. See for example \cite{vashishta1990interaction} for more details on this. The actual details of how oxygen can be transferred between silica and water is based on the number of silicon and hydrogen neighbors an oxygen atom has.
 \todoa{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
+
+The potential is further optimized by linearising it, meaning that the potential is calculated for example for different distances $r_{ij}$ and angles $\theta_{ijk}$, and then we can look up the values for the potential directly, without having to evaluate the potential.\todobo{refine this}
 
 % where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
 % \todo[inline]{$\xi$ and $C_{ijk}$ ???}
-\todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
+% \todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}
 
 \section{Integrator\label{sec:sio2_integrator}}
 \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
 \todob{Plot of energy conservation here?}
 
-The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way.
+The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. 
+
+See \cref{fig:energy_conservation_plot} for a plot of the energy over 100 000 timesteps. We see that the energy is very well conserved, with a change of 2e-6 over 100 000 timesteps.
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
+    \caption{%
+        \hl{Caption.}
+        \label{fig:energy_conservation_plot}%
+    }%
+\end{figure}%
 
 The multiple time-scale integrator utilizes the fact that the vibrational frequencies in water is much higher than the frequencies of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. When using the program we use timesteps that are calculated from these vibrational frequencies, to make sure we have small enough timesteps.\todobo{more about how timestep was chosen?}
+
 % %
 % \begin{figure}[htpb]%
 %     \centering%

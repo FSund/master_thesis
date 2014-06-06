@@ -8,11 +8,17 @@ In molecular dynamics we study systems of many interacting atoms and molecules b
 \section{The main program}
 % Deducing how a molecular dynamics program does its simulations isn't always easy from looking at source code, but most programs will follow a flow similar to the following:
 %
-Most molecular dynamics programs will follow an flow similar to the following:
+Using a molecular dynamic simulations we can start from any initial state $S_0$ and evolve this state in time. We can stop the simulations at any time, and continue the simulations from any saved state. This is a powerful tool that can be used to study different systems with the same initial conditions. 
+
+Most molecular dynamics programs will follow a flow similar to the following:
 %
 \begin{itemize}[midsep]
     \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
-    \item Initialize the system. Set up the initial positions and velocities for all atoms, either by generating them or loading a saved state from a previous simulation. Remove any net velocity by subtracting the mean velocity in each spatial direction from the velocities of all atoms.
+    \item Initialize the system by setting up the initial positions and velocities for all atoms. This is usually in one of two ways
+    \begin{itemize}[midsep]
+        \item Loading a saved state from a previous simulation
+        \item Generated positions and velocities randomly, or following some rules to control the structure and/or distribution of velocities. When generating random velocities we usually remove any net velocity by subtracting the mean velocity in each spatial direction from the velocities of all atoms.
+    \end{itemize}
     \item For each timestep
     \begin{itemize}[midsep]
         \item Calculate the forces between the atoms.
@@ -41,7 +47,7 @@ An example of a program that implements the above procedure can be seen in \cref
 }%
 \end{listing}%
 
-When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, since we usually have a strong repulsive force when the atoms get close together, which would give very big forces. We also want to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
+When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, since we usually have a strong repulsive force when the atoms get close together,  which would give very big forces. We also want to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.
 
 \section{Calculation of forces\label{sec:program:lj}}
 The forces are calculated from the derivatives of interatomic potentials, that usually only depend on the positions of the atoms. The potentials are generally of the form
@@ -156,9 +162,9 @@ If we are using higher-order potentials we can use the same optimization for the
 \tododo{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
 In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center, and will most likely not behave as intended. To remedy this we use periodic boundary conditions. This means that we repeat the simulation box at the boundaries of the system, so that the atoms near the boundaries feel forces from atoms on the opposite side of the system, and in a uniform system all atoms will have a bulk-like environment. 
 
-Atom $l$ has what we call an \emph{image} in all other neighbor boxes, with position
+Atom $n$ has what we call an \emph{image} in all other neighbor boxes, with position
 \begin{align}
-    \rvec_l^{ijk} = \rvec_l + (iL_x, jL_y, kL_z),
+    \rvec_n^{ijk} = \rvec_l + (iL_x, jL_y, kL_z),
     \label{eq:pbc_positions}
 \end{align}
 where $(L_x, L_y, L_z)$ is the dimensions of the simulation box, and $(i, j, k)$ is the index of the neighbor box. We usually choose box $(0,0,0)$ as our ``origin'' box, with the corner of the box in the point $(0,0,0)$. In reality we still have the same number of atoms, but the atoms on near the boundaries of the simulation box will now feel forces from the atoms on the opposite side of the box.
@@ -199,14 +205,16 @@ An example of how to ensure that all atomic positions are inside the boundaries 
     }
 \end{cppcode*}
 \caption{%
-    A function for checking if any atoms have moved outside their boundaries, called \mono{checkBoundaryConditions}. This method assumes that no atoms have moved more than one system size outside the boundaries, in any direction.
+    A function for checking if any atoms have moved outside their boundaries, called \mono{checkBoundaryConditions}. This method assumes that no atoms have moved more than one system size outside the boundaries, in any direction.%
     \label{list:pbc}%
 }%
 \end{listing}%
 
-A consequence of using periodic boundary conditions is that each atom now feels the force from an infinite number of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \emph{minimum image convention} \todobo{cite mimimum image convetion?}. This implies that we only calculate the force between atom $i$ and the \emph{nearest} image of each atom $j$, effectively limiting the potential to \hl{half?} the size of the system. \todo{really $L\sqrt{3}$, diagonally} \hl{In doing this we do an approximation, but this is ok??.}
+A consequence of using periodic boundary conditions is that each atom now feels the force from an infinite number of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \emph{minimum image convention} \todobo{cite mimimum image convetion?}. This implies that we only calculate the force between atom $n$ and the \emph{nearest} image of each atom $m$, effectively limiting the potential to half the size of the system in each direction. When doing this truncation and simulating ``bulk'' or ``infinte'' systems, we do an approximation that might have some unknown consequences, but this is not usually a problem.
+%\todo{really $L\sqrt{3}$, diagonally} 
+%\hl{In doing this we do an approximation, but this is ok??.}
 
-To find the distance between atom $i$ and the closest image of atom $j$ we can calculate the distance between $i$ and any image of $j$, $\rvec_{ij}$, and then check if any of the components of this vector is more than half the system size in that direction\todobo{explain why?}. See \cref{list:minimum_image_convention} for an example of a function that finds the distance between a point $u$ and the closest image of a point $v$ using the minimum image convention.%
+To find the distance between atom $n$ and the closest image of atom $m$ we can calculate the distance between $n$ and any image of $m$, $\rvec_{nm}$, and then check if any of the components of this vector is more than half the system size in that direction\todobo{explain why?}. See \cref{list:minimum_image_convention} for an example of a function that finds the distance between a point $u$ and the closest image of a point $v$ using the minimum image convention.%
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -221,7 +229,7 @@ To find the distance between atom $i$ and the closest image of atom $j$ we can c
         }
         return dr.lengthSquared(); // Avoid calculating $\sqrt{dr^2}$, return $dr^2$ instead
     }
-\end{cppcode*}%
+\end{cppcode*}
 \caption{%
     An example of how to find the distance between two points \mono{u} and \mono{v} in a periodic system of size \mono{systemSize} using the \emph{minimum image convention}. We calculate the distance squared to avoid taking the square root, since this is a slow operation.%
     \label{list:minimum_image_convention}%
