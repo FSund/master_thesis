@@ -15,30 +15,33 @@
 \title{\uppercase{Water confined in\\ nanoporous silica}}
 \date{June 2014}
 
-% TODO: Sometime
+% TODO:
 % Fix verbatim in listing captions making too long lines
-% MD units in example programs? (especially sampling parts)
-% Replace \bvec with \vec? (they are defined as the same, but...)
 % Decide on caption skips (see preamble)
-% Decide on listing font size (\small or \footnotesize?)
+% MD units in example programs? (especially sampling parts)
+
 % Space before \cite{}??
 % ``timestep'' vs ``time step'' ?
 % Decide on font size for includesvg (now it's \footnotesize) - Change font size for individual figures with includesvg option pretex = \normalsize
 % Decide on main font size (12 or 11 pt)
-% Check all listings for linewidth (after deciding on listing font size)
+
 % Fix \texttt{} linebreak in listing captions (can for example use \caption[<listoflistings caption>]{<actual caption>}
 %   - DONE, replaced with monospaced font, which breaks properly
+
 % Decide on code background
 % Check distance before and after \AA and \cpp and similar commands
 % Check ``htpb'' on all figures that need it (fracture frontpage thing need something else) -- search for begin\{figure\}
 % Ensure that footnote for fig:diamond_square_testing end up on correct page (\protect\footnotemark and \footnotetext doesn't know where to place the text)
+
 % Minimum distance below figures/captions?
-%   - Reset \textfloatsep, \intextsep and \floatsep to defaults in layout_lengths_floats.tex
+%   - DID Reset \textfloatsep, \intextsep and \floatsep to defaults in layout_lengths_floats.tex
+
 % Check for isn't, don't, etc.
 % Check for \textbf{a)} for subcaptions, replace with \textbf{(a)} ???
 
-% TODO: Before handing in
-% Replace \include with \input 
+% Decide on listing font size (\small or \footnotesize?)
+% Check all listings for linewidth (after deciding on listing font size)
+
 
 % ---- Includeonly stuff ---- %
 % \includeonly{molecular_dynamics/introduction}
@@ -90,7 +93,7 @@
 \cleardoublepage
 
 \input{abstract}
-\input{dedications}
+% \input{dedications}
 \input{acknowledgements}
 
 \tableofcontents
@@ -98,41 +101,42 @@
 \input{introduction}
 
 \part{Molecular dynamics}
-    \include{molecular_dynamics/introduction}
-%     \include{molecular_dynamics/statistical_mechanics}
-    \include{molecular_dynamics/simple_md_program}
-%     \include{molecular_dynamics/optimizations} % Moved cell lists to md part, removed MD units stuff
-    \include{molecular_dynamics/observables}
-    \include{molecular_dynamics/ensembles}
-    \include{molecular_dynamics/usc_program}
+    \input{molecular_dynamics/introduction}
+%     \input{molecular_dynamics/statistical_mechanics}
+    \input{molecular_dynamics/simple_md_program}
+%     \input{molecular_dynamics/optimizations} % Moved cell lists to md part, removed MD units stuff
+    \input{molecular_dynamics/observables}
+    \input{molecular_dynamics/ensembles}
+    \input{molecular_dynamics/usc_program}
 
 \part{Fractures}
-    \include{fractures/fractures}
-    \include{fractures/hurst_exponent}
-    \include{fractures/detrending_moving_average}
-    \include{fractures/generating_surfaces}
-    \include{fractures/generating_fractures}
+    \input{fractures/fractures}
+    \input{fractures/hurst_exponent}
+    \input{fractures/detrending_moving_average}
+    \input{fractures/generating_surfaces}
+    \input{fractures/generating_fractures}
 
 \part{Simulations}
-    \include{results/introduction}
-    \include{molecular_dynamics/experimental_procedure}
-    \include{molecular_dynamics/measurements}
-    \include{results/systems}
+    \input{results/introduction}
+    \input{molecular_dynamics/experimental_procedure}
+    \input{molecular_dynamics/measurements}
+    \input{results/systems}
     \FloatBarrier
-    \include{results/renderings}
-    \include{results/results}
-    \include{results/discussion}
+    \input{results/renderings}
+    \input{results/results}
 
 % \part{Conclusion and future}
-    \include{results/conclusion}
-%     \include{results/future}
+    \chapter{Discussion, conclusions and future}
+    \input{results/discussion}
+    \input{results/conclusion}
+%     \input{results/future}
 
 \part{Appendices}
 \begin{appendix}
-%     \include{appendices/md_units} % remove md units completely?
-    \include{appendices/integrators}
-    \include{appendices/nose_hoover}
-%     \include{appendices/pressure} % haven't measure pressure, and haven't derived it either
+%     \input{appendices/md_units} % remove md units completely?
+    \input{appendices/integrators}
+    \input{appendices/nose_hoover}
+%     \input{appendices/pressure} % haven't measure pressure, and haven't derived it either
 \end{appendix}
 
 \listoffigures
