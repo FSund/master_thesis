@@ -45,7 +45,7 @@ where $\Delta t$ is the timestep, and $\avec(t)$ is the velocity at time $t$. Th
 
 % The stability and versatiliy of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
 
-We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion around $\rvec(t\pm\Delta t)$, which gives
+We see that the velocity is not explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion around $\rvec(t\pm\Delta t)$, which gives
 \begin{align*}
     \vvec(t) = \frac{\rvec(t + \Delta t) - \rvec(t - \Delta t)}{2\Delta t},
 \end{align*}
@@ -85,7 +85,7 @@ The most used form of the Velocity integration scheme is called the velocity Ver
 \end{align}
 with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the accumulated error in energy being of the order $\mathcal{O}(\Delta t^2)$ (see \cref{appendix:verlet_taylor,appendix:liouville_verlet} for more information). It can be shown that this form is equivalent to the regular Verlet method.
 
-One advantage of this form compared to the regular Verlet method, is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
+One advantage of this form compared to the regular Verlet method, is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we do not have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
 
 % \todobo{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
 

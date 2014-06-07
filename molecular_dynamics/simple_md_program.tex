@@ -159,7 +159,7 @@ If we are using higher-order potentials we can use the same optimization for the
 
 \section{Boundary conditions}
 % \tododo{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
-In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we haven't implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center, and will most likely not behave as intended. To remedy this we usually apply periodic boundary conditions. This means that we repeat the simulation box at the boundaries of the system, so that the atoms near the boundaries feel forces from atoms on the opposite side of the system, and in an uniform system all atoms will have a bulk-like environment. 
+In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we have not implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center, and will most likely not behave as intended. To remedy this we usually apply periodic boundary conditions. This means that we repeat the simulation box at the boundaries of the system, so that the atoms near the boundaries feel forces from atoms on the opposite side of the system, and in an uniform system all atoms will have a bulk-like environment. 
 
 Atom $n$ has what we call an \emph{image} in all other neighboring simulation boxes, created by the periodic boundaries. The position of the images of atom $n$ can be calculated using
 \begin{align}
@@ -283,7 +283,7 @@ The truncation is now done by only calculating the force between atom $i$ and al
 
 One issue that arises when using the cell lists is how to utilize Newton's third law. We see that after calculating the force between all atoms in cell $(i,j,k)$ and all atoms in the 26 neighboring cells, while adding the calculated forces to the other atoms using Newton's third law, we must not include that cell (cell $(i,j,k)$) in any other force calculations this timestep, or else we will get double contributions from atoms in that cell. One simple way of solving this is to keep a list of all cells we have calculated the forces on (and from) so far, and then check against that list every time we are calculating the force from a neighbor cell. But if we loop through the cells in the same order every time, we see that it would perhaps be more efficent to make a list over neighbor cells for each cell, so that we can just loop through a list of neighbors. The time spent on this in the simulations is nevertheless neglible compared to the evaluations of the potential.
 
-An implementation of the calculation of forces using cell lists can be seen in \cref{list:cutoff_forcecalculation,list:sort_atoms_into_cells,list:calculateForceFromNeighborCells}. In these examples we don't use Newton's third law for optimization, to shorten the code and make the example simpler.
+An implementation of the calculation of forces using cell lists can be seen in \cref{list:cutoff_forcecalculation,list:sort_atoms_into_cells,list:calculateForceFromNeighborCells}. In these examples we do not use Newton's third law for optimization, to shorten the code and make the example simpler.
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -307,7 +307,7 @@ An implementation of the calculation of forces using cell lists can be seen in \
     }
 \end{cppcode*}
 \caption{%
-    An example of an implementation of the force calculation \mono{calculateForces} from \cref{list:simple_md_program}, using the Lennard-Jones potential with a cutoff length for the force, and cell lists. Notice that we don't use Newton's third law, to simplify the example. %
+    An example of an implementation of the force calculation \mono{calculateForces} from \cref{list:simple_md_program}, using the Lennard-Jones potential with a cutoff length for the force, and cell lists. Notice that we do not use Newton's third law, to simplify the example. %
     %Examples of how to calculate the forces using cell lists and Newton's third law are described \cref{sec:cell_lists}.%
     \label{list:cutoff_forcecalculation}%
 }%

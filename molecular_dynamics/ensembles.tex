@@ -10,7 +10,7 @@
 \todoco{small discussion of how heat bath really works? see thijssen p. 203(216)}%
 %
 % \section{Ensemble/thermostats}
-We have now developed a molecular dynamics program that simulates simple systems like Argon, with constant number of particles $N$, constant volume $V$ and constant energy $E$, which means that the system can't exchange particles or energy with the environment. This forms a statistical ensemble called the microcanonical ensemble or the $NVE$-ensemble, which has some implications for what we can simulate and measure. Other ensembles that might be of interest is the canonical ensemble (constant $N$, $V$ and temperature $T$) and the grand canonical ensemble (constant $N$, pressure $P$, and temperature $T$).
+We have now developed a molecular dynamics program that simulates simple systems like Argon, with constant number of particles $N$, constant volume $V$ and constant energy $E$, which means that the system can not exchange particles or energy with the environment. This forms a statistical ensemble called the microcanonical ensemble or the $NVE$-ensemble, which has some implications for what we can simulate and measure. Other ensembles that might be of interest is the canonical ensemble (constant $N$, $V$ and temperature $T$) and the grand canonical ensemble (constant $N$, pressure $P$, and temperature $T$).
 
 % \hl{To study the canonical ensemble we can use a thermostat, which is a method for controlling the temperature of the system.} \todo{transition to parts below}
 
@@ -48,12 +48,12 @@ where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the st
 }%
 \end{listing}%
 
-The Berendsen thermostat is very good at controlling and changing the temperature of a system, but it doesn't sample the canonical ensemble very well. This is because we change the velocity of \emph{all} atoms at every $n$-th timestep, which isn't physically realistic. This means that we shouldn't use this thermostat when trying to sample the canonical ensemble, but we often use it to heat up or cool down a system, to reach a wanted temperature.
+The Berendsen thermostat is very good at controlling and changing the temperature of a system, but it does not sample the canonical ensemble very well. This is because we change the velocity of \emph{all} atoms at every $n$-th timestep, which is not physically realistic. This means that we should not use this thermostat when trying to sample the canonical ensemble, but we often use it to heat up or cool down a system, to reach a wanted temperature.
 
 Many thermostats similar to the Berendsen thermostat exist but they all suffer from the fact that they scale the velocity of all particles, giving unphysical behaviour.
 
 \section{Andersen thermostat}
-The Andersen thermostat is a more physically realistic thermostat, which simulates hard collisions between atoms in the system and atoms in the heat bath. We don't actually simulate any extra particles, but we we assign new random velocities to a random fraction of the atoms, the fraction and magnitude of the velocity determined by the strength of the thermostat and the temperature of the thermostat. 
+The Andersen thermostat is a more physically realistic thermostat, which simulates hard collisions between atoms in the system and atoms in the heat bath. We do not actually simulate any extra particles, but we we assign new random velocities to a random fraction of the atoms, the fraction and magnitude of the velocity determined by the strength of the thermostat and the temperature of the thermostat. 
 
 This thermostat uses the following procedure%
 %
@@ -140,7 +140,7 @@ which we see have a similar form to the equations we get when using a regular No
     \dot{p_{\xi,k}} &= \left[ \frac{p_{\xi_k-1}^2}{Q_{k-1}} - k_BT \right] - \frac{p_{\xi,k+1}}{Q_{k+1}}p_{\xi,k} \\
     \dot{p_{\xi,M}} &= \left[ \frac{p_{\xi_M-1}^2}{Q_{M-1}} - k_BT \right].
 \end{align*}
-As with the Nosé-Hoover thermostat, the regular velocity Verlet integrator can't be used with this thermostat, but a derivation of an integrator for these equations of motion can be seen in \cite[Appendix E.2.1]{frenkel2001understanding} and \cite{martyna1996explicit}, where they again use the Liouville approach similar to the one we used to derive the velocity Verlet integrator in \cref{appendix:liouville_verlet}.
+As with the Nosé-Hoover thermostat, the regular velocity Verlet integrator can not be used with this thermostat, but a derivation of an integrator for these equations of motion can be seen in \cite[Appendix E.2.1]{frenkel2001understanding} and \cite{martyna1996explicit}, where they again use the Liouville approach similar to the one we used to derive the velocity Verlet integrator in \cref{appendix:liouville_verlet}.
 
 The Nosé-Hoover chains thermostat will generate a canonical distribution even in a system with external forces, and center of mass that is not fixed\cite[Appendix B.2.2]{frenkel2001understanding}, and will for example work well in a simulation where we introduce flow by some external force.
 

@@ -3,29 +3,29 @@
 % \section{}
 %
 %
-\section{Measuring as function of distance to matrix\label{sec:measuring_distance_to_matrix}}
-\todoa{Why measure as function of distance to matrix?}
+\section{Distance to silica matrix\label{sec:measuring_distance_to_matrix}}
+\todoao{Why measure as function of distance to matrix}%
 % \todoa{Finish measuring as function of distance from matrix}
 % Mean distance from matrix in range --> if we limit the standard deviation as well, we're effectively limiting temperature, or diffusion??
 % When measuring things like density, diffusion, and the tetrahedral order parameter in a nanoporous system, we often want to study the behaviour of 
+When doing experiments with nanoporous and nanoscale systems we often want to do measures as function of the distance to the surface of the pore, in our case meaning the distance to the interface between water and silica. The first problem with this is to find out how to measure the distance from a point, for example a water molecule, to the surface. Most of our measures are done on water molecules in fractures and pores, so we first define the position of the water molecule as equal to the position of the oxygen atom in the water molecule. We then use the distance from these water-oxygen atoms to the nearest silica atom to define a distance from the water molecule to the surface of the silica matrix. Finding the nearest silica atom is not trivial though, so a separate procedure for doing this is shown in \cref{sec:find_distance_to_surface}.
 
-When doing experiments with nanoporous and nanoscale systems we often want to do measures as function of the distance to the surface of the pore, in our case meaning the distance to the interface between water and silica. The first problem with this is to find out how to measure the distance from a point, for example a water molecule, to the surface. Most of our measures are done on water molecules in fractures and pores, so we first define the position of the water molecule as equal to the position of the oxygen atom in the water molecule\footnote{\hl{Something about using positions of hydrogen atoms as well as oxygen position to define water position?}}. We then use the distance from these water-oxygen atoms to the nearest silica atom to define a distance from the water molecule to the surface of the \hl{pore/fracture}. Finding the nearest silica atom isn't trivial, so a procedure for doing this is shown in \cref{sec:find_distance_to_surface}.
+When measuring quantities that only depend on data from one timestep we do not have to worry about that the atoms move, so we just sort the atoms by distance to the surface using the procedure in \cref{sec:find_distance_to_surface} and do our measurements, individually on each timestep. But if we want to study for example diffusion, or the tetrahedral order parameter, which depend on data from several timesteps, we have to find a good way to define which atoms are in a certain range of the surface. We tried different methods, but decided to use the average distance to the surface for this\todobo{why, examples of tested methods -- constant within bin --> bad statistics, low number of atoms}.
 
-When measuring \hl{things} that only depend on data from one timestep we don't have to worry about that the atoms move, so we just sort the atoms by distance to the surface using the procedure in \cref{sec:find_distance_to_surface} and do our measurements, individually on each timestep. But if we want to study for example diffusion, or the tetrahedral order parameter, which depend on data from several timesteps, we have to find a good way to define which atoms are in a certain range of the surface. We tried different methods, but decided to use the average distance to the surface for this\todobo{why, examples of tested methods}.
+\subsection{Note on this method\label{sec:distance_to_matrix_issues}}
+\todobo{Clean up ``distance to z'' stuff}%
+When we define the distance to the silica matrix as the distance to the nearest silicon atom, we get some effects we should take note of for atoms very close to the matrix. With our definition of the distance to the silica matrix we are effectively making our bins out of spherical shells centered on each silicon atom. Compared to for example using the $z$-distance to the surface in a completely flat fracture, where we know the $z$-height of the surface, we see that this can give different results. The problem is of course that in a random fracture in a silica system we ca not easily define a normal vector to the surface of the fracture, so finding an equivalent to the $z$-distance in such a fracture is hard.
 
-\subsection[Note on this method]{\hl{Note on this method/distance from matrix definition}\label{sec:distance_to_matrix_issues}}
-When we define the distance to the silica matrix as the distance to the nearest silicon atom, we get some effects we should take note of for atoms very close to the matrix. With our definition of the distance to the silica matrix we are effectively making our bins out of spherical shells centered on each silicon atom. Compared to for example using the $z$-distance to the surface in a completely flat fracture, where we know the $z$-height of the surface, we see that this can give different results. The problem is of course that in a random fracture in a silica system we can't easily define a normal vector to the surface of the fracture, so finding an equivalent to the $z$-distance in such a fracture is hard.
-
-When we do our measurements as a function of distance to the silica matrix we usually sort the atoms into bins according to their \hl{(average)} distance to the nearest silicon atom. At distances much larger than the average distance between the silicon atoms at the surface of the fracture this isn't a problem, since the curature of the spherical shells is low, and the volume enclosed by the shells is pretty close to the one we would have gotten if we had created bins used $z$-positions in flat fracture. But at distances close to the average distances between the silicon atoms we begin to see that the volumes our bins consist of start curving around the silicon atoms, instead of staying flat as they would have if we were using the $z$-distance. See \cref{fig:distance_to_matrix_illustration} for an illustration of this. In this illustration we have illustrated bins created using the same bin width and distance from the matrix, using the two different methods. The dark gray areas are the ones that are included using both methods ($A_\text{Si}\cap A_z$), the light grey areas ($A_\text{Si}$) are the ones unique to the spherical shell bins, and the yellow areas are the ones unique to the the $z$-distance bins ($A_z$).%
+When we do our measurements as a function of distance to the silica matrix we usually sort the atoms into bins according to their (average) distance to the nearest silicon atom. At distances much larger than the average distance between the silicon atoms at the surface of the fracture this is not a problem, since the curature of the spherical shells is low, and the volume enclosed by the shells is pretty close to the one we would have gotten if we had created bins used $z$-positions in flat fracture. But at distances close to the average distances between the silicon atoms we begin to see that the volumes our bins consist of start curving around the silicon atoms, instead of staying flat as they would have if we were using the $z$-distance. See \cref{fig:distance_to_matrix_illustration} for an illustration of this. In this illustration we have illustrated bins created using the same bin width and distance from the matrix, using the two different methods. The dark gray areas are the ones that are included using both methods ($A_\text{Si}\cap A_z$), the light grey areas ($A_\text{Si}$) are the ones unique to the spherical shell bins, and the yellow areas are the ones unique to the the $z$-distance bins ($A_z$).%
 %
-\begin{figure}[htpb]%
+\begin{figure}[htb]%
 % \centering%
     \begin{minipage}[c]{0.6\textwidth}%
         \captionsetup{width=0.925\textwidth}%
         \centering%
         \includesvg[width=\textwidth, svgpath=./images/density/]{number_of_molecules_all_distances02}%
         \caption{%
-            Plot of the number of atoms in each bin when measuring \hl{something} as a function of distance to the \hl{silica matrix/surface of the fracture}. \hl{Finish caption}%
+            Plot of the number of atoms in each bin, when using the distance to the nearest atom for binning.%
             \label{fig:distance_to_matrix_number_of_atoms}%
         }%
     \end{minipage}%
@@ -36,77 +36,20 @@ When we do our measurements as a function of distance to the silica matrix we us
         \centering%
         \includesvg[pretex=\normalsize, width=0.9\textwidth, svgpath=./images/distance_to_matrix_illustration/]{figure12}%
         \caption{%
-            Illustration of binning when using distance to nearest silicon atom as definition of distance to silica matrix ($r_\text{Si})$, vs. $z$-distance ($r_z$). \hl{Finish caption}%
+            Illustration of binning when using distance to nearest silicon atom as definition of distance to silica matrix ($r_\text{Si})$, vs. $z$-distance ($r_z$).%
             \label{fig:distance_to_matrix_illustration}%
         }%
     \end{minipage}%
 \end{figure}%
 
-This difference in binning is something we should be wary about when comparing our results to measurements done using the $z$-distance as the distance to the matrix. One result of this can be seen in \cref{fig:distance_to_matrix_number_of_atoms}, where we have plotted the number of atoms in each bin of width $0.25\text{ \AA}$ against the distance from the silica matrix (meaning the radius of the spherical shells). We see that we get no atoms in the bins from 2 to 3 \Ang, but a big spike just below 2 \AA. This spike is most likely caused by water-oxygen atoms that are bound to silicon atoms, which we placed there when passivating the system (silicon-water atoms from the initial silica crystal are not included in the counting, but we use water-oxygen when passivating). If we would have used the $z$-distance in a flat fracture in a system like this, we would most likely have gotten a very different distribution below 4 \AA\todobo{Why?}, with a more flat distribution instead of it going to zero, since the angular distribution of the oxygen atoms around the silica atoms \hl{makes the $z$-distance vary}.
-% \begin{figure}[htpb]%
-%     \centering%
-%     \includesvg[width=0.8\textwidth, svgpath=./images/density/]{number_of_molecules_all_distances01}%
-%     \caption{%
-%         Number of atoms in each bin when measuring density of water as function of distance from matrix. Bin width = 0.25 \AA\ \hl{FINISH CAPTION}. %
-% %         \label{fig:cell_lists}%
-%     }%
-% \end{figure}%
-% %
-% \begin{figure}[htpb]%
-%     \centering%
-%     \includesvg[width=0.4\textwidth, svgpath=./images/distance_to_matrix_illustration/]{figure05}%
-%     \caption{%
-%         \hl{CAPTION}. %
-% %         \label{fig:cell_lists}%
-%     }%
-% \end{figure}%
-%
-%
-% %
-% \begin{figure}[htpb]%
-%     \centering%
-%     \setlength{\myfigwidth}{0.49\textwidth}%
-% %     \setlength{\mycaptionwidth}{0.3\textwidth}%
-% %
-%     \begin{subfigure}[b]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_13}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-%     \hfill%
-%         \begin{subfigure}[b]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_15}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-%     \\%
-%     \begin{subfigure}[b]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_16}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-%     \hfill%
-%     \begin{subfigure}[b]{\myfigwidth}%
-%         \centering% % Need to center to get image centered over caption
-%         \includegraphics[width=\textwidth]{images/systems/trimmed-rough_fracture01_abel_17}%
-%         \caption{Caption.}%
-% %         \label{fig:hex_to_tetra}%
-%     \end{subfigure}%
-%     \caption{%
-%         Caption. %
-%         \label{fig:rough_fracture01}%
-%     }%
-% \end{figure}%
+This difference in binning is something we should be wary about when comparing our results to measurements done using the $z$-distance as the distance to the matrix. One result of this can be seen in \cref{fig:distance_to_matrix_number_of_atoms}, where we have plotted the number of atoms in each bin of width $0.25\text{ \AA}$ against the distance from the silica matrix (meaning the radius of the spherical shells). We see that we get no atoms in the bins from 2 to 3 \Ang, but a big spike just below 2 \AA. This spike is most likely caused by water-oxygen atoms that are bound to silicon atoms, which we placed there when passivating the system (silicon-water atoms from the initial silica crystal are not included in the counting, but we use water-oxygen when passivating). If we had used the $z$-distance in a flat fracture in a system like this, we would most likely have gotten a very different distribution below 4 \AA, with a more flat distribution instead of it going to zero, since the angular distribution of the oxygen atoms around the silica atoms makes the $z$-distance vary.
 
 \section{Voxelation\label{sec:voxelation}}
 The method of voxelation is a method where we divide our simulation system into adjacent boxes or \emph{voxels} (3-dimensional pixels). The system is divided into $n_x\times n_y\times n_z$ voxels of size $l_x\times l_y\times l_z$. Depending the what we want to calculate we can calculate the voxel size from the number of voxels, or vice versa, using the following relation
 \begin{align*}
     n_i = \frac{L_i}{l_i},
 \end{align*}
-where $L_i$ is the system size, and we assume that the voxel size $l_i$ is set so that $L_i$ is evenly divisible by $l_i$\hl{, meaning that the remainder of $L_i/l_i$ is zero}. If we have a maximum or minimum voxel size $l_i^\text{max}$ or $l_i^\text{min}$ we can use the following relations to calculate the number of voxels
+where $L_i$ is the system size, and we assume that the voxel size $l_i$ is set so that $L_i$ is evenly divisible by $l_i$ (meaning that the remainder of $L_i/l_i$ is zero). If we have a maximum or minimum voxel size $l_i^\text{max}$ or $l_i^\text{min}$ we can use the following relations to calculate the number of voxels
 \begin{align*}
     &n_i=\left\lfloor\frac{L_i}{l_i^\text{max}}\right\rfloor &\text{or}& &n_i=\left\lceil\frac{L_i}{l_i^\text{min}}\right\rceil,
 \end{align*}
@@ -128,7 +71,7 @@ Since we want to find all neighbors within a distance $dr$ of a point, for all o
     &i = \Bigg\lfloor \frac{x}{l_x} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{y}{l_y} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{z}{l_z} \Bigg\rfloor,&
 \end{align*}
 where $l_x\times l_y \times l_z$ is the actual voxel size (we need an even number of voxels, so the actual voxel size is governed by the system size). We then check the distance between the point and the atoms in the voxel the point belongs in, and the atoms in the 26 neighboring voxels of this voxel. 
-\todoc{make voxel size vs. $dr$ illustration}%
+\todoco{make voxel size vs. $dr$ illustration}%
 
 Checking the 26 neighboring voxels ensure that we included all atoms within the distance $dr$. We can see this by looking at the worst case example, where we have a point right at the edge of the voxel it belongs to, at $(i+(1-\epsilon_0))$, and an atom in voxel $(i+2)$ being as close to the point as possible, at $(i+2 + \epsilon)$. The distance between those two points would then be
 \begin{align*}
@@ -138,11 +81,11 @@ Checking the 26 neighboring voxels ensure that we included all atoms within the 
 \end{align*}
 which is larger than $l$, since $\epsilon_0, \epsilon_1$ have to be larger than 0.
 
-When voxelating the system using the distance $r$ we should take care not to use a too small distance, i.e. make the voxels too small and create a lot of voxels. Since the total number of voxels goes as $n^3$ the memory needed to store the matrix increases rapidly with decreasing voxel size. To avoid this we usually implement a hard limit to the number of voxels, and found that a limit of $n < 256$ or even $n < 128$ seemed to work good in most cases. On the other hand, if we make the voxels too large we soon find that the program isn't especially efficient. This is because most voxels will have a lot of atoms in then, and we have to look through a lot of atoms when checking the 26+1 voxels for each atom.
+When voxelating the system using the distance $r$ we should take care not to use a too small distance, i.e. make the voxels too small and create a lot of voxels. Since the total number of voxels goes as $n^3$ the memory needed to store the matrix increases rapidly with decreasing voxel size. To avoid this we usually implement a hard limit to the number of voxels, and found that a limit of $n < 256$ or even $n < 128$ seemed to work good in most cases. On the other hand, if we make the voxels too large we soon find that the program is not especially efficient. This is because most voxels will have a lot of atoms in then, and we have to look through a lot of atoms when checking the 26+1 voxels for each atom.
 
 An implementation of the voxelation method for creating neighbor lists can be seen in \cref{list:create_neighbor_lists}. Note that when calculating distances between points we usually calculate and compare squared distances like $r^2 = (x_1-x_2)(x_1-x_2) + \dots$, since calculating roots are a time-consuming operation on a computer (at least compared to multiplication and addition).
 %
-% We didn't find any algorithms for solving this specific problem, and the usual algorithms can't benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
+% We did not find any algorithms for solving this specific problem, and the usual algorithms can not benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -309,7 +252,7 @@ and the two sums go over the 6 possible angles $\theta$, between the main point 
 
 We use the tetrahedral order parameter for investigating the coordination of water molecules relative to other water molecules. When we lower the temperature in water below freezing the average $Q$ will \hl{approach 1/increas}, since ice has very high coordination. Liquid water also has high coordination caused by the hydrogen bonds, but much lower coordination than ice, so the distribution of $Q$-values are more spread out, with the mean lower than the mean for ice.
 
-When we measure the tetrahedral order parameter we measure $Q$ for all water molecules, defining the position of the water molecules as the position of the oxygen atom in each molecule, and plot the \hl{relative occurrence}\todob{probability density?}, $P(Q)$, to investigate the distribution of $Q$-values. Since $Q$ isn't dependent on several timesteps (like for example diffusion), averaging over several timesteps is trivial. \todobo{But we should be wary of correlations between states?}. Since silica is hydrophilic we expect $Q$ to be different for water molecules near the silica surface, so we will measure $P(Q)$ as function of distance to the silica matrix.
+When we measure the tetrahedral order parameter we measure $Q$ for all water molecules, defining the position of the water molecules as the position of the oxygen atom in each molecule, and plot the \hl{relative occurrence}\todob{probability density?}, $P(Q)$, to investigate the distribution of $Q$-values. Since $Q$ is not dependent on several timesteps (like for example diffusion), averaging over several timesteps is trivial. \todobo{But we should be wary of correlations between states?}. Since silica is hydrophilic we expect $Q$ to be different for water molecules near the silica surface, so we will measure $P(Q)$ as function of distance to the silica matrix.
 
 % \todob{Write about time and atom average?}
 
@@ -323,7 +266,7 @@ To help visualize and characterize our nanoporous system we developed a program 
 \section{Manhattan distance to nearest atom\label{sec:generation_matrix}}
 Since the program from \cref{sec:distance_to_atom} takes a long time to run to get decent maps with high resolution, we decided to also develop a similar program that creates a 3d map of the space, but this time creating a map with the Manhattan distance from each point on the grid to the nearest atom. To ease calculation we this time used a method inspired by the voxelation technique from \cref{sec:voxelation}. This program first divides the system into $n_x\times n_y\times n_z$ voxels, and make a 3d matrix of the same size for storing the Manhattan distance to the nearest atom in each point. We first give all voxels with one or more atoms in them the distance 0. We then label the rest of the voxels using an iterative method, increasing the number by one for each iteration. In each iteration we find the voxels that have a neighbor voxel \hl{labelled} with the previous label (\mono{label-1}), using 4-neighbor connectivity, and give them the current label. When all voxels are labelled, they should have a label corresponding to the \hl{Manhattan distance} to the nearest atom.
 
-Although the Manhattan distance isn't as useful as the regular Euclidean distance we calculate using the \hl{``distance to atom''}-program, the benefit is that making a 3d map of space using the \hl{``generation matrix''} method uses about 3\% of the time that ``distance to atom'' uses for the same system and same resolution. 
+Although the Manhattan distance is not as useful as the regular Euclidean distance we calculate using the \hl{``distance to atom''}-program, the benefit is that making a 3d map of space using the \hl{``generation matrix''} method uses about 3\% of the time that ``distance to atom'' uses for the same system and same resolution. 
 
 \todoa{Something about the usefulness of this measure?}
 

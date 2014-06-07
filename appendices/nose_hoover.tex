@@ -94,7 +94,7 @@ These equations can further be simplified if we introduce a thermodynamic fricti
 % Note that the last equation is redundant, since eq. 1-4 form a closed set
 
 % \todo[inline]{Remove this part, integrate it in ensembles part}
-% A problem with the Nosé-Hoover thermostat is now apparent. Since the velocity appears on both sides of \cref{eq:nose_momentum}, we can't implement it directly in the velocity Verlet integrator. To see this we consider a standard microcanonical simulation \hl{(constant $N$, $V$, and $E$}. There the velocity Verlet algorithm is of the form
+% A problem with the Nosé-Hoover thermostat is now apparent. Since the velocity appears on both sides of \cref{eq:nose_momentum}, we can not implement it directly in the velocity Verlet integrator. To see this we consider a standard microcanonical simulation \hl{(constant $N$, $V$, and $E$}. There the velocity Verlet algorithm is of the form
 % (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
 % \begin{align*}
 %     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \avec(t)\frac{\Delta t^2}{2}\\

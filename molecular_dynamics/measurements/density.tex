@@ -3,7 +3,7 @@ To measure the density in a uniform system consisting of just one atom type, we 
 \[
     \rho = \frac{Nm}{V},
 \]
-where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of the whole system. But if we have a more complicated system, like in our case where we have three different atom types, liquid water in some parts of the system, and solid silica in other parts, we can't use that simple relation. What we do instead is to assiociate a volume $V_i^j$ with each atom of type $j$, and calculate the density of atom type $j$ using
+where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of the whole system. But if we have a more complicated system, like in our case where we have three different atom types, liquid water in some parts of the system, and solid silica in other parts, we can not use that simple relation. What we do instead is to assiociate a volume $V_i^j$ with each atom of type $j$, and calculate the density of atom type $j$ using
 \[
     \rho_j = \dfrac{m_jM}{\sum_{i=0}^M V_i^j},
 \]
@@ -36,7 +36,7 @@ We use the \cpp-library \texttt{Voro++} to find the Voronoi cells, and calculate
     \end{minipage}%
 \end{figure}%
 
-\todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we don't have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
+\todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we do not have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
 
 \todoa{Write about averaging over timesteps and atoms}
 
