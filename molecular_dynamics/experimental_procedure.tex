@@ -22,7 +22,7 @@ When doing simulations using molecular dynamics we use a procedure akin that use
 %     \end{quote}
 % }
 
-To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, the unit cell of which can be seen in figure \cref{fig:beta_cristobalite-unit_cell}, and a larger crystal in \cref{fig:cristobalite01} \todo{Why?}. This this crystalline form consists of corner-bonded SiO$_4$-tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms. \hl{transition?} We give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}.
+To generate silica in the glass form we first create a perfect silica crystal in the crystalline form $\upbeta$-cristobalite, the unit cell of which can be seen in figure \cref{fig:beta_cristobalite-unit_cell}, and a larger crystal in \cref{fig:cristobalite_crystal} \todo{Why?}. This this crystalline form consists of corner-bonded SiO$_4$-tetrahedra, and in the perfect crystallic form all silicon atoms are bound to four oxygen atoms, and all oxygen atoms to two silicon atoms. \hl{transition?} We give the atoms a random uniformly distributed velocities with mean $\mu = 0$ and standard deviation $\sigma = \sqrt{T}$, where $T$ is the wanted temperature \hl{in MD units}.
 % %
 % \begin{figure}[htpb]%
 %     \centering%
@@ -95,6 +95,7 @@ The initialization procedure is visualized in \cref{fig:initialization_steps}, a
         \caption{%
             Perfect $\upbeta$-cristobalite crystal.%
             \label{fig:initialization_step00}%
+            \label{fig:cristobalite_crystal}%
         }%
         \hspace{8pt}
     \end{subfigure}%

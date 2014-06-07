@@ -7,9 +7,9 @@ In \cref{fig:distance_to_atom_r05} we can clearly see the positions of the atoms
 
 In \cref{fig:distance_to_atom_r20} we still see the positions of the atoms, but they are less visible now since we have a bigger range for the colormap. We can still see the pores easily, colored white, and we now also see some characteristics of the pore itself, where it has a darker red color.%
 %
-\begin{figure}[htpb]%
+\begin{figure}[!p]%
     \centering%
-    \setlength{\myfigwidth}{0.9\textwidth}%
+    \setlength{\myfigwidth}{\textwidth}%
     \begin{subfigure}[b]{\myfigwidth}%
         \includesvg[pretex=\normalsize, width=\textwidth, svgpath = ./images/distance_to_atom/rough_fracture_03/]{05_r05_n256}%
         \caption{Max distance $r_\text{max}=5.0$ \AA.%
@@ -21,6 +21,7 @@ In \cref{fig:distance_to_atom_r20} we still see the positions of the atoms, but 
         \caption{Max distance $r_\text{max}=20$ \AA.%
         \label{fig:distance_to_atom_r20}}%
     \end{subfigure}%
+    \captionsetup{width=\textwidth}%
     \caption{%
         Slices of 3d maps of the distance to the nearest atom in the system labelled ``rough fracture \#2'', generated using method from \cref{sec:distance_to_atom}, using a colormap that goes from \textbf{(a)} 0 to 5 \AA, and \textbf{(b)} 0 to 20 \AA.%
     }%
