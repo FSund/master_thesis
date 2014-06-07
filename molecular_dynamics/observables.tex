@@ -21,8 +21,11 @@
 %
 %
 %
-\todoa{Write introduction to observables. Statistical mechanics?}
-We are now ready to start doing some simple simulations, and observe some properties of the system. One of the most basic things we measure is the temperature and pressure in a system
+\todobo{Write introduction to observables. Statistical mechanics?}
+We are now ready to start doing some simple simulations, and observe some properties of the system. One of the most basic statistics we can observe we is the temperature and pressure in a system, and we use results from statistical mechanics to justify that we can simply take the average over all atoms to calculate these observables.
+
+An example of a function that samples statistics for the observables can be seen in \cref{list:sampling} (note that \mono{diffusionSample} will be defined later, in \cref{list:diffusionSample}).%
+%
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
     void sample(System &system) {
@@ -41,12 +44,12 @@ We are now ready to start doing some simple simulations, and observe some proper
 \end{listing}%
 
 \subsection{Temperature}
-\todob{derivation of temperature?}
-According to the equipartition principle the average total kinetic energy \hl{per atom}, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
+% \todob{derivation of temperature?} %
+According to the equipartition principle the average total kinetic energy, for a system consisting of $N$ particles with three degrees of freedom each, can be related to the temperature of the system via
 \begin{align*}
     \Braket{E_k} = \frac{3}{2}Nk_\text{B}T,
 \end{align*}
-where $T$ is the temperature of the system. We calculate the average kinetic energy of a system using
+where $T$ is the temperature of the system, and $k_B$ is the Boltzmann constant. We calculate the average kinetic energy of a system using
 \begin{align*}
     \Braket{E_k} = \frac{1}{N}\sum_{i=1}^N \frac{1}{2} m_i v_i^2,
 \end{align*}
@@ -55,7 +58,8 @@ where $m_i$ and $v_i = |\vec v_i|$ is respectively the mass and speed of atom $i
     T = \frac{2}{3} \frac{\Braket{E_k}}{Nk_B} = \frac{1}{3N^2k_B} \sum_{i=1}^N m_i v_i^2.
 \end{align*}
 
-See \cref{list:temperatureSample} for an example of how to calculate the temperature in a molecular dynamics \hl{simulation/program?} similar to the one we have outlined in \cref{chap:simple_md_program}.
+See \cref{list:temperatureSample} for an example of how to calculate the temperature in a molecular dynamics simulation.
+%\hl{simulation/program?} similar to the one we have outlined in \cref{chap:simple_md_program}. %
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -76,24 +80,25 @@ See \cref{list:temperatureSample} for an example of how to calculate the tempera
     \label{list:temperatureSample}%
 }%
 \end{listing}%
-
-\todod{Something about temperature in system with flow? (not that relevant for me though...)}
+%
+% \todod{Something about temperature in system with flow? (not that relevant for me though...)}
 
 \subsection{Pressure\label{subsec:pressure}}
-\todoa{Mention that it's hard to measure pressure since we don't know the program, and thus can't easily calculate forces?}
-\todob{derivation of pressure? See Anderhaf}
-\todoc{we haven't measured pressure, so maybe remove this section?}
+% \todoa{Mention that it's hard to measure pressure since we don't know the program, and thus can't easily calculate forces?}
+% \todob{derivation of pressure? See Anderhaf}
+\todoco{we haven't measured pressure, so maybe remove this section?}
 To measure the pressure when using potentials with pairwise additive interactions, like the case is for our example program with the Lennard-Jones potential, we can use a method derived from the virial equation for the pressure\cite[Section~4.4]{frenkel2001understanding}. In a volume $V$ with particle density $\rho = N/V$, the average pressure is
 % For pairwise additive interactions we can write\cite[Section~4.4]{frenkel2001understanding}
 \begin{align}
     P = pk_\text{B}T + \frac{1}{dV} \Braket{\sum_{i<j} \bvec F (\bvec r_{ij}) \cdot \bvec r_{ij}},
     \label{eq:measure_pressure}
 \end{align}
-where $\vec F(\rvec_{ij})$ is the force between particle $i$ and $j$, and $\rvec_{ij}$ is the distance between the particles. \hl{Note that this expression for the pressure has been derived for a system at constant $N$, $V$ and $T$, whereas our simulations are performed at a constant $N$, $V$, and $E$}
+where $\vec F(\rvec_{ij})$ is the force between particle $i$ and $j$, and $\rvec_{ij}$ is the distance between the particles. Note that this expression for the pressure has been derived for a system at constant $N$, $V$ and $T$, whereas our simulations are performed at a constant $N$, $V$, and energy $E$.
 
 We see that we need the force from each atom $j$ on atom $i$, $\vec F(\rvec_{ij})$ to calculate the pressure, so for efficiency we should calculate the contribution to the pressure, $\vec F(\rvecij)\cdot\rvecij$, while doing the force calculations. The contribution to the pressure should then be stored so we can calculate the average in \cref{eq:measure_pressure} later.
 
-An example of how to calculate the pressure in a molecular dynamics \hl{simulation/program} as outlined in \cref{chap:simple_md_program} can be seen in \cref{list:pressureSample}.
+An example of how to calculate the pressure in a molecular dynamics similation can be seen in \cref{list:pressureSample}.%
+%\hl{simulation/program} as outlined in \cref{chap:simple_md_program} can be seen in \cref{list:pressureSample}. %
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}

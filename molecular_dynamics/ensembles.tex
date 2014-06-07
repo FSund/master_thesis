@@ -5,17 +5,16 @@
 %     \item microcanonical = constant $N$, $V$ and $E$
 % \end{itemize}
 % }
-\todoa{Clean up ensembles intro}
-\todo{see \cite[section 3.7]{griebel2007numerical} for good intro to thermostats/ensembles}
-
+\todoao{Clean up ensembles intro}%
+\todo{see \cite[section 3.7]{griebel2007numerical} for good intro to thermostats/ensembles}%
+\todoco{small discussion of how heat bath really works? see thijssen p. 203(216)}%
+%
 % \section{Ensemble/thermostats}
-We have now developed a molecular dynamics program that simulates simple systems \hl{like liquid/gas Argon}, with constant number of particles $N$, constant volume $V$ and constant energy $E$ %
-%\hl{$V$ and $E$ depend on integrator?}%
-, which means that the system can't exchange particles or energy with the environment. This forms a statistical ensemble called the microcanonical ensemble or the $NVE$-ensemble, which has some implications for what we can simulate and measure. Other ensembles that might be of interest is the canonical ensemble (constant $N$, $V$ and temperature $T$) and the grand canonical ensemble (constant chemical potential $\mu$, $V$ and $T$ / constant $N$, pressure $P$, and temperature $T$) \hl{and $NPT$? see Thijssen p. 209(222)}.
+We have now developed a molecular dynamics program that simulates simple systems like Argon, with constant number of particles $N$, constant volume $V$ and constant energy $E$, which means that the system can't exchange particles or energy with the environment. This forms a statistical ensemble called the microcanonical ensemble or the $NVE$-ensemble, which has some implications for what we can simulate and measure. Other ensembles that might be of interest is the canonical ensemble (constant $N$, $V$ and temperature $T$) and the grand canonical ensemble (constant $N$, pressure $P$, and temperature $T$).
 
 % \hl{To study the canonical ensemble we can use a thermostat, which is a method for controlling the temperature of the system.} \todo{transition to parts below}
 
-The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. \todoco{small discussion of how heat bath really works? see thijssen p. 203(216)} The temperature is defined via the kinetic energy of the system, so we know we have to somehow control and modify the velocities of the atoms in the system to control the temperature.
+The most often studied ensemble other than the microcanonical is the canonical, with constant temperature instead of energy. To study this we need a way of controlling the temperature of the system, which is usually done by using a \emph{thermostat}. A thermostat simulates the system being in contact with a heat bath with temperature $T_\text{bath}$. The temperature is defined via the kinetic energy of the system, so we know we have to somehow control and modify the velocities of the atoms in the system to control the temperature.
 % 
 % \orangebox{
 %     \begin{itemize}
@@ -30,7 +29,7 @@ Perhaps the simplest example of a thermostat is the Berendsen thermostat\cite{be
 \begin{align*}
     \gamma = \sqrt{1 + \frac{\Delta t}{\tau}\left(\frac{T_\text{bath}}{T} - 1\right)},
 \end{align*}
-where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \hl{strength} of the thermostat, $T$ is the temperature of the system and $T_\text{bath}$ is the temperature of the \hl{simulated} heat bath. Setting $\tau = \Delta t$ makes the temperature exactly equal to $T_\text{bath}$. The velocities can either be multiplied by this factor every timestep, or every $n$-th timestep. An example of how to apply the Berendsen thermostat can be seen in \cref{list:applyBerendsenThermostat}.%
+where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the strength of the thermostat, $T$ is the temperature of the system and $T_\text{bath}$ is the temperature of the simulated heat bath. Setting $\tau = \Delta t$ makes the thermostat change the temperature of the system so it is exactly equal to $T_\text{bath}$. The velocities can either be multiplied by this factor every timestep, or every $n$-th timestep. An example of how to apply the Berendsen thermostat can be seen in \cref{list:applyBerendsenThermostat}.%
 %
 \begin{listing}[!htb]%
 \begin{cppcode*}{gobble=4}
@@ -44,17 +43,17 @@ where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the \h
     }
 \end{cppcode*}
 \caption{%
-    The Berendsen thermostat implemented in the function \mono{applyBerendsenThermostat}. %
+    Example of how to implement the Berendsen thermostat. %
     \label{list:applyBerendsenThermostat}%
 }%
 \end{listing}%
 
-The Berendsen thermostat is very good at controlling and changing the temperature of a system, but it doesn't sample the canonical ensemble especially good. This is because we change the velocity of \emph{all} atoms at every timestep, which isn't \hl{physically realistic}. This means that we shouldn't use this thermostat when trying to sample the canonical ensemble, but we often use it to heat up or cool down a system, to reach a wanted temperature.
+The Berendsen thermostat is very good at controlling and changing the temperature of a system, but it doesn't sample the canonical ensemble very well. This is because we change the velocity of \emph{all} atoms at every $n$-th timestep, which isn't physically realistic. This means that we shouldn't use this thermostat when trying to sample the canonical ensemble, but we often use it to heat up or cool down a system, to reach a wanted temperature.
 
-Many thermostats similar to the Berendsen thermostat exist\todoco{examples of other Berendsen-like thermostats}, but they all suffer from the fact that they scale the velocity of all particles, giving \hl{unphysical} behaviour.
+Many thermostats similar to the Berendsen thermostat exist but they all suffer from the fact that they scale the velocity of all particles, giving unphysical behaviour.
 
 \section{Andersen thermostat}
-A more \hl{physically realistic} thermostat is the Andersen thermostat\todobo{cite Andersen?}, which simulates \hl{(hard)} collisions between atoms in the system and atoms in the heat bath. We don't actually simulate any extra particles, but we we assign new random velocities to a random fraction of the atoms, the fraction and magnitude of the velocity determined by the strength of the thermostat and the temperature of the thermostat. 
+The Andersen thermostat is a more physically realistic thermostat, which simulates hard collisions between atoms in the system and atoms in the heat bath. We don't actually simulate any extra particles, but we we assign new random velocities to a random fraction of the atoms, the fraction and magnitude of the velocity determined by the strength of the thermostat and the temperature of the thermostat. 
 
 This thermostat uses the following procedure%
 %
@@ -73,45 +72,26 @@ This thermostat uses the following procedure%
         \end{align*}
 \end{itemize}
 %
-In this thermostat $\tau$ can be seen as a collision time, \hl{and $\tau$ should have about the same value as in the Berendsen thermostat}\tododo{we give no number for $\tau$ in Berendsen..}.
+In this thermostat $\tau$ can be seen as a collision time, and $\tau$ should have about the same value as in the Berendsen thermostat.
+%}\tododo{we give no number for $\tau$ in Berendsen..}.
 
-The Andersen thermostat samples the canonical ensemble well\hl{cite}, but disturbs the dynamics of e.g. lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, since we so abruptly change the velocity and trajectory of the particles \hl{(e.g. diffusion)}.
+The Andersen thermostat samples the canonical ensemble well\todobo{citation?}, but disturbs the dynamics of for example lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, for example diffusion, since we so abruptly change the velocity and trajectory of the particles.
 
 \section{Nos\'e-Hoover thermostat and Nos\'e-Hoover chains}
-The Nos\'e-Hoover thermostat is an advanced thermostat %
-%\hl{based on statistical mechanics}, %
-that generates a correct canonical ensemble %
-%\hl{(under certain conditions, which will be discussed later)} %
-and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. The effect of applying Nosé-Hoover type thermostats it that we get an additional \emph{friction}-term to the forces on the atoms, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
+The Nos\'e-Hoover thermostat is an advanced thermostat that generates a correct canonical ensemble and give very accurate dynamics\cite[section 6.1]{frenkel2001understanding}. The effect of applying Nosé-Hoover type thermostats it that we get an additional \emph{friction}-term to the forces on the atoms, instead of directly changing the velocities as with the Andersen and Berendsen thermostats.
 
 \todoa{A bit more general about Nosé-Hoover thermostats, developmend history stuff}
-
 \todob{We have derived the equations of motion we get when using the Nosé-Hoover thermostat in \cref{appendix:nose_hoover}, and repeat some of the results here.}
 
 % A further development of an even more a These type of thermostats are in widespread use because of these properties, although they are a lot harder to implement than the Berendsen and Andersen thermostat. A derivation of the Nosé-Hoover thermostat can be seen in \cref{appendix:nose_hoover}, and some of the results are repeated here.
 
 \subsection{Nosé-Hoover thermostat}
-% To implement the thermostat \hl{we need to integrate a new set of equations of motion}
-% \begin{align*}
-%     \avec &= -\frac{\nabla U(\rvec)}{m} - \xi \vvec
-% \end{align*}
-% \begin{align*}
-% %     \dot \rvec_i &= \vvec_i \\
-%     \dot \vvec_i &= \frac{\Fvec_i}{m_i} - \xi\vvec_i \\
-%     \Fvec &= m\avec = m\dot\vvec = -\nabla U(\rvec) - \xi m_i \vvec \\
-%     \Fvec &= -\nabla U(\rvec) \\
-%           &\rightarrow -\nabla U(\rvec) - \xi m_i \vvec
-% \end{align*}
 The simplest form of the Nosé-Hoover type thermostats is the Nosé-Hoover thermostat. This introduces a thermodynamic friction coefficient $\xi$ in the equations of motion, and we get the following equations of motion (the time derivative noted by a dot)
-% \begin{align*}
-%     \Fvec &= -\nabla U(\rvec)
-% \end{align*}
-% to \todobo{add $d/dt \rvec = \vvec$?}
 \begin{align}
     \dot \rvec &= \vvec \label{eq:nose_hoover_velocity}\\
     \Fvec &= -\nabla U(\rvec) - \xi m \vvec, \label{eq:nose_hoover_force}
 \end{align}
-where the friction coefficient generally depends on time, $\xi = \xi(t)$, and the choice of $\xi(t)$ determines the characteristics of the thermostat. See \cref{appendix:nose_hoover} for a derivation of this. \todoao{write more about this time dependence? transition to below}
+where the friction coefficient generally depends on time, $\xi = \xi(t)$, and the choice of $\xi(t)$ determines the characteristics of the thermostat. See \cref{appendix:nose_hoover} for a derivation of this.
 
 If we try to integrate these equations of motion using our integrator of choice, the velocity Verlet algorithm, a problem with using this thermostat will become apparent. The velocity Verlet integrator has the followin form (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})
 \begin{align*}
@@ -119,30 +99,7 @@ If we try to integrate these equations of motion using our integrator of choice,
     \vvec(t + \Delta t) &= \vvec(t) + \big[\avec(t) + \avec(t + \Delta t)\big] \frac{\Delta t}{2}.
 \end{align*}
 If we insert \cref{eq:nose_hoover_force} into these equations (using $\Fvec = m\avec$) we get
-% \begin{align*}
-% FVEC version
-%     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \left[ \frac{\vec F(t)}{m} - \xi(t)\vec v(t) \right] \frac{\Delta t^2}{2}\\
-%     \vvec(t + \Delta t) 
-%         &= \vvec(t) + \Bigg[ 
-%             \left(\frac{\vec F(t+\Delta t)}{m} - \xi(t+\Delta t)\vec v(t+\Delta t)\right) \\
-%             &\phantom{= \vvec(t) + \Big[} + \left(\frac{\vec F(t)}{m} - \xi(t)\vec v(t)\right)
-%         \Bigg] 
-%         \frac{\Delta t}{2}.
-% \end{align*}
-% \begin{align*} %
-% % avec version
-%     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \big[ -\nabla U(t) - \xi(t)m\vec v(t) \big] \frac{\Delta t^2}{2m}\\
-%     \vvec(t + \Delta t) 
-%         &= \vvec(t) + \Bigg[ 
-% %             \left(
-%                 -\nabla U(t) - \xi(t)m\vec v(t) \\
-%                 &\phantom{= \vvec(t) + \Big[} -\nabla U(t+\Delta t) - \xi(t+\Delta t)m\vec v(t+\Delta t)
-% %             \right)
-%         \Bigg] 
-%         \frac{\Delta t}{2m},
-% \end{align*}
-\begin{align*} %
-% avec version
+\begin{align*}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \left[ -\frac{\nabla U(t)}{m} - \xi(t)\vec v(t) \right] \frac{\Delta t^2}{2}\\
     \vvec(t + \Delta t) 
         &= \vvec(t) + \Bigg[ 
@@ -164,13 +121,9 @@ and the time-evolution of $\xi$ is described by
 \begin{align}
     \dot\xi         &= \left( \sum_{i=1}^N \frac{p_i^2}{m_i} - 3Nk_BT \right) / Q.\label{eq:nose_hoover_dot_xi}
 \end{align}
-Here $s$ is a degree of freedom introduced to the Lagrangian \hl{and Hamiltonian} of the system, $p_s$ is the \hl{momentum} associated with $s$, and $Q$ the ``mass'' associated with $s$. $Q$ controls the coupling to the heat bath, and has to be chosen with care\todobo{how to choose this?}. A large value for $Q$ leads to a weak coupling.
+Here $s$ is a degree of freedom introduced to the Lagrangian and Hamiltonian of the system, $p_s$ is the momentum associated with $s$, and $Q$ the ``mass'' associated with $s$. $Q$ controls the coupling to the heat bath, and has to be chosen with care. A large value for $Q$ leads to a weak coupling.
 
 An important result derived by Hoover in \cite{hoover1986constant} is that this choice of $\xi$ (\cref{eq:nose_hoover_xi,eq:nose_hoover_dot_xi}) is the \emph{only} choice that can lead to a canonical distribution.
-
-% \subsubsection{Subsubsection?}
-% \todoa{Do something about transition/section/headline here}
-
 
 \subsection{Nosé-Hoover chains\label{sec:nose_hoover_chain}}
 It can be shown that the Nosé-Hoover thermostat (\cref{eq:nose_hoover_xi,eq:nose_hoover_dot_xi}) only generates a correct canonical distribution for molecular systems in which there are no external forces, and the center of mass remains fixed \cite[Appendix B.2.1]{frenkel2001understanding}\cite{hoover1985canonical}. The last condition can be obeyed if we initialize the system with a net zero center-of-mass velocity, which we usually do in our simulations to avoid drift. If we want to simulate systems with an external force, for example to introduce flow, or a system where the center off mass is not fixed, we can use what is called Nosé-Hoover \emph{chains}, as proposed by Martyna et al.\cite{martyna1992nose}. 
@@ -189,7 +142,7 @@ which we see have a similar form to the equations we get when using a regular No
 \end{align*}
 As with the Nosé-Hoover thermostat, the regular velocity Verlet integrator can't be used with this thermostat, but a derivation of an integrator for these equations of motion can be seen in \cite[Appendix E.2.1]{frenkel2001understanding} and \cite{martyna1996explicit}, where they again use the Liouville approach similar to the one we used to derive the velocity Verlet integrator in \cref{appendix:liouville_verlet}.
 
-The Nosé-Hoover chains thermostat will generate a canonical distribution even in a system with external forces, and center of mass that is not fixed\cite[Appendix B.2.2]{frenkel2001understanding}, \hl{so this is perfect for simulating a system where we introduce flow}.
+The Nosé-Hoover chains thermostat will generate a canonical distribution even in a system with external forces, and center of mass that is not fixed\cite[Appendix B.2.2]{frenkel2001understanding}, and will for example work well in a simulation where we introduce flow by some external force.
 
 
 % Since the force depends on both the positions $\rvec$ and velocities $\vvec$, and our integrator of choice, the velocity Verlet algorithm, needs the forces in the next timestep to calculate the velocities in the next timestep, we turn the velocity Verlet integrator into a  (from \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity})

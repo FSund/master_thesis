@@ -1,16 +1,16 @@
 \section{Detrending moving average\label{sec:dma}}
-\todoa{Plot of $\sigma_\text{DMA}^2$ as function of $n$ to determine $H$}
-\todobo{Transition from rescaled range to surface?}
-To estimate the Hurst exponent of a surface we use a method called detrending moving average (DMA) developed for 1-dimensional data by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
+\todoao{Plot of $\sigma_\text{DMA}^2$ as function of $n$ to determine $H$}%
+% \todobo{Transition from rescaled range to surface?}%
+Estimating the Hurst exponent of a surface is not trivial, so to measure this we use a method called detrending moving average (DMA), developed for 1-dimensional data by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
 
-After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is \hl{easy} to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in\cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.%
-\todo{good results, easy to implement? }%
-\todoao{everything below is for 2/3 D, not always obvious}%
+After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is easy to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in\cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.%
+% \todo{good results, easy to implement? }%
+% \todoao{everything below is for 2/3 D, not always obvious}%
 
 \subsection{Detrending moving average in 2 dimensions}
 % We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. We divide this surface into \emph{overlapping} subsurfaces of size $n \times n$, spanning the whole surface. The \hl{lower left} corners of the surfaces are located in the points $(i,j)$ for $i,j = 1,\dots, N-n+1$ (the limits are set so that the subsurfaces stay within the domain of the surface). In each surface we find a point $(k,l) = (n-m,n-m)$ (relative to lower bottom corner of subsurface)
 
-We define a \hl{(self-affine)} surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. For each point $i,j \in [1,N-n+1]$ in this surface we define a subsurface of size $n\times n$, where each subsurface consists if the points
+We define a (self-affine) surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. For each point $i,j \in [1,N-n+1]$ in this surface we define a subsurface of size $n\times n$, where each subsurface consists if the points
 \begin{align*}
 %     (k,l) = \left([i, \dots, i+n], [j, \dots, j+n]\right)%
 %     (k,l) = (i,j) + ([1\dots,n], [1,\dots,n])%
@@ -94,17 +94,17 @@ The parameter $\theta$ controls the position of this point inside the subsurface
         \label{fig:DMA_theta_c}%
     \end{subfigure}%
         \caption{%
-        Illustration of three extreme cases for the parameter $\theta$ in \hl{2/3} dimensions. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustrations use $n = 3$.%
+            Illustration of three extreme cases for the parameter $\theta$ in DMA, on a surface. The dots are points where the main surface is defined, the red star is the point $(k_m,j_m)$, and the black square marks the subsurface, and the points averaged over to calculate $\bar {f_n}(i,j)$ in \cref{eq:carbone_average}. The illustrations use $n = 3$.%
         \label{fig:DMA_theta}%
     }%
 \end{figure}%
 
-We find the average $\bar {f_n}$ of each subsurface \hl{using}
+We find the average $\bar {f_n}$ of each subsurface using
 \begin{align}
     \bar {f_n}(i,j) = \frac{1}{n^2} \sum_{k = i}^{i+n} \sum_{l = j}^{j+n} f(k,l),
     \label{eq:carbone_average}
 \end{align}
-and we define the \emph{generalized variance}, $\sigma_\text{DMA}^2$, as \hl{the sum of the squared differences between} the value in the point $f(k_m,l_m)$ minus the average $\bar {f_n}(i,j)$, for each subsurface. This can be written as
+and we define the \emph{generalized variance}, $\sigma_\text{DMA}^2$, as the sum of the squared differences between the value in the point $f(k_m,l_m)$ minus the average $\bar {f_n}(i,j)$, for each subsurface. This can be written as
 \begin{align}
     \sigma_\text{DMA}^2 
 %     &= \frac{1}{(N-n)^2}\sum_{i=n-m}^{N-m} ~ \sum_{j=n-m}^{N-m} 
@@ -131,9 +131,9 @@ It can be shown that this generalized variance has a power-law dependence on $n$
 \end{align*}
 We can use this dependence to estimate the Hurst exponent $H$, by calculating $\sigma_\text{DMA}^2$ for different sizes of the subsurfaces, $n$. We estimate $H$ by a linear fit of $\log \left(\sigma_\text{DMA}\right)^2$ against $\log \left(2n^2 \right)$, where $H$ is the slope of this fit.
 
-In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid \hl{strange/spurious?} results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
+In the paper by Anna Carbone that generalizes DMA to higher dimensions\cite{carbone2007algorithm} they use different parameters for each spatial dimension $d$, $\bvec\theta = \theta_1, \dots, \theta_d$ and $\bvec{n} = n_1, \dots, n_d$, but for simplicity and to avoid spurious results, we use $\theta_1 = \theta_2 = \theta$ and $n_1 = n_2 = n$.
 
-A modification of the method mentioned is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with\todoao{check this equation}
+A modification of the method mentioned is replacing $\bar f_n(i,j)$ in \cref{eq:dma_variance} with
 \begin{align*}
     \bar {f_n}^*(i,j) = (1-\alpha) f_n(i,j) + \alpha \bar {f_n}(i-1,j-1),
 \end{align*}
@@ -141,29 +141,32 @@ where
 \[
     \alpha = n^2/(n+1)^2,
 \]
-and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). To use this modification we also have to change the limits in \cref{eq:dma_variance} from ${i,j\in [1,N-n+1]}$ to $i,j\in [2,N-n+1]$. This modification has been shown to give better results for small systems\cite{carbone2007algorithm}\todo{why?}, and since we are usually generating surfaces with a \hl{resolution/$N$ of 100-200}, we use this modified method in our implementation of the method. \todo{maybe implement both methods?}
+and $\tilde f_n(i,j)$ has the same form as before (see \cref{eq:carbone_average}). To use this modification we also have to change the limits in \cref{eq:dma_variance} from ${i,j\in [1,N-n+1]}$ to $i,j\in [2,N-n+1]$. This modification has been shown to give better results for small systems\cite{carbone2007algorithm}, and since we are usually generating surfaces with a resolution of 100-200 points in each direction, we use this modified method in our implementation of the method.
 
-\todob{The method is implemented in Matlab/Octave}
+% \todob{The method is implemented in Matlab/Octave}
 
-\subsection{The performance of detrending moving average}
-\todoa{Read through DMA performance, make some conclusions from plot}
-To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic \hl{(1D)} time series and \hl{(2D)} surfaces \hl{of fractional Brownian motion} with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it's both hard to accurately measure the exponent, and it's hard to synthesize data with a given exponent. \hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
+% \subsection{The performance of detrending moving average}
+\subsection{Validation}
+\todoao{Read through DMA performance, make some conclusions from plot}
+To verify that the method we used for estimating the Hurst exponent worked as intended, and gave good results, we ran a series of tests using synthetic 1-dimensional timeseries and 2-dimensional surfaces of fractional Brownian motion, with a known Hurst exponent. When doing these tests we soon realized that a big problem with synthesizing time series and surfaces with a given Hurst exponent is that it is both hard to accurately measure the exponent, and it is hard to synthesize data with a given exponent. %\hl{This means that when testing methods for analysing and synthesizing signals, you never know if it's you measuring method, or your synthesizing method that is causing problems if things aren't working as intended.}
 
-To test the \hl{DMA method} we synthesized data with a given Hurst exponent using 4 different \hl{methods/programs}, and measured the exponent using the detrending moving average method for each of these methods. 
+To test the DMA method we synthesized data with a given Hurst exponent using 4 different programs, and measured the exponent using the detrending moving average method for each of these methods. 
 
-For synthesizing 1D data we used the built-in Matlab-function \hl{cite matlab?} \Verb!wfbm! which uses a wavelet-based synthesis method described by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method proposed by Wood and Chan in \cite{wood1994simulation}, and \Verb!fbmlevinson! which uses Cholesky/Levinson factorization from \cite{levinson1947wiener}. 
+For synthesizing 1D data we used the built-in Matlab-function \Verb!wfbm! which uses a wavelet-based synthesis method described by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method proposed by Wood and Chan in \cite{wood1994simulation}, and \Verb!fbmlevinson! which uses Cholesky/Levinson factorization from \cite{levinson1947wiener}. 
 
-There are many methods and algorithms for generating \hl{2D/3D/surfaces} data with a given Hurst exponent, but we had problems finding working implementations of any of them. We will later implement a midpoint displacement method for this (see \cref{chap:generating_surfaces,subsec:SRA_implementation}), but having external reference is very useful, so we used a function from FracLab called \Verb!synth2!, which, according to the documentation of the function:%
+There are many methods and algorithms for generating surfaces data with a given Hurst exponent, but we had problems finding working implementations of any of them. We will later implement a midpoint displacement method for this (see \cref{chap:generating_surfaces,subsec:SRA_implementation}), but having external reference is very useful, so we used a function from FracLab called \Verb!synth2!, which, according to the documentation of the function:\todoao{What to do about this? no sources...}
 \begin{quote}
     \textit{Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0).}
-\end{quote}\todobo{No sources are given in FracLab documentation...}
-We will later also test our own implementation of a method for generating \hl{2d/3d} data against \hl{DMA}.
+\end{quote}
+No further information is given in the FracLab documentation for how this method works.
+% We will later also test our own implementation of a method for generating \hl{2d/3d} data against \hl{DMA}.
 % ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
 
-See \cref{fig:dma_performace} for a plot of Hurst exponent measured using \hl{DMA} as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$.
+See \cref{fig:dma_performace} for a plot of Hurst exponent measured using DMA as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$.
 
-From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the best and most consistent results, as also noted by Gao-Feng Gu and Wei-Xing Zhou in\cite{gu2010detrending}, where they further develop the \hl{DMA} method to analyse multifractals. \hl{We would liked to have more 2D data references.}%
-\todob{Fix newcommand stuff in \cref{fig:dma_performace}, and maybe legend texts (can remove stuff now that we know have smaller text in figures)}
+From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the best and most consistent results, as also noted by Gao-Feng Gu and Wei-Xing Zhou in \cite{gu2010detrending}, where they further develop the DMA method to analyse multifractals. %
+% \todobo{We would liked to have more 2D data references.}%
+% \todob{Fix newcommand stuff in \cref{fig:dma_performace}, and maybe legend texts (can remove stuff now that we know have smaller text in figures)} %
 %
 \begin{figure}[htpb]%
     \centering%
@@ -184,11 +187,11 @@ From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the
         \label{fig:dma_performace}%
     }%
 \end{figure}%
-
-\orangebox{
-    \begin{itemize}
-        \item 1D: Plot of H from DMA vs. input H for wfbm (Matlab built in), and perhaps a FracLab variant?
-        \item 1D: Plot of H from DMA vs. H from FracLab measure method?
-        \item 2D: Plot of H from DMA vs. input DiamondSquare H and vs. synth2? (this could fit better in diamondsquare part).
-    \end{itemize}
-}
+%
+% \orangebox{
+%     \begin{itemize}
+%         \item 1D: Plot of H from DMA vs. input H for wfbm (Matlab built in), and perhaps a FracLab variant?
+%         \item 1D: Plot of H from DMA vs. H from FracLab measure method?
+%         \item 2D: Plot of H from DMA vs. input DiamondSquare H and vs. synth2? (this could fit better in diamondsquare part).
+%     \end{itemize}
+% }

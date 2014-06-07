@@ -1,8 +1,8 @@
 \section{Integration scheme}
-\tododone{Cite appendix \cref{appendix:verlet_integrators,sec:liou,appendix:verlet_taylor}}
-\tododone{Write newton's equation of motion}
-\tododone{Important to have $\Fvec = m\avec = -\nabla U(\rvec)$ somewhere here, to show how we find forces from potential}
-\todoao{Replace $\avec$ with $\Fvec$ in equations below?}
+% \tododone{Cite appendix \cref{appendix:verlet_integrators,sec:liou,appendix:verlet_taylor}}
+% \tododone{Write newton's equation of motion}
+% \tododone{Important to have $\Fvec = m\avec = -\nabla U(\rvec)$ somewhere here, to show how we find forces from potential}
+% \todoao{Replace $\avec$ with $\Fvec$ in equations below?}
 To integrate Newton's equations of motion (time derivative denoted by a dot)
 % \begin{align*}
 %     \vvec &= \dod{\rvec}{t} \\
@@ -15,35 +15,35 @@ To integrate Newton's equations of motion (time derivative denoted by a dot)
     \dot \rvec &= \vvec \\
     \Fvec &= -\nabla U(\rvec(t)) = -\nabla U(t)
 \end{align*}
-for the intermolecular potential $U(\rvec)$ there are a lot of different methods to choose between, ranging from the simple forward Euler method first described by Leonard Euler in 1768, to higher order predictor-corrector methods\hl{cite}. Since the equations of motion are reversible, so should our integration method be. We also want to be able to use as large timesteps as possible, to save computation time. Lastly, and perhaps most importantly, we want the energy of our system to be conserved, so the long-term drift in energy should be small. We only need to be able to make statistically correct predictions about the trajectories of the atoms, so predicting the true trajectories of the atoms isn't a priority as long as they are statistically correct.
+for the intermolecular potential $U(\rvec)$ there are a lot of different methods to choose between, ranging from the simple forward Euler method first described by Leonard Euler in 1768, to higher order ``predictor-corrector'' methods. The integrator we use need to fullfil certain demands. Since the equations of motion are reversible, so should our integration method be. We also want to be able to use as large timesteps as possible, to save computation time. Lastly, and perhaps most importantly, we want the energy of our system to be conserved, so the long-term drift in energy should be small. We only need to be able to make statistically correct predictions about the trajectories of the atoms, so predicting the true trajectories of the atoms is not a priority as long as they are statistically correct.
 
 %Our integration method needs to\hl{???} ``Newton's equations of motion are time reversible, ans so should our algorithms be'' \hl{(see Frenkel p. 73/93)}.
 % \todobo{something about trajectory of atoms in integrator?}
-\todob{a bit more intro about integration}
+% \todob{a bit more intro about integration}
 % \todoa{Rewrite integration chapter to properly integrate appendix}
 
-It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a accumulated error in energy of the order $\mathcal{O}(\Delta t^2)$ (as shown in \cref{subsec:verlet_error_liouville}), and is time-reversible. 
+It turns out that a deceptively simple method first described by Loup Verlet in 1967\cite{verlet1967computer} often satisfies our needs in an integrator, being both very accurate over long simulation times, having a accumulated error in energy of the order $\mathcal{O}(\Delta t^2)$ (as shown in \cref{subsec:verlet_error_liouville}), and is time-reversible. This method also has the advantage that it is numerically cheap, compared to higher-order methods. The integration method is called Verlet integration.
 
-\hl{It can be shown that the Verlet algorithm is so-called area-preserving}\cite[section 4.3.3]{frenkel2001understanding}, \hl{which means that the algorithm is compatible with energy conservation, but doesn't guarantee the absence of long-term energy drift.}
+% \hl{It can be shown that the Verlet algorithm is so-called area-preserving}\cite[section 4.3.3]{frenkel2001understanding}, \hl{which means that the algorithm is compatible with energy conservation, but doesn't guarantee the absence of long-term energy drift.}
 
-(It is also and numerically cheap \hl{(compared to other methods)} \st{requiring on the order of $N$?? flops}.)
+% (It is also and numerically cheap \hl{(compared to other methods)} \st{requiring on the order of $N$?? flops}.)
 %
 % \tododone{Decide on global error in velocity Verlet, and source for this}%
-\todoa{Something about what demands we have for an integrator, see Frenkel p 73/93}%
-\todob{Discuss that global error has been hard to find sources for?}%
-\todod{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}%
-\todod{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}%
+% \todoa{Something about what demands we have for an integrator, see Frenkel p 73/93}%
+% \todob{Discuss that global error has been hard to find sources for?}%
+% \todod{Verlet can have numerical imprecision caused by adding small $\Delta t^2$ term to large $\Delta t^0$ term}%
+% \todod{Tildesey p. 80/95: in simulations of liquid Argon near the triple point using Verlet, RMS energy fluctuations of 0.01 percent observed with $\Delta t \approx 10^{-14}\text s$ and 0.2 percent for $\Delta t \approx 4\times10^{-14}\text{ s}$}%
 
 \subsection{Regular Verlet integration}
-\todob{Something general about Verlet methods before specific?}
+% \todob{Something general about Verlet methods before specific?}
 The Verlet method has many variations, but the simplest form (the one used by Verlet in \cite{verlet1967computer}) has the form
 \begin{align}
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
     \label{eq:regular_verlet}
 \end{align}
-where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ (see \cref{appendix:verlet_taylor}).
+where $\Delta t$ is the timestep, and $\avec(t)$ is the velocity at time $t$. This form of the scheme has a truncation error in the position for one timestep of the order $\mathcal{O}(\Delta t^4)$ (see \cref{appendix:verlet_taylor}).
 
-The stability and \hl{versatiliy} of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
+% The stability and versatiliy of the \hl{velocity} Verlet method comes from the fact that the scheme is symplectic\todo{show this?, appendix material}. \hl{write more about this, what this means}.
 
 We see that the velocity isn't explicitly calculated or used in this form of the sceme, but if we need it for our experiments we can estimate the velocity using a Taylor expansion around $\rvec(t\pm\Delta t)$, which gives
 \begin{align*}
@@ -51,7 +51,7 @@ We see that the velocity isn't explicitly calculated or used in this form of the
 \end{align*}
 which has a truncation error for one timestep of the order $\mathcal{O}(\Delta t^2)$ (see \cref{appendix:verlet_taylor}). 
 
-The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of happens in the first step. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually approximated using the initial velocity, as follows
+The implementation of the Verlet scheme is mostly straightforward, the only thing we have to take care of is what happens in the first timestep. When calculating the positions in the first step, $\rvec(0+\Delta t)$, we see from \cref{eq:regular_verlet} that we need the positions from the previous step, $\rvec(0-\Delta t)$. These positions are usually approximated using the initial velocity, as follows
 \begin{align*}
     \rvec(0-\Delta t) = \rvec(0) - \vvec(0)\Delta t.
 \end{align*}
@@ -72,7 +72,7 @@ See \cref{list:regular_verlet} for an example of how to implement the Verlet int
 \end{cppcode*}
 \caption{%
 %     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
-    Implentation of \mono{integrateEquationsOfMotion} from \cref{list:simple_md_program}.%
+    Implentation of \mono{integrateEquationsOfMotion} from \cref{list:simple_md_program}, using regular Verlet integration.%
     \label{list:regular_verlet}%
 }%
 \end{listing}%
@@ -85,11 +85,11 @@ The most used form of the Velocity integration scheme is called the velocity Ver
 \end{align}
 with the truncation error for one timestep $\Delta t$ being of the order $\mathcal{O}(\Delta t^3)$ for both the position and the velocity, and the accumulated error in energy being of the order $\mathcal{O}(\Delta t^2)$ (see \cref{appendix:verlet_taylor,appendix:liouville_verlet} for more information). It can be shown that this form is equivalent to the regular Verlet method.
 
-One advantage of this form is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
+One advantage of this form compared to the regular Verlet method, is that it is self-starting. In the regular Verlet algorithm we need $\rvec(t-\Delta t)$ to compute $\rvec(t+\Delta t)$, which we don't have at $t = 0$. This means that we have to approximate $\rvec(-\Delta t)$ somehow. In the velocity form of the algorithm we only need the positions, velocities and forces at time $t$ to calculate $\rvec(t+\Delta)$.
 
-\todobo{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
+% \todobo{Show that it's equivalent to regular Verlet? to rationalize that the accumulated error is the same?}
 
-The velocity Verlet algorithm is usually rewritten in the following way, to optimize the implementation on a computer. The new velocities $\vvec(t+\Delta t)$ can be written as
+The velocity Verlet algorithm is usually rewritten in the following way to optimize implementation on a computer. The new velocities $\vvec(t+\Delta t)$ can be written as
 \begin{align}
     \vvec(t+\Delta t) = \tilde\vvec(t + \tfrac{1}{2}\Delta t) + \avec(t+\Delta t)\frac{\Delta t}{2}, \label{eq:verlet_velocity_with_halfstep}
 \end{align}
@@ -103,18 +103,19 @@ We see that \cref{eq:verlet_halfstep} can be used in updating the positions, so 
 \end{align}
 Which leads us to the usual way of implementing the algorithm\cite{allen1989computer}:
 \begin{itemize}
-    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} \hl{(repeated here)}
+    \item Calculate the velocities at $t+\tfrac{1}{2}\Delta t$ using \cref{eq:verlet_halfstep} (repeated here)
     \begin{align*}
         \tilde\vvec(t + \tfrac{1}{2}\Delta t) = \vvec(t) + \frac{\Fvec(t)}{m}\frac{\Delta t}{2}.
     \end{align*}
-    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_positions_halfstep} \hl{(repeated here)}
+    \item Calculate the new positions at $t + \Delta t$ using \cref{eq:velocity_verlet_positions_halfstep} (repeated here)
     \begin{align*}
         \rvec(t + \Delta t) &= \rvec(t) + \tilde\vvec(t+\tfrac{1}{2}\Delta t)\Delta t.
     \end{align*}
-    \item Calculate the new forces $\Fvec(t+\Delta t)$/\hl{accelerations $\avec(t+\Delta t)$}.
-    \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} \hl{(repeated here)}
+    \item Calculate the new forces $\Fvec(t+\Delta t)$.%/\hl{accelerations $\avec(t+\Delta t)$}.
+    \item Calculate the new velocities at $t+\Delta t$ using \cref{eq:verlet_velocity_with_halfstep} (repeated here)
     \begin{align*}
         \vvec(t+\Delta t) = \vvec(t + \tfrac{1}{2}\Delta t) + \frac{\Fvec(t + \Delta t)}{m}\frac{\Delta t}{2}.
     \end{align*}
 \end{itemize}
-This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 
+This implementation minimizes the memory needs, as we only need to store one copy of $\rvec$, $\vvec$ and $\Fvec$ at all times, compared to implementing \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity} which needs to store the values of both $\Fvec(t)$ and $\Fvec(t+\Delta)$ to calculate the new velocities. Memory is usually abundant these days though, so this is not really an issue. It can also be shown that this implementation leads to less floating point truncations\cite{frenkel2001understanding}\todoao{Find source for this?}.
+% \hl{memory usually isn't an issue...}. \todo{maybe also more computationally efficient? flops? floating point truncation?}. 
