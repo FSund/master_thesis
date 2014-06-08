@@ -6,11 +6,13 @@
 
 The behaviour of water in nanoporous silica is important for many geological, biological, physical and biomedical processes. We are able to produce nanoporous silica with tuneable pore sizes, and the pore surfaces can be functionalized, which can lead to a wide range of industrial applications, many of which we have yet to discover, or the process behind is not fully understood. Examples of such applications are filtration, catalysis, phase separation, medical delivery systems, desalination of sea water, and CO$_2$ capture and storage.
 
-Experiments have shown that the behaviour of fluids confined in nanoscale pores is different to that of bulk fluids. This is caused not only by the confinement to a small volume, but also by the high ratio of surface area to volume inside the pores. There is evidence that water near surfaces can reach super-cooled states without forming ice, and that the density and dynamics of water near surfaces is different than that of bulk water. The detailed mechanisms for such behaviours is still uncertain.
+Experiments have shown that the behaviour of fluids confined in nanoscale pores is different to that of bulk fluids. This is caused not only by the confinement to a small volume, but also by the high ratio of surface area to pore volume. There is evidence that water near surfaces can reach super-cooled states without forming ice, and that the density and dynamics of water near surfaces is different than that of bulk water. The detailed mechanisms for such behaviours are still uncertain.
 
-While there has been performed significant number of high-quality experimental studies of the properties of water in nanoscale pores in the recent years, simulational studies are still limited, and many of the simulational studies that have been performed have been for small systems with limited dynamics. This makes this area good for application of large-scale modelling and simulation.
+While there has been performed significant number of high-quality experimental studies of the properties of water in nanoscale pores in the recent years, simulational studies are still limited, and many of the simulational studies that have been performed have been for small systems with limited dynamics. This makes this a good area for application of large-scale modelling and simulation.
 
-The goal of this master thesis is to do a numerical study of water trapped in nanoscale pores in solid silica, using a well-constrained interatomic potential that cover both silica, water, and the interactions between the two. This potential has been developed by researchers at the University of Southern California, and the models have been well tested and calibrated.
+We choose to model the nanoporous system at an atomic scale, both because we think that such a scale is appropriate for predicting the effects at nano-scales, and because similar studies have been performed with good results. We choose to use molecular dynamics to to the modelling, but an alternative method is direct simulation Monte Carlo, which have shown equally promising results applied on similar problems.
+
+The goal of this master thesis is to do a numerical study of water trapped in nanoscale pores in solid silica, using a well-constrained interatomic potential that accurately predict the behaviour of both silica, water, and the interactions between the two. The potential we use has been developed by researchers at the University of Southern California, and the models have been well tested and calibrated to experimental and other numerical studies.
 
 To study water trapped in nanoporous silica we need to develop reproducable methods for intializing realistic nanoporous silica, and methods for filling the nanoscale pores with water. We want to study the structure, behaviour and transport properties of water in silica, so we also need to find some appropriate way of quantifying and analyzing the dynamic and structural properties of water near the surface.
 
@@ -27,8 +29,8 @@ To study water trapped in nanoporous silica we need to develop reproducable meth
 
 \section*{Structure of the thesis}
 \addcontentsline{toc}{section}{Structure of the thesis}%
-We start with a description of the numerical methods we will be using to study nanoporous silica and water. We then describe the methods we use for creating the systems we want to simulate and to measurements on, and finally we prepare, simulate, and do measurements on the systems. In the end we analyze the results, compare the measurements against each other, and draw some conclusions.
-\todoa{More?}
+We start with a description of the numerical methods we will use to study silica and water. We then describe the methods we use for creating and initializing the systems we want to simulate and do measurements on. We then prepare, simulate, and do measurements on the systems. Finally we analyze the results, compare the measurements against each other, and draw some conclusions.
+% \todoa{More?}
 % The results are analyzed, and conclusions are drawn.\todoa{FIX THIS}
 
 % We need to find an appropriate method for studying such a system

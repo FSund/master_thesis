@@ -9,8 +9,8 @@
 %     \item isotropic
 %     \item lacunarity
 % \end{itemize}
-
-\todobo{More introduction to generating surfaces?}
+%
+\todobo{More introduction to generating surfaces?}%
 % When generating random surfaces we want to be able to control the properties like the Hurst exponent (\hl{etc.?}) of the surface.
 
 To generate random surfaces we use an iterative midpoint displacement method usually called successive random additions (SRA). The method is based on a method proposed by Fourner in 1982\cite{fournier1982computer}, but with some modifications suggested by Voss\cite{voss1985random, voss1988fractals}. The method has further been discussed by Saupe\cite{saupe1988algorithms}, amongst others. We choose this method mainly because it is possible to generate periodic surfaces with it, because it generates very good approximations to fBm surfaces\cite{zhou2005comparison}, and because the Hurst exponent of the generated surfaces is easy to control. The method is also easy to understand, easy to implement, and generates surfaces with high resolution very fast. The method is widely used in scientific applications because of these properties, and is also used for generating surfaces in computer graphics, since the surfaces look very realistic.

@@ -3,14 +3,14 @@
 % \todobo{Transition from rescaled range to surface?}%
 Estimating the Hurst exponent of a surface is not trivial, so to measure this we use a method called detrending moving average (DMA), developed for 1-dimensional data by E. Alessio, A. Carbone et al.\cite{alessio2002dma}, and later generalized to higher dimensions by A. Carbone \cite{carbone2007algorithm}. 
 
-After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is easy to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in\cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.%
+After trying out some different methods for estimating the Hurst exponent, we ended up choosing this method both because it is easy to understand and implement, and because it has been shown to give good results, as we will also confirm later. A more detailed comparison of different methods for estimating the Hurst exponent can be seen in \cite{shao2012comparing}, where they find that DMA and DFA (detrended fluctuation analysis) overall perform better than FA (fluctuation analysis), also being less sensitive to the choice of scaling range.%
 % \todo{good results, easy to implement? }%
 % \todoao{everything below is for 2/3 D, not always obvious}%
 
 \subsection{Detrending moving average in 2 dimensions}
 % We define a \hl{(self-affine)} surface $f(i,j)$, where $f$ is the height in the point $(i,j)$, defined in a discrete 2-dimensional domain with size $N\times N$, for $i,j = 1,\dots,N$. We divide this surface into \emph{overlapping} subsurfaces of size $n \times n$, spanning the whole surface. The \hl{lower left} corners of the surfaces are located in the points $(i,j)$ for $i,j = 1,\dots, N-n+1$ (the limits are set so that the subsurfaces stay within the domain of the surface). In each surface we find a point $(k,l) = (n-m,n-m)$ (relative to lower bottom corner of subsurface)
 
-We define a (self-affine) surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. For each point $i,j \in [1,N-n+1]$ in this surface we define a subsurface of size $n\times n$, where each subsurface consists if the points
+We define a self-affine surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. For each point $i,j \in [1,N-n+1]$ in this surface we define a subsurface of size $n\times n$, where each subsurface consists if the points
 \begin{align*}
 %     (k,l) = \left([i, \dots, i+n], [j, \dots, j+n]\right)%
 %     (k,l) = (i,j) + ([1\dots,n], [1,\dots,n])%
@@ -18,24 +18,24 @@ We define a (self-affine) surface $f(i,j)$ of size $N,N$, with $i,j \in [1,N]$. 
     (k,l) \in \left\{ (i,j) + \left([1\dots,n], [1,\dots,n]\right)\right\}
 %     (k,l) \in \left( i + [1\dots,n], j + [1,\dots,n]\right)%
 \end{align*}
-\begin{align*}
-    \begin{pmatrix}
-        k \\
-        l
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-        i \\
-        j
-    \end{pmatrix}
-    +
-    \begin{pmatrix}
-        1,\dots,n \\
-        1,\dots,n
-    \end{pmatrix}
-\end{align*}%
+% \begin{align*}
+%     \begin{pmatrix}
+%         k \\
+%         l
+%     \end{pmatrix}
+%     =
+%     \begin{pmatrix}
+%         i \\
+%         j
+%     \end{pmatrix}
+%     +
+%     \begin{pmatrix}
+%         1,\dots,n \\
+%         1,\dots,n
+%     \end{pmatrix}
+% \end{align*}%
 \todoao{Decide on which vector/matrix thing}%
-in the main surface. This means that the point $(i,j)$ is located in the \hl{``lower left''}\todoao{replace lower left with something smart} corner of the subsurface, that the subsurfaces overlap, and that they together span the whole main surface. The limits $i,j \in [1,N-n+1]$ are set so that all subsurfaces are \emph{inside} the main surface.
+in the main surface. This means that the point $(i,j)$ is located in the ``lower left'' corner of the subsurface, that the subsurfaces overlap, and that they together span the whole main surface. The limits $i,j \in [1,N-n+1]$ are set so that all subsurfaces are \emph{inside} the main surface.
 
 For each subsurface located at $(i,j)$ we find a point $(k_m, l_m)$ in the subsurface, which can be written as
 \begin{align}
@@ -154,17 +154,18 @@ To test the DMA method we synthesized data with a given Hurst exponent using 4 d
 
 For synthesizing 1D data we used the built-in Matlab-function \Verb!wfbm! which uses a wavelet-based synthesis method described by Abry and Sellan \cite{abry1996wavelet}, and two methods from the Matlab-toolbox FracLab\cite{fraclab_toolbox}, \Verb!fbmwoodchan! which uses a method proposed by Wood and Chan in \cite{wood1994simulation}, and \Verb!fbmlevinson! which uses Cholesky/Levinson factorization from \cite{levinson1947wiener}. 
 
-There are many methods and algorithms for generating surfaces data with a given Hurst exponent, but we had problems finding working implementations of any of them. We will later implement a midpoint displacement method for this (see \cref{chap:generating_surfaces,subsec:SRA_implementation}), but having external reference is very useful, so we used a function from FracLab called \Verb!synth2!, which, according to the documentation of the function:\todoao{What to do about this? no sources...}
-\begin{quote}
-    \textit{Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0).}
-\end{quote}
-No further information is given in the FracLab documentation for how this method works.
+There are many methods and algorithms for generating surfaces data with a given Hurst exponent, but we had problems finding working implementations of any of them. We will later implement a midpoint displacement method for this (see \cref{chap:generating_surfaces,subsec:SRA_implementation}), but having external reference is very useful, so we used a function from FracLab called \Verb!synth2!, which %
+% , according to the documentation of the function:\todoao{What to do about this? no sources...}
+% \begin{quote}
+%     \textit{Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0).}
+% \end{quote}
+% No further information is given in the FracLab documentation for how this method works.
+is not very well documented, but at least seems to generate accurate samples of fractional Brownian surfaces.
+%
 % We will later also test our own implementation of a method for generating \hl{2d/3d} data against \hl{DMA}.
 % ``Generates a 2D Fractional Brownian Motion (fBm) using an incremental Fourier Method for processes with stationary increments of order (0,1) and (1,0)''.
 
-See \cref{fig:dma_performace} for a plot of Hurst exponent measured using DMA as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$.
-
-From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the best and most consistent results, as also noted by Gao-Feng Gu and Wei-Xing Zhou in \cite{gu2010detrending}, where they further develop the DMA method to analyse multifractals. %
+See \cref{fig:dma_performace} for a plot of Hurst exponent measured using DMA as a function of the exponent used as input for the four different methods for generating synthetic data above, for three different values of the parameter $\theta$. From the plots we conclude that $\theta = 0.0$ seems to give the best and most consistent results, as also noted by Gao-Feng Gu and Wei-Xing Zhou in \cite{gu2010detrending}, where they further develop the DMA method to analyse multifractals. %
 % \todobo{We would liked to have more 2D data references.}%
 % \todob{Fix newcommand stuff in \cref{fig:dma_performace}, and maybe legend texts (can remove stuff now that we know have smaller text in figures)} %
 %
@@ -183,7 +184,7 @@ From \cref{fig:dma_performace} we conclude that $\theta = 0.0$ seems to give the
 %         \label{fig:dma_performace}%
 %     }%
     \caption{%
-        Plot of the Hurst exponent against the exponent used as input when generating the signals, as estimated by the detrending moving average method, used on data from four different synthetic signals, and for three different values of the parameter $\theta$ used in \hl{DMA}. For the 1d methods we have averaged over 1000 samples for each point, and for \mono{synth2} we have averaged over 100 samples, for input Hurst exponents between 0.05 and 0.95 in steps of 0.1. All methods except \mono{synth2} generate 1-dimensional signals, while \mono{synth2} generates a 2-dimensional signal. \hl{FINISH CAPTION}. %
+        Plot of the Hurst exponent against the exponent used as input when generating the signals, as estimated by the detrending moving average method, used on data from four different synthetic signals, and for three different values of the parameter $\theta$ used in DMA. For the 1d methods we have averaged over 1000 samples for each point, and for \mono{synth2} we have averaged over 100 samples, for input Hurst exponents between 0.05 and 0.95 in steps of 0.1. All methods except \mono{synth2} generate 1-dimensional signals, while \mono{synth2} generates a 2-dimensional signal. %
         \label{fig:dma_performace}%
     }%
 \end{figure}%

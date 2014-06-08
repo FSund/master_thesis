@@ -15,7 +15,7 @@ Since we do not take chemical bonds into consideration when removing atoms to cr
 
 % When inserting hydrogen and hydroxide we want to insert them in positions that are close to their equilibrium positions, so we do not have to do a lot of simulating to get a stabilized system after passivating. It is possible to calculate the optimal positions based on the potential and the positions of the existing atoms, but this is a complicated computation, that we can avoid, by instead realizing that the optimal positions for the oxygen atoms we insert will most likely \hl{(source?)} be close to the positions that complete the SiO$_2$ tetrahedra. These positions can be calculated, using simple geometry, from the positions of the oxygen atoms each silicon atom is bonded to.
 
-To passivate the silicon atoms that are bonded to less than four oxygen atoms, we see that we need to complete the incomplete SiO$_4$ tetrahedra that have been created in the system. But if we only insert oxygen atoms in the positions of the missing oxygen atoms, we end up with new dangling ends, since the inserted oxygen atoms will only be bonded to one silicon atom. But, as we just saw, we will have hydroxide (OH) groups available in the system after filling the fracture with water. So instead of inserting oxygen atoms and creating new unsaturated bonds, we insert hydroxide groups and create saturated Si-O-H bonds. We put the hydrogen atom so that the Si-O-H angle is close to the angle in water molecules, 107.5 degrees. \hl{The hydrogen atoms moves very rapidly compared to the rest of the species in the system, so they will quicly find the equilibrium position, meaning that the exact position of the hydrogen atoms is not that important.}
+To passivate the silicon atoms that are bonded to less than four oxygen atoms, we see that we need to complete the incomplete SiO$_4$ tetrahedra that have been created in the system. But if we only insert oxygen atoms in the positions of the missing oxygen atoms, we end up with new dangling ends, since the inserted oxygen atoms will only be bonded to one silicon atom. But, as we just saw, we will have hydroxide (OH) groups available in the system after filling the fracture with water. So instead of inserting oxygen atoms and creating new unsaturated bonds, we insert hydroxide groups and create saturated Si-O-H bonds. We put the hydrogen atom so that the Si-O-H angle is close to the angle in water molecules, 107.5 degrees. %\hl{The hydrogen atoms moves very rapidly compared to the rest of the species in the system, so they will quicly find the equilibrium position, meaning that the exact position of the hydrogen atoms is not that important.}
 
 To passivate the oxygen atoms that are bonded to only one silicon atom, we can use the hydrogen atoms that are avilable after filling the fracture with water, turning unsaturated SiO-groups into the same saturated Si-O-H-groups as before. We here too insert the hydrogen atoms with the Si-O-H angle close to 107.5 degrees.
 
@@ -66,18 +66,18 @@ The lengths used are approximate experimental lengths found in naturally occurin
 \end{figure}%
 
 \subsection{Counting number of bonds}
-Since we do not have actual bonds in molecular dynamics simulations, we do not know which atoms are bonded to which. So to find the number of bonded atoms for each silicon and oxygen atom, we create what we call \emph{neigbor lists}. These neighbor lists are a list of atoms within a chosen radius for each atom. To create these lists we use the procedure detailed in \cref{sec:neighbor_lists}. Since we only have silicon and oxygen atoms in our system, we only need to specify a maximum the Si-O-distance to find which atoms are bonded. If we choose this distance properly, we should be able find a good approximation to how many atoms each atom is bonded to.
+Since we do not have actual bonds in molecular dynamics simulations, we do not know which atoms are bonded to which. So to find the number of bonded atoms for each silicon and oxygen atom, we create what we call \emph{neigbor lists}. These neighbor lists are a list of atoms within a chosen radius for each atom. To create these lists we use the procedure detailed in \cref{sec:neighbor_lists}. Since we only have silicon and oxygen atoms in our system, we only need to specify a maximum the Si-O-distance to find which atoms are bonded. If we choose this distance properly, we should be able find a good approximation to how many atoms each atom is bonded to.%
 \todobo{Something about g(r) for deciding Si-O bond length, or potential parameters?}
 
-\orangebox{
-\begin{itemize}
-    \item What Si-O distance did we use to find bonds? Why? 
-    \item g(r) for Si-O?
-    \item Implementation?
-    \item Visualization of results?
-    \item What to do about atoms that can not be passivated (because we have to insert passively)?
-\end{itemize}
-}
+% \orangebox{
+% \begin{itemize}
+%     \item What Si-O distance did we use to find bonds? Why? 
+%     \item g(r) for Si-O?
+%     \item Implementation?
+%     \item Visualization of results?
+%     \item What to do about atoms that can not be passivated (because we have to insert passively)?
+% \end{itemize}
+% }
 
 % \subsection{Implementation}
 % To implement the passivation procedure detailed above we see that we can make an  
@@ -124,12 +124,14 @@ An example of a system after passivation can be seen in \cref{fig:passivation_ex
     \label{fig:passivation_example}%
 \end{figure}%
 
-\todobo{Decide on whether to include silanol density stuff, and if so, write it}
-\orangebox{
-A good measure of the performance of the passivation method is the surface density of silanol after passivation. This number is often called the \emph{silanol number}, and us considered to be a physico-chemical constant, with a numerical value $\alpha_\text{OH} = 4.6$ (least-squares method) and $\alpha_\text{OH}\text{ nm}^{-2}$ (arithmical mean) \cite{zhuravlev1999silanol}, and is known in literature as the Kiselev-Zhuravlev constant. As we will see, measuring the surface area of porous system is not trivial, so estimating this density is not trivial. But by creating a completely flat pore and passivating it, we found that we created a silanol surface density of $\approx 7.05\text{ nm}^{-2}$ (if counting number of inserted hydrogen atoms) or $\approx 3.53\text{ nm}^{-2}$ (if counting number if inserted oxygen atoms). MAYBE MEASURE THIS PROPERLY?
+A good measure of the performance of the passivation method is the surface density of silanol after passivation. This number is often called the \emph{silanol number}, and us considered to be a physico-chemical constant, with a numerical value $\alpha_\text{OH} = 4.6$ (least-squares method) and $\alpha_\text{OH}\text{ nm}^{-2}$ (arithmical mean) \cite{zhuravlev1999silanol}, and is known in literature as the Kiselev-Zhuravlev constant. As we will see, measuring the surface area of porous system is not trivial, so estimating this density is not trivial. But by creating a completely flat pore and passivating it, we found that we got a silanol surface density between 4 and 7 nm$^{-2}$, depending on how we measure the surface area of the pore, and how we cound the number of silanol groups. % $\approx 7.05\text{ nm}^{-2}$ (if counting number of inserted hydrogen atoms) or $\approx 3.53\text{ nm}^{-2}$ (if counting number if inserted oxygen atoms). MAYBE MEASURE THIS PROPERLY?
 
-If the big number (7): since we inserted neutrally, the excess atoms will diffuse into the water anyway
-If the small number: the water we inject later will passivate the rest of the atoms
-Could also be caused by how we cut??
-The surface area is really bigger than $L^2$, since the atoms make a ``rough'' surface, not flat.
-}
+% \todobo{Decide on whether to include silanol density stuff, and if so, write it}
+% \orangebox{
+% A good measure of the performance of the passivation method is the surface density of silanol after passivation. This number is often called the \emph{silanol number}, and us considered to be a physico-chemical constant, with a numerical value $\alpha_\text{OH} = 4.6$ (least-squares method) and $\alpha_\text{OH}\text{ nm}^{-2}$ (arithmical mean) \cite{zhuravlev1999silanol}, and is known in literature as the Kiselev-Zhuravlev constant. As we will see, measuring the surface area of porous system is not trivial, so estimating this density is not trivial. But by creating a completely flat pore and passivating it, we found that we created a silanol surface density of $\approx 7.05\text{ nm}^{-2}$ (if counting number of inserted hydrogen atoms) or $\approx 3.53\text{ nm}^{-2}$ (if counting number if inserted oxygen atoms). MAYBE MEASURE THIS PROPERLY?
+
+% If the big number (7): since we inserted neutrally, the excess atoms will diffuse into the water anyway
+% If the small number: the water we inject later will passivate the rest of the atoms
+% Could also be caused by how we cut??
+% The surface area is really bigger than $L^2$, since the atoms make a ``rough'' surface, not flat.
+% }

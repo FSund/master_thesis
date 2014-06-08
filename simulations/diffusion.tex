@@ -1,5 +1,5 @@
 \section{Diffusion}
-\todob{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
+% \todob{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
 When we talk about diffusion in this thesis we mean the process of \emph{self-diffusion}, which is different from ``normal'' diffusion, which is the net movement of a substance in the presence of a gradient, which can be for example a concentration gradient, a temperature gradient, or a pressure gradient. With \emph{self-diffusion} we mean the random movement in a substance that has no gradients.
 
 Diffusion can be characterized by a constant $D$, which is related to the displacement of each atom relative to a initial position. We can measure this constant by measuring the mean square displacement $r_i^2(t)$ of each atom as a function of time, and average over all atoms. The mean square displacement is measured as
@@ -86,7 +86,7 @@ where $d$ is the spatial dimension. This means that we can find the diffusion co
     }
 \end{cppcode*}
 \caption{%
-    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \mono{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \mono{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \emph{actual} position of the atom can be calculated by adding \mono{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
+    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \mono{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \mono{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the atoms will always be inside the system, the \emph{actual} positions of the atoms can be calculated by adding \mono{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
     \label{list:diffusionSample}%
 }%
 \end{listing}%
