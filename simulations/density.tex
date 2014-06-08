@@ -36,7 +36,9 @@ We use the \cpp-library \texttt{Voro++} to find the Voronoi cells, and calculate
     \end{minipage}%
 \end{figure}%
 
-\todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we do not have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
+When measuring the Voronoi volume of each water molecule we simplify the calculations by removing all hydrogen atoms. We also noticed that we had some strange vacuum bubbles in the water, very close to the silica surface in some systems. To avoid problems with this when calculating the density, we removed the upper 10\% of the Voronoi volumes, to remove this long tail of high densities.
+
+% \todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we do not have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
 
 % \todoao{Write about averaging over timesteps and atoms}
 

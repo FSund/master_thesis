@@ -10,7 +10,7 @@ where $\rvec_i(t=0)$ is the initial position of atom $i$. From theoretical consi
 \begin{align}
     \lim_{t\rightarrow \infty}\dpd{}{t}\Braket{r^2(t)} = 2dD\label{eq:diffusion_derivative}
 \end{align}
-where $d$ is the spatial dimension. This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and find the slope of this data as the diffusion constant in the limit $t\rightarrow \infty$. We are limited in that we ca not actually simulate infinite number of timesteps, but have to find a reasonable number of timesteps to measure over. An example of how to sample the mean square displacement $\Braket{r^2(t)}$ in a simulation can be seen in \cref{list:diffusionSample}.
+where $d$ is the spatial dimension. This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and find the slope of this data as the diffusion constant in the limit $t\rightarrow \infty$. We are limited in that we can not actually simulate infinite number of timesteps, but have to find a reasonable number of timesteps to measure over. An example of how to sample the mean square displacement $\Braket{r^2(t)}$ in a simulation can be seen in \cref{list:diffusionSample}.
 %
 % This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and plotting $\Braket{r^2(t)}/(2dt)$ as a function of time. The diffusion constant will then be the value this expression approaches when simulating for enough timesteps.
 %
