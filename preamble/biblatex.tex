@@ -1,0 +1,23 @@
+% Example from here: http://codydunne.blogspot.no/2012/01/suppressing-bibtex-fields-for-specific.html
+\AtEveryBibitem{% Clean up the bibtex rather than editing it
+    \clearlist{address}
+%  \clearfield{date}
+%     \ifentrytype{www}{}{ % url is alias for ``online''
+%         \clearfield{url}
+%     }
+    \ifentrytype{online}{}{
+        \clearfield{url}
+    }
+    \clearfield{doi}
+    \clearfield{eprint}
+    \clearfield{isbn}
+    \clearfield{issn}
+    \clearlist{location}
+    \clearfield{month}
+    \clearfield{series}
+    
+%     \ifentrytype{book}{}{% Remove publisher and editor except for books
+%         \clearlist{publisher}
+%         \clearname{editor}
+%     }
+}

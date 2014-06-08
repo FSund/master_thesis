@@ -1,6 +1,6 @@
 \section{Diffusion}
 \todob{derivation of diffusion? See \cite[Section~4.4.1]{frenkel2001understanding}}
-When we talk about diffusion in \hl{the context of} this thesis we mean the process of \emph{self-diffusion}, which is different from \hl{``normal''} diffusion which is the net movement of a substance in the presence of a gradient, which can be for example a concentration gradient, a temperature gradient, or a pressure gradient. With \emph{self-diffusion} we mean the \hl{random?} movement in a substance that has no gradients.
+When we talk about diffusion in this thesis we mean the process of \emph{self-diffusion}, which is different from ``normal'' diffusion, which is the net movement of a substance in the presence of a gradient, which can be for example a concentration gradient, a temperature gradient, or a pressure gradient. With \emph{self-diffusion} we mean the random movement in a substance that has no gradients.
 
 Diffusion can be characterized by a constant $D$, which is related to the displacement of each atom relative to a initial position. We can measure this constant by measuring the mean square displacement $r_i^2(t)$ of each atom as a function of time, and average over all atoms. The mean square displacement is measured as
 \begin{align*}
@@ -10,7 +10,7 @@ where $\rvec_i(t=0)$ is the initial position of atom $i$. From theoretical consi
 \begin{align}
     \lim_{t\rightarrow \infty}\dpd{}{t}\Braket{r^2(t)} = 2dD\label{eq:diffusion_derivative}
 \end{align}
-where $d$ is the \hl{spatial} \hl{dimensionality/dimension?}. This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and find the slope of this data as the diffusion constant in the limit $t\rightarrow \infty$. \hl{We are limited in that we ca not actually simulate infinite number of timesteps, but have to find a reasonable number of timesteps to measure over.} An example of how to sample the mean square displacement $\Braket{r^2(t)}$ in a simulation can be seen in \cref{list:diffusionSample}.
+where $d$ is the spatial dimension. This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and find the slope of this data as the diffusion constant in the limit $t\rightarrow \infty$. We are limited in that we ca not actually simulate infinite number of timesteps, but have to find a reasonable number of timesteps to measure over. An example of how to sample the mean square displacement $\Braket{r^2(t)}$ in a simulation can be seen in \cref{list:diffusionSample}.
 %
 % This means that we can find the diffusion constant in a molecular dynamics simulation by measuring the mean square displacement for many timesteps, and plotting $\Braket{r^2(t)}/(2dt)$ as a function of time. The diffusion constant will then be the value this expression approaches when simulating for enough timesteps.
 %
@@ -86,7 +86,7 @@ where $d$ is the \hl{spatial} \hl{dimensionality/dimension?}. This means that we
     }
 \end{cppcode*}
 \caption{%
-    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \mono{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \mono{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \hl{\emph{real}} position of the atom can be calculated by adding \mono{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
+    An example of how to calculate the mean square displacement in a molecular dynamics simulation. Example implementation of \mono{diffusionSample} from \cref{list:sampling}. We store the inital positions of the atoms as \mono{atom->initialPosition()}, and when using periodic boundary conditions we count the number of times we have to translate the atom one system-size in each direction, so while the position of the atom will always be inside the system, the \emph{actual} position of the atom can be calculated by adding \mono{atom->getBoundaryCrossings()*system.size()} to $\rvec$.%
     \label{list:diffusionSample}%
 }%
 \end{listing}%

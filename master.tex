@@ -43,49 +43,6 @@
 % Check all listings for linewidth (after deciding on listing font size)
 
 
-% ---- Includeonly stuff ---- %
-% \includeonly{molecular_dynamics/introduction}
-% \includeonly{molecular_dynamics/simple_md_program}
-% \includeonly{molecular_dynamics/optimizations}
-% \includeonly{molecular_dynamics/observables}
-% \includeonly{molecular_dynamics/ensembles}
-% \includeonly{molecular_dynamics/usc_program}
-% 
-% \includeonly{fractures/fractures}
-% \includeonly{fractures/hurst_exponent}
-% \includeonly{fractures/detrending_moving_average}
-% \includeonly{fractures/generating_surfaces}
-% \includeonly{fractures/generating_fractures}
-% 
-% \includeonly{molecular_dynamics/experimental_procedure}
-% \includeonly{molecular_dynamics/measurements}
-% \includeonly{results/systems}
-% \includeonly{results/results}
-% 
-% \includeonly{appendices/md_units}
-% \includeonly{appendices/integrators}
-% \includeonly{appendices/nose_hoover}
-% \includeonly{appendices/pressure}
-% 
-% \includeonly{appendices/integrators}
-%
-% \includeonly{results/conclusion}
-% \includeonly{results/future}
-%
-
-% Part 1 - MD
-% \includeonly{molecular_dynamics/introduction,molecular_dynamics/simple_md_program,molecular_dynamics/optimizations,molecular_dynamics/observables,molecular_dynamics/ensembles,molecular_dynamics/usc_program}
-
-% Part 2 - Fractures
-% \includeonly{fractures/fractures,fractures/hurst_exponent,fractures/detrending_moving_average,fractures/generating_surfaces,fractures/generating_fractures}
-
-% Part 3 - Experiments
-% \includeonly{results/introduction,molecular_dynamics/experimental_procedure,molecular_dynamics/measurements,results/systems,results/results}
-
-
-% \includeonly{introduction,molecular_dynamics/introduction,results/introduction,results/systems,results/results,results/discussion,results/conclusion}
-
-
 \begin{document}
 
 \pagenumbering{roman}
@@ -167,7 +124,7 @@
         \FloatBarrier
 
 % \part{Conclusion and future}
-    \chapter{Discussion, conclusions and future}
+    \chapter{Discussion, conclusions and future\label{chap:ending}}
         \input{results/discussion}
         \input{results/conclusion}
 
@@ -175,6 +132,8 @@
 \begin{appendix}
 %     \input{appendices/md_units} % remove md units completely?
     \input{appendices/integrators}
+        \input{appendices/velocity_verlet_taylor.tex}
+        \input{appendices/velocity_verlet_liouville.tex}
     \input{appendices/nose_hoover}
 %     \input{appendices/pressure} % haven't measure pressure, and haven't derived it either
 \end{appendix}

@@ -1,10 +1,13 @@
 % ----  biblatex ---- %
 \usepackage[english]{babel}
 \usepackage{csquotes} % required by {babel} (or biblatex?)
-\usepackage[backend=biber, sorting=nyt, style=numeric]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
+\usepackage[backend=biber, sorting=nyt, style=numeric,%
+    firstinits=true % render all first and middle names as initials
+]{biblatex} % Note that "sorting=none" is NOT the same as leaving the field blank, "sorting=none" means "sorting=citeorder".
 % About DATES:
 % The date fields date, origdate, eventdate, and urldate require a date specification in yyyy-mm-dd format. Date ranges are given as yyyy-mm-dd/yyyy-mm-dd. Partial dates are valid provided that date components are omitted at the end only. You may specify an open ended date range by giving the range separator and omitting the end date (e. g., yyyy/).
 \bibliography{bibliography/JabRef_database,bibliography/Master}
+\input{preamble/biblatex}
 
 % ---- Code syntax highlighting ---- %
 % \usepackage[scaled=0.8]{beramono}  % Better monospaced font, nice ~ and ^

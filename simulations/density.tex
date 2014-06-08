@@ -7,7 +7,7 @@ where $N$ is the number of atoms, $m$ the mass of an atom, and $V$ the volume of
 \[
     \rho_j = \dfrac{m_jM}{\sum_{i=0}^M V_i^j},
 \]
-where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. \hl{We identify as the $\rho_j/m_j$ number density.} We can find the mass of an atom type from standard tables of molar masses, but we still need to find the volumes $V_i^j$ associated with each atom. To do this we use something called \hl{Voronoi cells/Voronoi tesselation}\todobo{citation? Dirchlet 1850 and Voronoi 1908, so very old...}. Voronoi tesselation is done by dividing the system into non-overlapping convex polyhedra (or convex polygons in 2 dimensions), with one atom in each polyhedra. The volume inside the polyhedron surrounding each atom consists of all points in space closer to that atom than any other atom. 
+where $m_j$ is the mass an atom of type $j$, and $M$ is the number of atoms of type $j$. We identify as the $\rho_j/m_j$ number density. We can find the mass of an atom type from standard tables of molar masses, but we still need to find the volumes $V_i^j$ associated with each atom. To do this we use something called Voronoi cells and the process of Voronoi tesselation. Voronoi tesselation is done by dividing the system into non-overlapping convex polyhedra (or convex polygons in 2 dimensions), with one atom in each polyhedra. The volume inside the polyhedron surrounding each atom consists of all points in space closer to that atom than any other atom. 
 
 We use the \cpp-library \texttt{Voro++} to find the Voronoi cells, and calculate the volumes of the cells. See \cref{fig:2d_voronoi_diagram} for an illustration of a 2-dimensional Voronoi, and \cref{fig:3d_voronoi_diagram} for a rendering of a 3D Voronoi diagram.
 %
@@ -38,6 +38,6 @@ We use the \cpp-library \texttt{Voro++} to find the Voronoi cells, and calculate
 
 \todoa{Something about removing hydrogen atoms, and just use oxygen position as hydrogen position, and water atom ``volume''? This simplifies life for us, since we do not have to find which water molecule each hydrogen atom belongs to, but we could get inconsistent water density. But since we use the same method for all measurements, we can compare relative densities.}
 
-\todoa{Write about averaging over timesteps and atoms}
+% \todoao{Write about averaging over timesteps and atoms}
 
-\todob{Something about removing extreme points/tail in distribution? Caused by vacuum.}
+\todoao{Something about removing extreme points/tail in distribution? Caused by vacuum.}

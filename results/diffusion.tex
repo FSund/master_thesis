@@ -13,7 +13,7 @@
 %   N = mean(3414, 3396, 3419, 3431, 3393)
 %
 
-We have measured the diffusion constant $D$ for water in the four reference systems, and the four random fracture systems. We have measured $D$ as function of distance to the silica matrix. We used 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). To improve the statistics we divided each set of states into 5 non-overlapping origos, with 40 states per origo. The results are plotted in \crefrange{fig:first_diffusion_figure}{fig:last_diffusion_figure}. We have also measured the bulk diffusion constant, the results of which are listed in \cref{tab:bulk_water_diffusion}.
+We have measured the diffusion constant $D$ for water in the four reference systems, and the four random fracture systems. We have measured $D$ as function of distance to the silica matrix, in steps of 0.25 \AA for the distance. We used 200 states for each system, with 100 timesteps of 0.050 picoseconds between each state (5 picoseconds between each state). To improve the statistics we divided each set of states into 5 non-overlapping origos, with 40 states per origo. The results are plotted in \crefrange{fig:first_diffusion_figure}{fig:last_diffusion_figure}. We have also measured the bulk diffusion constant, the results of which are listed in \cref{tab:bulk_water_diffusion}.
 %
 % ---- Subcaption ---- %
 \begin{figure}[!htb]%
@@ -42,7 +42,7 @@ We have measured the diffusion constant $D$ for water in the four reference syst
 }%
 \end{figure}%
 
-The overall trend we see in all plots and for all systems is that the diffusion constant is reasonably stable from 10 down to 6-7 \AA\ from the silica matrix, where it does a dip between 5 and 6 \AA, goes over a peak near 5 \AA, and then goes mostly linearly from this peak to zero at 3 \AA. We see that the diffusion constant for all systems follow this trend, even though the overall diffusion is different in different systems.
+The overall trend we see in all plots and for all systems is that the diffusion constant is reasonably stable from 10 down to 6-7 \AA\ from the silica matrix, where it does a dip between 5 and 6 \AA, goes over a peak near 5 \AA, and then goes almost linearly from this peak to zero at 3 \AA. We see that the diffusion constant for all systems follow this trend, even though the overall diffusion is different in different systems.
 
 We now look at the diffusion for the four reference systems, which are plotted in \cref{fig:diffusion_reference_systems}. We see that system \#1 has overall higher diffusion than system \#2, even though these two systems have very similar characteristics, as both consist of a 86 \AA\ wide flat pore. We notice a somewhat higher diffusion in the 14.4 \AA\ flat pore in system \#3 than in the 28.8 \AA\ flat pore in system \#4. The diffusion constant behaves very similarly in all four systems.
 
@@ -54,7 +54,7 @@ In \cref{fig:diffusion_rough_systems} we have the diffusion for the four random 
 % for the four random fracture systems, ``rough \#1'' through 4. We again see a quantitative similar behaviour, and we see that all systems except the 14.4 \AA\ narrow fracture (``rough \#3'') have very similar diffusion constants and behaviour. In \cref{tab:bulk_water_diffusion} see that the bulk diffusion constants in the two regular random fractures (\#1 and \#2) are similar, with a difference of {6 \%}. We also see that the $D$ for water at 7-10 \AA\ from the silica matrix is close to the bulk constant for these two systems.
 % \todoao{More about diffusion?}
 
-The bulk diffusion constants have been estimated in the two reference systems with 86 \AA\ wide flat pores (reference \#1 and \#2), and in rough system \#1 and \#2, by measuring $D$ for all water molecules further away from the silica matrix than 10 \AA. The results can be seen in \cref{tab:bulk_water_diffusion}. The other four systems have very narrow pores and fractures, with most of the water molecules closer to the silica matrix than 10 \AA, and as we see from \cref{fig:first_diffusion_figure} the transport properties of water in these regions are different from bulk water.
+The bulk diffusion constants have been estimated in the two reference systems with 86 \AA\ wide flat pores (reference \#1 and \#2), and in rough system \#1 and \#2, by measuring $D$ for all water molecules further away from the silica matrix than 10 \AA. The results can be seen in \cref{tab:bulk_water_diffusion}. The other four systems have very narrow pores and fractures, with most of the water molecules closer to the silica matrix than 10 \AA, and as we see from \cref{fig:first_diffusion_figure} the transport properties of water in these regions are different from bulk water, so we have not been able to estimate the diffusion of bulk-like water in these systems.
 % have not measured the bulk diffusion in those systems, and we do not expect much of the water to have bulk behaviour\todobo{explain this better?}.
 %
 \begin{table}[!htb]%
@@ -68,19 +68,19 @@ The bulk diffusion constants have been estimated in the two reference systems wi
     \end{tabular}%
     \vspace{8pt}%
     \caption{%
-        Bulk diffusion constant for water (for water molecules more than 10 \AA\ from the silica matrix), and the number of water molecules used in the calculations. %
+        Bulk diffusion constant for water (for water molecules more than 10 \AA\ from the silica matrix), and the number of water molecules used in the calculations ($N$). %
         \label{tab:bulk_water_diffusion}%
     }%
 \end{table}
 
 If we compare the bulk diffusion constants in \cref{tab:bulk_water_diffusion} with the plots in \cref{fig:first_diffusion_figure}, we see that the diffusion constant has reached values close to the bulk value at around 6-7 \AA\ from the silica matrix.
 
-In \cref{fig:diffusion_normal_and_reference} we have plotted diffusion for the two random fractures with varying pore width (the two solid lines) together with all four reference systems (the four dashed lines). We see that the behaviour of $D$ in both the rough systems are very close to the behaviour in reference system \#1, which is the 86 \AA\ wide flat pore. 
+In \cref{fig:diffusion_normal_and_reference} we have plotted diffusion for the two random fractures with varying pore width (the two solid lines) together with all four reference systems (the four dashed lines). We see that the behaviour of $D$ in both the rough systems are very close to the behaviour in reference system \#1, which is the 86 \AA\ wide flat pore, and that the overall diffusion is lower in the three other reference system than in the plotted rough fracture systems.
 
 %We see that the behaviour of $D$ as function of the distance to the silica matrix in the two fracture systems is very similar to each other, and matches the behaviour in reference system \#1 pretty well. This reference system is the one with a 86 \AA\ wide flat pore and the lowest bulk density of the two reference systems with wide flat pores ($\rho \approx 1038$ kg/m$^3$ compared to $\approx 1091$ kg/m$^3$).
 % \todoa{Write something about rough vs. reference and uniform rough vs. narrow flat pore figures below.}%
 
-In \cref{fig:diffusion_narrow_and_reference} we have plotted the diffusion for the two random narrow fractures with uniform width (the two solid lines) together with all four reference systems (the four dashed lines). We see that the diffusion in the 14.4 \AA\ narrow fracture (``Rough \#3'') matches the the diffusion in reference system \#3 very well, which has a 14.4 \AA\ flat pore. We also see that the 28.8 \AA\ narrow fracture has overall higher diffusion than reference system \#4, which has a 28.8 \AA\ flat pore, but that it matches reference system \#1 very well, which has a 86 \AA\ flat pore.
+In \cref{fig:diffusion_narrow_and_reference} we have plotted the diffusion for the two random narrow fractures with uniform width (the two solid lines) together with all four reference systems (the four dashed lines). We see that the diffusion in the 14.4 \AA\ narrow fracture (``Rough \#3'') matches the the diffusion in reference system \#3 very well, which is a 14.4 \AA\ flat pore. We also notice that the 28.8 \AA\ narrow fracture has overall higher diffusion than reference system \#4, which has a 28.8 \AA\ flat pore, but that it matches reference system \#1 very well, which has a 86 \AA\ flat pore.
 %
 % ---- Subcaption/subfigure version ---- %
 \begin{figure}[!htb]%
@@ -100,7 +100,7 @@ In \cref{fig:diffusion_narrow_and_reference} we have plotted the diffusion for t
     \end{minipage}%
 }%
 \caption{%
-    Diffusion constant ($D$) as function of distance from silica matrix ($r$), for \textbf{a)} rough fracture system \#1 and \#2 (normal rough fractures) and all reference systems, and \textbf{b)} the narrow uniform width fractures (fracture system \#3 and \#4) and all reference systems. Dashed lines are reference systems. %
+    Diffusion constant ($D$) as function of distance from silica matrix ($r$). Solid lines are \textbf{(a)} rough fracture system \#1 and \#2 (normal rough fractures), and \textbf{(b)} the narrow uniform width fractures (fracture system \#3 and \#4). Dashed lines are the four reference systems, in both \textbf{(a)} and \textbf{(b)}.%
     \label{fig:last_diffusion_figure}%
 }%
 \end{figure}%
