@@ -1,0 +1,68 @@
+\chapter{Studied systems}
+\todoa{Write about the systems we studied}%
+\todoa{Rename flat fracture systems to reference?}
+\todoa{Write about density and vacuum problems - injected water with high density in some systems - SEPARATE (sub)SECTION?}
+%
+% flat_square_fracture02
+% flat_square_fracture03
+% flat_fracture02
+% flat_fracture03
+% rough_fracture01_abel
+% rough_fracture03
+% rough_fracture04_same_distance
+% rough_fracture05
+%
+We have do experiments on a total of 8 different systems, all consisting of a slab of silica with a fracture in the center filled with water. Four of them are ``reference'' systems with just a flat fracture in the center, and the other four are systems with a random fracture with different geometries.
+
+All systems are created using the experimental procedure from \cref{sec:experimental_procedure}. The systems are initialized as a perfect crystal of $\upbeta$-cristobalite. The system is then brought to 4500 Kelvin using a thermostat, to melt the silica crystal. It is then cooled back down to 300 Kelvin, and a fracture is cut out of the solid slab of silica, the system dangling ends are passivated, and the fracture is filled with water. The system is then thermalized at 300 Kelvin.
+
+A summary of the different systems can be seen in \cref{tab:systems}, where we have listed the dimension, porosity, the number of atoms, and the number of SiO$_2$ and water \hl{units/species} in each system.
+%
+\begin{table}[htpb]
+\centering
+    \begin{tabular}{l|cccccc}
+    \textit{System}             & \textit{Dimensions} [\AA]     & $\phi$ [\%]   & \textit{r} [\AA]  & $N$       & $N_\text{SiO$_2$}$    & $N_\text{H$_2$O}$ \\ \hline 
+    Rough fracture \#1          & $179 \times 179 \times 179$   & ${\sim}12$    & -                 & 393 k  & 111 k                    & 19 k           \\ % rough_fracture01_abel, N = 393181
+    Rough fracture \#2          & $172 \times 172 \times 172$   & ${\sim}13$    & -                 & 347 k  & 97 k                     & 18 k            \\ %rough_fracture03, N = 347176
+    Rough fracture \#3          & $172 \times 172 \times 172$   & ${\sim}13$    & 14.4              & 349 k  & 99 k                     & 16 k            \\ % rough_fracture04_same_distance, N = 348573
+    Rough fracture \#4          & $172 \times 172 \times 172$   & ${\sim}23$    & 28.8              & 368 k  & 89 k                     & 34 k            \\ % rough_fracture05 N = 367958
+    \hline %
+    Reference \#1           & $179 \times 179 \times 179$   & 48            & 86                & 260 k     & 25 k                  & 60 k                             \\ % flat_square_fracture02, N = 259955
+    Reference \#2           & $179 \times 179 \times 179$   & 48            & 86                & 271 k     & 25 k                  & 64 k                             \\ % flat_square_fracture03, N = 271328
+    Reference \#3           & $143 \times 143 \times 57$    & 25            & 14.4              & 90 k      & 19 k                  & 10 k                             \\ % flat_fracture02, N = 89646
+    Reference \#4           & $143 \times 143 \times 57$    & 50            & 28.8              & 107 k     & 13 k                  & 22 k                             \\ % flat_fracture03, N = 106829
+    \end{tabular}%
+    \vspace{8pt}
+    \caption{%
+%     \caption{%
+%     a
+        An overview of the 8 different systems we have done experiments on. ``Flat fracture'' 1 through 4 are reference systems, that consist of a silica slab with a single flat fracture filled with water. ``Rough fracture'' 1 through 4 consist of a silica slab with different water-filled fractures with different geometries.%
+        \\%
+%
+        $\phi$ is the approximate porosity of the system, defined as the volume of the fracture relative to the volume of the whole system. $r$ is the distance between the surfaces used to create the fracture. $N$ is the total number of atoms (silicon, oxygen and hydrogen), $N_\text{SiO$_2$}$ is the number of SiO$_2$-units, and $N_\text{H$_2$O}$ is the number of water molecules. %
+%
+%         $N_\text{H$_2$O}$ and $N_\text{SiO$_2$}$ measured in flat02 and flat03 using slice of heigth 14.4/28.8, and then counting number of oxygen/silicon in slice. \hl{Volumes of rough fractures calculated using Ovito ``construct surface mesh''}%
+        \label{tab:systems}%
+%     }%
+    }
+\end{table}%
+
+In all systems with narrow pores and fractures we noticed that the water filling method had some problems. This is caused by the voxelation method used to fill the system, where we divide the system into voxels, mark all voxels with atoms in them (before filling the system with water) as occupied, and then put one water molecule in each unoccupied voxel. When marking occupied voxels we usually end up marking a lot of the voxels at the silica surface as occupied. This means that when we have very narrow pores, with the distance between the pore walls in the same range as the voxel size, a large fraction of the pore will be occupied voxels, and the resulting water density in the pore will be lower than the expected density. To rectify this we use higher input densities when filling narrow fractures and pores with water.
+
+
+\subsection*{Rough fractures}
+The fractures in the systems labelled ``rough fracture'' are all created using periodic surfaces with a Hurst exponent close to \hl{0.75}, generated using successive random additions from \cref{sec:diamond_square_2d_finite}, and the fractures cut out using the method from \cref{sec:generating_fractures}. ``Rough fracture'' \#1 and \#2 are created using different surfaces for the top and bottom of the fracture, while ``rough fracture'' \#3 and \#4 are created using the same surface repeated twice for the top and bottom of the fracture, with a distance of respectively 14.4 and 28.8 \AA\ between the surfaces, which gives an approximately constant width fracture. 
+
+When filling system \#1 and \#2 with water we used an input density of 1050 kg/m$^3$, and for system \#3 and \#4 we used 1273 kg/m$^3$.
+
+% When filling the narrow fractures in ``rough fracture'' \#3 and \#4 the water filling method had a lot of trouble, since the pore size is very close to the voxel size it ends up using. This means that a lot of the voxels in the pore end up being unavailable for putting water atoms in, and the net water density we end up with is usually much lower than the input density. We solve this by increasing the input density until the system seems somewhat saturated (using visual inspection, and looking at density profiles).
+
+\subsection*{Reference systems}
+To compare with the fracture systems we have also prepared four ``reference'' systems, all consisting of one flat pore with constant width. 
+
+``Reference'' \#1 and \#2 both have a 86 \AA\ wide pore. When filling system \#1 and \#2 with water we used an input density of respectively 1050 and 1126 kg/m$^3$, which, as we will see, resulted in bulk densities of respectively 1038 and 1126 kg/m$^3$ (see \cref{tab:bulk_water_density}). These two systems will serve as good references for the behaviour and structure of water near the silica surface, and in bulk-like conditions, as we expect the water in the middle of the pore to display bulk-like behaviour.%\todoao{Write more about increased density and vacuum, maybe in discussion/conclusion?}
+%
+% . After thermalizing this system we noticed some vacuum bubbles in the water near the silica surface, so in system \#2 we tried using a higher density when filling the pore with water, and we ended up using an input density of 1126 kg/m$^3$, which resulted in a bulk density of 1090 (see \cref{tab:bulk_water_density}). From phase diagrams of water \todobo{cite?} we know that water has the same phase in a wide range of densities and pressures, so we do not risk drastically changing the behaviour of the water atoms by increasing the density to 1090 kg/m$^3$.%
+%
+
+``Reference'' \#3 and \#4 consist of flat pores that are respectively 14.4 and 28.8 \AA\ wide, which we will compare to the random fracture systems with random uniform fractures in them. When filling the pores in these systems with water we used input densities of 1273 kg/m$^3$. %This is a pretty high density, but the voxelation method has some problems in very narrow fractures, when the pore sizes are in the same range as the voxel size, which makes the resulting density a lot lower than the input density. We also had problems with vacuum bubbles near the silica surface in these two systems, but this was somewhat remedied by increasing the water density. \todoao{Write about problems with injecting water in narrow fractures and pores}

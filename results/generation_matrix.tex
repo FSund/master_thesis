@@ -1,0 +1,27 @@
+\section{Manhattan distance to nearest atom}
+% \todo{replace these with results from actual fracture system?}
+%Not very useful. Much of the same as distance to atom, only worse (but faster). Quantitatively much the same as distance to atom?
+%
+We have made 3d maps of the system labelled ``rough fracture \#2'', of the Manhattan distance to the nearest atom to each point on a grid, using the method from \cref{sec:generation_matrix}. See \cref{fig:generation_matrix_r05,fig:generation_matrix_r11} for the results, where we show slices of the maps in the $yz$- and $xy$-plane.
+
+We see that the 3d maps made using this method shows a lot of the same details as the maps in \cref{fig:distance_to_atom_r05,fig:distance_to_atom_r20}, but we see that using the Manhattan distance can make the results harder to interpret, since the Manhattan distance between two points is generally shorter than the Euclidean distance, and we are not used to interpreting the Manhattan distance. In molecular dynamics simulations it is also unusual to use the Manhattan distance.%
+%
+\begin{figure}[!p]%
+    \centering%
+    \setlength{\myfigwidth}{\textwidth}%
+    \begin{subfigure}[b]{\myfigwidth}%
+        \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r0745_n256}%
+        \caption{Max distance $r_\text{max}=5.0$ \AA.%
+        \label{fig:generation_matrix_r05}}%
+    \end{subfigure}%
+    \vspace{10pt}
+    \begin{subfigure}[b]{\myfigwidth}%
+        \includesvg[pretex=\normalsize, width=\myfigwidth, svgpath = ./images/generation_matrix/rough_fracture03/]{05_r308_n256}%
+        \caption{Max distance $r_\text{max}=20$ \AA.%
+        \label{fig:generation_matrix_r11}}%
+    \end{subfigure}%
+    \captionsetup{width=\textwidth}%
+    \caption{%
+        Slices of 3d maps of the system labelled ``rough fracture \#2'', made using the method from \cref{sec:generation_matrix}. The method generates a 3d map of the Manhattan distance to the nearest atom, in each point on a grid. We have used colormaps from 0 to $r_\text{max}$, with \textbf{(a)} $r_\text{max} = 8$ \AA, and \textbf{(b)} $r_\text{max} = 30$ \AA.%
+    }%
+\end{figure}%
