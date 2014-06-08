@@ -1,4 +1,3 @@
-
 \section{Generating fractures from surfaces\label{sec:generating_fractures}}
 To generate a realistic fracture we use the method of successive random additions described in \cref{chap:generating_surfaces,subsec:SRA_implementation} to generate random surfaces with a known Hurst exponent. We then displace the surfaces in the $z$-direction, so one is above the other, and let the space between the surfaces be the void\footnote{Since we are using periodic systems, we could also have let the space outside the surfaces be the fracture and get the same result. But for easier visualization and understanding we use the volume between the surfaces.}.
 
@@ -63,58 +62,3 @@ in the two surfaces (four points in each surface). We then divide each convex he
         \label{fig:fracture_model}%
     \end{subfigure}%
 \end{figure}%
-
-\subsection{Finding a point inside a tetrahedron}
-A tetrahedron consists of four points $\bvec a$, $\bvec b$, $\bvec c$, and $\bvec d$, and four faces spanned by the four possible combinations of the four points. For a face spanned by the points $\bvec a$, $\bvec b$, and $\bvec c$ we can find if a point $\bvec P$ is on the same side of the face as the point $\bvec d$ (the point not used to construct the face) by doing some geometry. We first find the normal vector to the surface $\bvec n$ by the cross product 
-\begin{align*}
-    \bvec n = (\bvec a-\bvec c)(\bvec b-\bvec c).
-\end{align*}
-We know that the sign of the dot product between this normal vector and another vector going from the plane to a point will give us information about which side of the plane the point is. This means that if two points $\bvec p_1$ and $\bvec p_2$ are on the side of the plane, the dot product between the normal vector and the two vectors
-\begin{align*}
-    (\bvec p_i - \bvec k),
-\end{align*}
-where $\bvec k$ is any point in the plane, should have the same sign. So we find the sign of dot products
-\begin{align*}
-    &\text{sgn}\big(\bvec n\cdot(\bvec P - \bvec k)\big), \\
-    &\text{sgn}\big(\bvec n\cdot(\bvec d - \bvec k)\big),
-\end{align*}
-and if the sign of these dot products is the same, we know that the point $\bvec P$ is on the same side of the face as the point $\bvec d$. We now see that if we do this for all four faces of the tetrahedra, we know that the point $\bvec P$ is inside the tetrahedra if the signs of \emph{all} pairs of dot products are equal.
-
-To implement this for checking which atoms are between two surfaces (with the volume between the surfaces divided into tetrahedra), we express it as a matrix equation. This reduces the calculation of wether a point is inside a tetrahedron to comparing the signs of five matrix determinants.
-
-% Calculating wether a point is inside a tetrahedron can be reduced to comparing the sign of five different matrix determinants. If we have a point $P = (x,y,z)$ and the four vertices of the tetrahedron are $(x_i, y_i, z_i)$ for $i\in \{1,2,3,4\}$, we can find if the point is inside the tetrahedron by checking if the the following five matrix determinants have the same sign
-% \begin{align*}
-%     &\begin{vmatrix}
-%         x_1 & y_1 & z_1 & 1 \\
-%         x_2 & y_2 & z_2 & 1 \\
-%         x_3 & y_3 & z_3 & 1 \\
-%         x_4 & y_4 & z_4 & 1
-%     \end{vmatrix},&
-%     &\begin{vmatrix}
-%         x & y & z & 1 \\
-%         x_2 & y_2 & z_2 & 1 \\
-%         x_3 & y_3 & z_3 & 1 \\
-%         x_4 & y_4 & z_4 & 1
-%     \end{vmatrix},&
-%     &\begin{vmatrix}
-%         x_1 & y_1 & z_1 & 1 \\
-%         x & y & z & 1 \\
-%         x_3 & y_3 & z_3 & 1 \\
-%         x_4 & y_4 & z_4 & 1
-%     \end{vmatrix},&
-%     \\
-% %     \vspace{5mm}
-%     \\
-%     &\begin{vmatrix}
-%         x_1 & y_1 & z_1 & 1 \\
-%         x_2 & y_2 & z_2 & 1 \\
-%         x & y & z & 1 \\
-%         x_4 & y_4 & z_4 & 1
-%     \end{vmatrix},&
-%     &\begin{vmatrix}
-%         x_1 & y_1 & z_1 & 1 \\
-%         x_2 & y_2 & z_2 & 1 \\
-%         x_3 & y_3 & z_3 & 1 \\
-%         x & y & z & 1
-%     \end{vmatrix}.&
-% \end{align*}

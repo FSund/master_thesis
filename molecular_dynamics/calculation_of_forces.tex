@@ -1,0 +1,108 @@
+\section{Calculation of forces\label{sec:program:lj}}
+The forces are calculated from the derivatives of interatomic potentials, that usually only depend on the positions of the atoms. The potentials are generally of the form
+\begin{align*}
+    U(\rvec) = \sum_{i<j} U_{ij}(r_{ij}) + \sum_{i<j<k} U_{ijk}(\rvec_i, \rvec_i, \rvec_k) + \dots,
+\end{align*}
+where $\rvec_i$ is the position of atom $i$, $r_{ij}$ is the distance between atom $i$ and $j$, $U_{ij}$ is a two-particle potential depending only on the distance between two atoms, and $U_{ijk}$ is a three-particle potential that usually also depends on the angle between three atoms. Higher-order contributions to the forces are also sometimes used, but these are very demanding to evaluate.
+
+The potentials are often developed from quantum mechanical calculations, and when doing this one has to weigh the benefits of having a complex potential that models the interactions accurately, against having a less complex potential that will be easier to implement, and faster to evaluate. The limiting factor in any molecular dynamics calculation is the cost of doing simulations on high-performance computing clusters (like Abel at UiO), but luckily it seems like the progress in computational processing power still seems to almost follow Moore's Law\cite{mack2011moore}, which states that the number of transistors on integrated circuits double approximately every two years\cite{moore1965cramming}, effectively halving the cost of doing a computation every two years.
+
+In this example we will be using a potential first seen as early as 1924\cite{jones1924potential} called the Lennard-Jones potential after its creator, who used to to study the noble gas Argon. The potential is a two-particle potential with the following form
+% To model a simple mono-atomic system we use the well-known Lennard-Jones potential\cite{jones1924potential}, which when applied on the noble gas \hl{(inert)} Argon gives results that are in good agreement with experimental results. The potential is usually written as follows
+\begin{align}
+%     U(r) = 4\varepsilon \Big[
+%     \underbrace{
+%         \left(\frac{\sigma}{r}\right)^{12}
+%     }_{\text{attraction}}
+%      - 
+%     \underbrace{
+%         \left(\frac{\sigma}{r}\right)^6
+%     }_{\text{repulsion}}
+%     \Big],
+    U(r_{ij}) = 4\varepsilon\left[ \left(\frac{\sigma}{r}\right)^{12} - \left(\frac{\sigma}{r}\right)^{6} \right]
+    = \varepsilon\left[ \left(\frac{r_m}{r}\right)^{12} - 2\left(\frac{r_m}{r}\right)^{6} \right],
+    \label{eq:lennard-jones_potential}
+\end{align}
+where $\sigma$ is the distance between where the potential is zero (the equilibrium distance between the atoms), $\varepsilon$ is related to the strength of the potential (the minimum value of the potential), and $r_m = 2^{1/6} \sigma$ is the interatomic distance where the potential is at its minimum. The $r^{-12}$-term is a repulsive term that describes overlap of electron orbitals (Pauli repulsion) and the $r^{6}$-term is an attractive term that describes dipole-dipole interactions (van der Waals forces). 
+% \todobo{something about physical justification, use 6 for repulsive because $r^{12} = (r^6)^2$}
+
+Even though the potential is simple, it describes many properties of noble gases like Argon well, and its simplicity also means that the cost of calculating the forces between atoms is low. For these reasons it has been used in a lot of studies. 
+
+See \cref{fig:lennard-jones_potential} for a plot of the potential using the parameters usually used for simulating Argon\cite{frenkel2001understanding}, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV.
+%
+% \tododone{find section for Argon parameters ref in \cref{fig:lennard-jones_potential}}%
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones_manualalign01}%
+%     \includesvg[width=0.7\textwidth, svgpath=./images/lennard-jones/]{lennard-jones}%
+    \caption{%
+        Plot of the Lennard-Jones potential, as stated in \cref{eq:lennard-jones_potential}. Using the parameters usually used for simulating Argon, $\sigma = 3.405$~\AA\ and $\varepsilon = 0.010318$~eV\cite{frenkel2001understanding}.%
+        \label{fig:lennard-jones_potential}%
+    }%
+\end{figure}%
+
+\subsection{Newton's third law}
+When evaluating two-particle forces like the Lennard-Jones potential there is a simple optimization that lets us halve the number of computations, by utilizing Newton's third law. We see that when evaluating $U(r_{ij})$, the force will have the same magnitude if we switch particle $i$ and $j$. This means that when we have calculated the force $\vec F_{ij}$, from particle $j$ on particle $i$, we know that the force on atom $j$ from particle $i$ will have the same magnitude, and we can simply add the opposite force to atom $j$, $\vec F_{ji} = -\vec F_{ij}$. This way we can skip half the force calculations, and only have to calculate the forces between particle $i$ and particles $j>i$ in the main force loop.
+
+See \cref{list:calculate_forces,list:calculate_force_between_atoms} for an example of how to implement force calculation using the Lennard-Jones potential, using this optimization.
+%
+\begin{listing}[!htb]%
+% \begin{cppcode*}{gobble=4}
+%     void calculateForces(System &system)
+%     {
+%         for (Atom *atom1 : system.atoms())
+%         {
+%             for (Atom *atom2 : system.atoms())
+%             {
+%                 
+%             }
+%         }
+%     }
+% \end{cppcode*}
+%         for (vector<Atom*>::iterator atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1)
+\begin{cppcode*}{gobble=4}
+    void calculateForces(System &system) {
+        const vector<Atom*> &atoms = system.atoms();
+        for (auto atom1 = atoms.begin(); atom1 != atoms.end(); ++atom1) {
+        
+            // Use Newton's third law to skip half the force calculations
+            for (auto atom2 = atom1.next(); atom2 != atoms.end(); ++atom2) {
+                vec3 force = calculateTwoParticleForce(*atom1, *atom2);
+                
+                (*atom1)->force() += force;
+                (*atom2)->force() -= force; // Newton's third law
+            }
+        }
+    }
+\end{cppcode*}
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Implementation of \mono{calculateForces} from \cref{list:simple_md_program}. See \cref{list:calculate_force_between_atoms} for example implementation of \mono{calculateTwoParticleForce}.%
+    \label{list:calculate_forces}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    vec3 calculateTwoParticleForce(Atom *atom1, Atom *atom2) {
+        vec3 drVec = atom1->position() - atom2->position();
+        
+        double dr2 = drVec.lengthSquared();
+        double dr6 = dr2*dr2*dr2;
+
+        double LJforce = 24.0*(2.0 - dr6)/(dr6*dr6*dr2);
+        vec3 force = drVec*LJforce;
+        
+        return force;
+    }
+\end{cppcode*}
+\caption{%
+%     An example of how to implement the velocity Verlet integration scheme using \cpp-like object-oriented programming.%
+    Implementation of \mono{calculateTwoParticleForce} from \cref{list:calculate_forces}, using the Lennard-Jones potential.%
+    \label{list:calculate_force_between_atoms}%
+}%
+\end{listing}%
+
+% \todobo{Remove \cref{list:calculate_force_between_atoms} ?}
+If we are using higher-order potentials we can use the same optimization for the two-particle terms of the potential, but it is a bit more complicated for the terms depending on the positions of three or more particles, and the angles between them, but there are still similar optimizations that can be done if we are smart.

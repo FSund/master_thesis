@@ -1,0 +1,6 @@
+\chapter{Simulation procedure}
+% \todob{In experiments: mention smaug}
+\todobo{In experiments: mention phase transitions of silica and water? Water has same phase even if we have high pressure/density}%
+\todobo{Steepest descent procedure?}%
+%
+When doing simulations using molecular dynamics we use a procedure akin that used by actual experiments. Since the duration of the simulations we are realistically able to simulate on are of the order of tens of nanoseconds, we have to be smart when initializing the system, to avoid having to simulate for a long time to get to the state we want to study. This means that we should start out with the system in a state as close to the one we want to study as possible. The problem with this when simulating silica is that the silica structure formed when rapidly cooling molten silica does not have any long-range ordering. Silica in the glass form has an amorph structure, which does not have any long-range ordering, but has short-range ordering well beyond the Si-O bond length. This structure is hard to set up with an algorithm.

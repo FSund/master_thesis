@@ -1,0 +1,24 @@
+\section{Andersen thermostat}
+The Andersen thermostat is a more physically realistic thermostat, which simulates hard collisions between atoms in the system and atoms in the heat bath. We do not actually simulate any extra particles, but we we assign new random velocities to a random fraction of the atoms, the fraction and magnitude of the velocity determined by the strength of the thermostat and the temperature of the thermostat. 
+
+This thermostat uses the following procedure%
+%
+\begin{itemize}
+    \item For each atom generate a uniform random number $u$ in the interval $[0,1]$.
+    \item If this random number is less than $\Delta t/\tau$,
+        \begin{align*}
+            u < \frac{\Delta t}{\tau},
+        \end{align*}
+%         \\\begin{cppcode*}{gobble=12}
+%             if (u < dt/tau)
+%         \end{cppcode*}
+        we assign the atom a new, normally distributed velocity with standard deviation
+        \begin{align*}
+            \sigma_v = \sqrt{\frac{k_B T_\text{bath}}{m}}.
+        \end{align*}
+\end{itemize}
+%
+In this thermostat $\tau$ can be seen as a collision time, and $\tau$ should have about the same value as in the Berendsen thermostat.
+%}\tododo{we give no number for $\tau$ in Berendsen..}.
+
+The Andersen thermostat samples the canonical ensemble well\todobo{citation?}, but disturbs the dynamics of for example lattice vibrations. We should avoid using this thermostat when measuring properties directly connected to the movement of each particle, for example diffusion, since we so abruptly change the velocity and trajectory of the particles.

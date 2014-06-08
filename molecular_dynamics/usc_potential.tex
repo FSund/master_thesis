@@ -1,0 +1,113 @@
+\section{Potential\label{sec:sio2_potential}}
+% \orangebox{
+%     \begin{itemize}
+%         \item Which of the parameters given below are constants?
+%         \item Does the potential care about number of neighbors (for example via adjustment of some parameters) ?
+%     \end{itemize}
+% }
+%
+The interatomic potential\cite{vashishta1990interaction} % \todoco{not exactly same as vashishta, see nanobubble supplements} 
+we use for for both silica and water consists of a two-body and a three-body part, and has the form
+\begin{align*}
+    E_\text{tot} = \sum_{i<j} V_{ij}^{(2)}(r_{ij}) + \sum_{i<j<k}V_{ijk}^{(3)}(\rvec_{ij},\rvec_{ij}),
+\end{align*}
+for
+\begin{align*}
+    1\leq \{i,j,k\} \leq N.
+\end{align*}
+
+$V_{ij}^{(2)}$ is the two-body term, which consists of four terms that take into account steric repulsion, charge-charge (Coulomb), charge-dipole, and dipole-dipole (van der Waals) interactions. The two-body term only depends on the interatomic distance between atom $i$ and $j$, $|\rvec_{ij}| = r_{ij} = r$, and it has the form%
+\begin{align*}
+    V_{ij}^{(2)} (r) = 
+    \underbrace{
+        \frac{H_{ij}}{r^{\eta_{ij}}}
+    }_{\text{steric repulsion}}
+    +~ 
+    \underbrace{
+        \frac{Z_iZ_j}{r}e^{-r/r_{1\text{s}}}
+    }_{\text{Coulomb}}
+    ~-~
+    \underbrace{
+        \frac{D_{ij}}{2r^4}e^{-r/r_{4\text{s}}}
+    }_{\text{charge-dipole}}
+    ~- 
+    \underbrace{
+        \frac{w_{ij}}{r^6}
+    }_{\text{van der Waals}}
+    ,
+\end{align*}%
+% where $r$ is the distance between two atoms $i$ and $j$, $H_{ij}$ and 
+where the parameters are%
+\begin{itemize}[%
+    leftmargin=*,%
+    label={}%,
+%     font=\itshape%
+]
+    \item \textit{Steric repulsion}
+    \begin{itemize}[label=$\bullet$]
+        \item $H_{ij}$ controls the strength of the steric repulsion
+        \item $\eta_{ij}$ is the strength/exponent of the steric repulsion
+    \end{itemize}
+    \item \textit{Charge-charge (Coulomb) interaction}
+    \begin{itemize}[label=$\bullet$]
+        \item $Z_i$ is the charge associated with atom $i$
+        \item $r_{1\text{s}}$ is the screening length for the interaction
+    \end{itemize}
+    \item \textit{Charge-dipole interaction}
+    \begin{itemize}[label=$\bullet$]
+        \item $D_{ij}$ controls the strength of the interaction
+        \item $r_{4\text{s}}$ is the screening length for the interaction
+    \end{itemize}
+    \item \textit{Dipole-dipole (van der Waals) interaction}
+    \begin{itemize}[label=$\bullet$]
+        \item $w_{ij}$ controls the strength of the interaction
+        \item $r_{4\text{s}}$ is the screening length for the interaction
+    \end{itemize}
+    \vspace{10pt}
+\end{itemize}
+% $\eta_{ij}$ are the strengths of the steric repulsion, $Z_i$ is the charge associated with atom $i$, $D_{ij}$ \hl{controls the charge-dipole interaction}, $w_{ij}$ \hl{controls the dipole-dipole interaction}, and $r_{1\text{s}}$ and $r_{4\text{s}}$ are the screening lengths for the Coulumb and charge-dipole interactions respectively. 
+
+$V_{ijk}^{(3)}$ is the three-body term, which take into account bending and stretching of covalent bonds. This term depends on the distances between atom $i$, $j$ and $k$, and also the angle $\theta_{ijk}$ between the atoms. The term has the form %\todoco{split into $f(\rvec_{ij}, \rvec_{ik})$ and $p(\theta_{ijk}, \theta_0)$ as in vashista 1990?}
+\begin{align*}
+    V^{(3)}_{jik}(\rvec_{ij}, \rvec_{ik}) = 
+    B_{ijk} 
+    \underbrace{ % use vphantom to get proper vertical alignment
+        \vphantom{\frac{\big)^2}{\big)^2}}\exp\left( \frac{\xi}{r_{ij} - r_0} + \frac{\xi}{r_{ij} - r_0} \right)
+    }_{\text{bond-stretching}}
+    \underbrace{
+        \frac{\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}{1 + C_{ijk}\left(\cos\theta_{ijk} - \cos\theta_0\right)^2}
+    }_{\text{bond-bending}}
+    ,
+\end{align*}
+for
+\begin{align*}
+    \{r_{ij}, r_{ik}\} \leq r_0.
+\end{align*}
+The parameters of the three-body term are as follows
+\begin{itemize}[leftmargin=*,label={}]
+    \item  % This needs to be here so the document compiles, but I don't think it adds any space
+    \begin{itemize}[label=$\bullet$]
+        \item $B_{ijk}$ controls the strength of the three-body interaction
+    \end{itemize}
+    \item \textit{Bond-stretching}
+    \begin{itemize}[label=$\bullet$]
+        \item $\xi$ controls the strength of the bond-stretching
+        \item $r_0$ is the cutoff distance for the three-body interaction
+    \end{itemize}
+    \item \textit{Bond-bending}
+    \begin{itemize}[label=$\bullet$]
+        \item $C_{ijk}$ controls the strength of the bond-bending
+        \item $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$
+        \item $\theta_0$ is the angle at which the three-body term vanishes
+    \end{itemize}
+    \vspace{10pt}
+\end{itemize}
+
+The parameters used in our simulations were chosen by first determing good parameters for pure water and silica independently, and then interpolating between these parameters to allow transfer of oxygen atoms between silica and water. See for example \cite{vashishta1990interaction} for more details on this. The actual details of how oxygen is transferred between silica and water is based on the number of silicon and hydrogen neighbors an oxygen atom has, but the details of this method is outside the scope of this thesis.
+% \todoa{More about how parameters were decided, see Mathilde's master, and [25] Wang et al in it}
+
+The potential is further optimized by linearizing it, meaning that the potential is calculated for example for different distances $r_{ij}$ and angles $\theta_{ijk}$ when the program starts, and then the forces can be looked up directly in a table without having to evaluate the potential, when we run the simulations.
+
+% where $\rvec_{ij} = \rvec_i - \rvec_j$, $r_{ij} = |\rvec_{ij}|$, $r_0$ is the cutoff distance for the three-body interaction, $\theta_{ijk}$ is the angle between $\rvec_{ij}$ and $\rvec_{ik}$, $B_{ijk}$ is the strength of the three-body interaction, and $\theta_0$ is a parameter that controls the angle at which the three-body term vanishes.
+% \todo[inline]{$\xi$ and $C_{ijk}$ ???}
+% \todod{cuts off interaction at $r_0$ with no discontinuities in the derivatives with respect to $r$ (vashista 1990)}

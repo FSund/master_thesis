@@ -1,0 +1,10 @@
+\section{Successive random additions}
+The method called \emph{successive random additions} (SRA) is a modification of the regular midpoint displacement method first described by Richard F. Voss in \cite{voss1985random}, where we add random numbers to \emph{all} points in each iteration, compared to just adding random numbers to the \emph{new} points in the regular midpoint displacement method. This modification means that we can replace the factor $(1/2)$ in \cref{eq:midpoint_sigma_first,eq:midpoint_sigma_general} with a general parameter $r$,%
+%\todoco{why? (something about distance between points)}% 
+and we get the following variance for iteration $i$
+\begin{align*}
+    \sigma_i^2 = r^{2H}\sigma^2_{i-1}.
+\end{align*}
+This new parameter $r$ controls the lacunarity of the surface, without affecting the Hurst exponent.%
+\todoco{Define lacunarity? - defined by equation above..}
+% \hl{$r$ controls the lacunarity/roughness, $H$ independent of $r$}

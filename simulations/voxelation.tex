@@ -1,0 +1,153 @@
+\section{Voxelation\label{sec:voxelation}}
+The method of voxelation is a method where we divide our simulation system into adjacent boxes or \emph{voxels} (3-dimensional pixels). The system is divided into $n_x\times n_y\times n_z$ voxels of size $l_x\times l_y\times l_z$. Depending the what we want to calculate we can calculate the voxel size from the number of voxels, or vice versa, using the following relation
+\begin{align*}
+    n_i = \frac{L_i}{l_i},
+\end{align*}
+where $L_i$ is the system size, and we assume that the voxel size $l_i$ is set so that $L_i$ is evenly divisible by $l_i$ (meaning that the remainder of $L_i/l_i$ is zero). If we have a maximum or minimum voxel size $l_i^\text{max}$ or $l_i^\text{min}$ we can use the following relations to calculate the number of voxels
+\begin{align*}
+    &n_i=\left\lfloor\frac{L_i}{l_i^\text{max}}\right\rfloor &\text{or}& &n_i=\left\lceil\frac{L_i}{l_i^\text{min}}\right\rceil,
+\end{align*}
+where $\lfloor x \rfloor$ is the \Verb!floor!-function and $\lceil x \rceil$ is the \Verb!ceil!-function.
+
+The voxels are indexed $(i,j,k)$ where $i,j,k \in [0,n_i-1]$, and a voxel is defined as the points $(x,y,z)$ where
+\begin{align}
+    \left\lfloor\frac{x}{l_x}\right\rfloor = i,\label{eq:find_voxel_index}
+\end{align}
+and similarly for the other dimensions.
+
+\subsection{Neighbor lists\label{sec:neighbor_lists}}
+When doing calculations and measurements on a molecular system, we often need information about the neighboring atoms of each atom, and we want to make a so-called \emph{neighbor list}, which are lists of which atoms are within a distance $dr$ of each atom. Finding out which atoms are within a certain distance of each atom can take a long time; the trivial way of checking each atom against all other atoms scales as $\mathcal{O}(N^2)$, $N$ being the number of atoms. 
+%
+%There are many clever algorithms for finding nearest neighbors, often called a ``nearest neighbor search'' (see \url{http://www.slac.stanford.edu/cgi-wrap/getdoc/slac-r-186.pdf} and references in that paper, especially ``11. Levinthal 1966''). 
+
+Since we want to find all neighbors within a distance $dr$ of a point, for all or most of the atoms, we can use the voxelation method to do it efficiently. To do this we first voxelate the system using a minimum voxel size equal to $r$. We then find which voxel each atom belongs to, and store this. We can then find the atoms within a distance $dr$ from a point $(x,y,z)$ by first finding the voxel this point lies in using (from \cref{eq:find_voxel_index})
+\begin{align*}
+    &i = \Bigg\lfloor \frac{x}{l_x} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{y}{l_y} \Bigg\rfloor,& &j = \Bigg\lfloor \frac{z}{l_z} \Bigg\rfloor,&
+\end{align*}
+where $l_x\times l_y \times l_z$ is the actual voxel size (we need an even number of voxels, so the actual voxel size is governed by the system size). We then check the distance between the point and the atoms in the voxel the point belongs in, and the atoms in the 26 neighboring voxels of this voxel. 
+\todoco{make voxel size vs. $dr$ illustration}%
+
+Checking the 26 neighboring voxels ensure that we included all atoms within the distance $dr$. We can see this by looking at the worst case example, where we have a point right at the edge of the voxel it belongs to, at $(i+(1-\epsilon_0))$, and an atom in voxel $(i+2)$ being as close to the point as possible, at $(i+2 + \epsilon)$. The distance between those two points would then be
+\begin{align*}
+    ((i+2)l + \epsilon_1) - (il + (l-\epsilon_0)) 
+    &= ((i + 2) - (i + 1) - \epsilon_0)l + \epsilon_1 + \epsilon_0 \\
+    &= l + \epsilon + \epsilon_0,
+\end{align*}
+which is larger than $l$, since $\epsilon_0, \epsilon_1$ have to be larger than 0.
+
+When voxelating the system using the distance $r$ we should take care not to use a too small distance, i.e. make the voxels too small and create a lot of voxels. Since the total number of voxels goes as $n^3$ the memory needed to store the matrix increases rapidly with decreasing voxel size. To avoid this we usually implement a hard limit to the number of voxels, and found that a limit of $n < 256$ or even $n < 128$ seemed to work good in most cases. On the other hand, if we make the voxels too large we soon find that the program is not especially efficient. This is because most voxels will have a lot of atoms in then, and we have to look through a lot of atoms when checking the 26+1 voxels for each atom.
+
+An implementation of the voxelation method for creating neighbor lists can be seen in \cref{list:create_neighbor_lists}. Note that when calculating distances between points we usually calculate and compare squared distances like $r^2 = (x_1-x_2)(x_1-x_2) + \dots$, since calculating roots are a time-consuming operation on a computer (at least compared to multiplication and addition).
+%
+% We did not find any algorithms for solving this specific problem, and the usual algorithms can not benefit from the fact that we need to find the nearest neighbors of \emph{all} points.
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    int nVoxels = floor(systemSize/radius);
+    double voxelSize = systemSize*nVoxels;
+    
+    sortAtomsIntoVoxels(atoms, voxelSize, voxels);
+    
+    vector<vector<Atom*> > neighborAtoms(atoms.size());
+    
+    // Loop over all atoms
+    for (Atom *atom : atoms) {
+        // Index of the voxel this atom belongs to
+        ivec3 index = floor(atom.position() / voxelSize)
+        
+        // Loop over all 27 neighbor voxels (including self)
+        for (int di = -1; di <= 1; di++)
+        for (int dj = -1; dj <= 1; dj++)
+        for (int dk = -1; dk <= 1; dk++)
+        {{{
+            // Index of neighbor voxel using periodic boundary conditions
+            // nx, ny, nz is the number of voxels in each direction
+            int i = (index[0] + di + nx) % nx;
+            int j = (index[1] + dj + ny) % ny;
+            int k = (index[2] + dk + nz) % nz;
+            
+            neighborAtoms[atom.index()].push_back(
+                findAtomsWithinRadius(atom, voxels[i][j][k], radiusSquared)
+            );
+        }}}
+    }
+\end{cppcode*}
+\caption{%
+    An example of how to find the neighbor atoms within a given distance (\mono{radius}) of all atoms. This example assumes a cubic system of size \mono{systemSize}. See \cref{list:sortAtomsIntoVoxels,list:findAtomsWithinRadius} for example implentations of \mono{sortAtomsIntoVoxels} and \mono{findAtomsWithinRadius}. %
+    \label{list:create_neighbor_lists}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    void sortAtomsIntoVoxels(
+        const vector<Atom*> &atoms, 
+        double voxelSize, 
+        vector<vector<vector<Atom*> > > &voxels) {
+        
+        for (Atom *atom : atoms) {
+            // Index of the voxel this atom belongs to
+            int i = floor(atom.position().x() / voxelSize);
+            int j = floor(atom.position().y() / voxelSize);
+            int k = floor(atom.position().z() / voxelSize);
+            voxels[i][j][k].push_back(atom);
+        }
+    }
+\end{cppcode*}
+\caption{%
+    Example of implementation of \mono{sortAtomsIntoVoxels} from \cref{list:create_neighbor_lists}, for sorting atoms into voxels with size \mono{voxelSize}. We use the \mono{floor} function to get the index of the voxel each atom belongs in, using zero-based numbering. % \mono{sortAtomsIntoVoxels}. %
+    \label{list:sortAtomsIntoVoxels}%
+}%
+\end{listing}%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    vector<Atom*> findAtomsWithinRadius(
+        Atom *atom1, const vector<Atom*> &voxel, double radiusSquared) {
+        
+        vector<Atom*> neighborAtoms;
+        
+        // Loop over atoms in neighbor voxel
+        for (Atom *atom2 : voxel) {
+            if (atom2 != atom1) {
+                double drSquared = 
+                    calculateDistanceSquaredBetweenAtoms(atom1, atom2);
+                if (drSquared < radiusSquared) {
+                    neighborAtoms.push_back(atom2);
+                }
+            }
+        }
+        return neighborAtoms;
+    }
+\end{cppcode*}
+\caption{%
+    Example implementation of \mono{findAtomsWithinRadius} from \cref{list:create_neighbor_lists}. See \cref{list:calculateDistanceSquaredBetweenAtoms} for an example implementation of \mono{calculateDistanceSquaredBetweenAtoms}.%
+    \label{list:findAtomsWithinRadius}%
+}%
+\end{listing}%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    double calculateDistanceSquaredBetweenAtoms(Atom *atom1, Atom *atom2) {
+        vec3 dr = atom2->position() - atom1->position();
+        
+        // Minimum image convention
+        for (int dim = 0; dim < 3; dim++) {
+            if      (dr[dim] >  L[dim]/2.0) dr[dim] -= L[dim];
+            else if (dr[dim] < -L[dim]/2.0) dr[dim] += L[dim];
+        }
+        
+        // Calculate $dr^2$ instead of $\sqrt{dr^2}$, since sqrt() is a very 
+        // slow operation, and in this case is unnecessary
+        return dr.lengthSquared();
+    }
+\end{cppcode*}
+\caption{%
+    Example implementation of \mono{calculateDistanceSquaredBetweenAtoms} from \cref{list:findAtomsWithinRadius}.%
+    \label{list:calculateDistanceSquaredBetweenAtoms}%
+}%
+\end{listing}%
+
+\subsection{Finding distance to surface\label{sec:find_distance_to_surface}}
+When doing measurements on water molecules we often want to know the distance from the water molecule to the surface of the pore the water molecule is in. To find this we first define the position of the water molecule as the position of the oxygen atom in the molecule. We then use the distance between this oxygen atom to the nearest silicon atom as the distance to the surface.
+
+To use the voxelation method we need to have a maximum distance to look for silicon atoms in. This atom should be set as small as possible, to efficiently use the voxelation method\footnote{We usually implement a hard upper bound on the number of voxels, or a lower bound on the voxel size, to keep the memory consumption of our program in check.}. We divide the system into voxels using the technique from \cref{sec:voxelation}, and sort all silicon atoms into the voxels. For each water-oxygen atom we then find the distance to the nearest silicon atom by calculating the distance between the oxygen atom and the silicon atoms in the voxel the oxygen atom belongs in, and the silicon atoms in all 26 neighbor voxels. See \cref{sec:neighbor_lists} for more details.

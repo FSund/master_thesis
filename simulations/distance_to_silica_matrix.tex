@@ -1,0 +1,40 @@
+\section{Distance to silica matrix\label{sec:measuring_distance_to_matrix}}
+\todoao{Why measure as function of distance to matrix}%
+% \todoa{Finish measuring as function of distance from matrix}
+% Mean distance from matrix in range --> if we limit the standard deviation as well, we're effectively limiting temperature, or diffusion??
+% When measuring things like density, diffusion, and the tetrahedral order parameter in a nanoporous system, we often want to study the behaviour of 
+When doing experiments with nanoporous and nanoscale systems we often want to do measures as function of the distance to the surface of the pore, in our case meaning the distance to the interface between water and silica. The first problem with this is to find out how to measure the distance from a point, for example a water molecule, to the surface. Most of our measures are done on water molecules in fractures and pores, so we first define the position of the water molecule as equal to the position of the oxygen atom in the water molecule. We then use the distance from these water-oxygen atoms to the nearest silica atom to define a distance from the water molecule to the surface of the silica matrix. Finding the nearest silica atom is not trivial though, so a separate procedure for doing this is shown in \cref{sec:find_distance_to_surface}.
+
+When measuring quantities that only depend on data from one timestep we do not have to worry about that the atoms move, so we just sort the atoms by distance to the surface using the procedure in \cref{sec:find_distance_to_surface} and do our measurements, individually on each timestep. But if we want to study for example diffusion, or the tetrahedral order parameter, which depend on data from several timesteps, we have to find a good way to define which atoms are in a certain range of the surface. We tried different methods, but decided to use the average distance to the surface for this\todobo{why, examples of tested methods -- constant within bin --> bad statistics, low number of atoms}.
+
+\subsection{Note on this method\label{sec:distance_to_matrix_issues}}
+\todobo{Clean up ``distance to z'' stuff}%
+When we define the distance to the silica matrix as the distance to the nearest silicon atom, we get some effects we should take note of for atoms very close to the matrix. With our definition of the distance to the silica matrix we are effectively making our bins out of spherical shells centered on each silicon atom. Compared to for example using the $z$-distance to the surface in a completely flat fracture, where we know the $z$-height of the surface, we see that this can give different results. The problem is of course that in a random fracture in a silica system we ca not easily define a normal vector to the surface of the fracture, so finding an equivalent to the $z$-distance in such a fracture is hard.
+
+When we do our measurements as a function of distance to the silica matrix we usually sort the atoms into bins according to their (average) distance to the nearest silicon atom. At distances much larger than the average distance between the silicon atoms at the surface of the fracture this is not a problem, since the curature of the spherical shells is low, and the volume enclosed by the shells is pretty close to the one we would have gotten if we had created bins used $z$-positions in flat fracture. But at distances close to the average distances between the silicon atoms we begin to see that the volumes our bins consist of start curving around the silicon atoms, instead of staying flat as they would have if we were using the $z$-distance. See \cref{fig:distance_to_matrix_illustration} for an illustration of this. In this illustration we have illustrated bins created using the same bin width and distance from the matrix, using the two different methods. The dark gray areas are the ones that are included using both methods ($A_\text{Si}\cap A_z$), the light grey areas ($A_\text{Si}$) are the ones unique to the spherical shell bins, and the yellow areas are the ones unique to the the $z$-distance bins ($A_z$).%
+%
+\begin{figure}[htb]%
+% \centering%
+    \begin{minipage}[c]{0.6\textwidth}%
+        \captionsetup{width=0.925\textwidth}%
+        \centering%
+        \includesvg[width=\textwidth, svgpath=./images/density/]{number_of_molecules_all_distances02}%
+        \caption{%
+            Plot of the number of atoms in each bin, when using the distance to the nearest atom for binning.%
+            \label{fig:distance_to_matrix_number_of_atoms}%
+        }%
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[c]{0.3999\textwidth}% % change "b" to "t" to anchor top instead of bottom
+%         \captionsetup{width=0.95\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \captionsetup{width=0.9\textwidth}% % minipage defines a \textwidth for it's own, so we have to repeat this command inside the minipage
+        \centering%
+        \includesvg[pretex=\normalsize, width=0.9\textwidth, svgpath=./images/distance_to_matrix_illustration/]{figure12}%
+        \caption{%
+            Illustration of binning when using distance to nearest silicon atom as definition of distance to silica matrix ($r_\text{Si})$, vs. $z$-distance ($r_z$).%
+            \label{fig:distance_to_matrix_illustration}%
+        }%
+    \end{minipage}%
+\end{figure}%
+
+This difference in binning is something we should be wary about when comparing our results to measurements done using the $z$-distance as the distance to the matrix. One result of this can be seen in \cref{fig:distance_to_matrix_number_of_atoms}, where we have plotted the number of atoms in each bin of width $0.25\text{ \AA}$ against the distance from the silica matrix (meaning the radius of the spherical shells). We see that we get no atoms in the bins from 2 to 3 \Ang, but a big spike just below 2 \AA. This spike is most likely caused by water-oxygen atoms that are bound to silicon atoms, which we placed there when passivating the system (silicon-water atoms from the initial silica crystal are not included in the counting, but we use water-oxygen when passivating). If we had used the $z$-distance in a flat fracture in a system like this, we would most likely have gotten a very different distribution below 4 \AA, with a more flat distribution instead of it going to zero, since the angular distribution of the oxygen atoms around the silica atoms makes the $z$-distance vary.

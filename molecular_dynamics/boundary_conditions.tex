@@ -1,0 +1,84 @@
+\section{Boundary conditions}
+% \tododo{Cite Born and Von Karman 1912? (See Comp. Sim. of Liquids p. 24 (39)}
+In theory we now have a working molecular dynamics program by combining \cref{list:simple_md_program,list:calculate_forces,list:calculate_force_between_atoms,list:regular_verlet}. But if we start our simulations we will quicly see that the particles will start spreading out into space, since we have not implemented any kind of boundary conditions. The particles that are on the surface of our initial system will feel very different forces than the ones in the center, and will most likely not behave as intended. To remedy this we usually apply periodic boundary conditions. This means that we repeat the simulation box at the boundaries of the system, so that the atoms near the boundaries feel forces from atoms on the opposite side of the system, and in an uniform system all atoms will have a bulk-like environment. 
+
+Atom $n$ has what we call an \emph{image} in all other neighboring simulation boxes, created by the periodic boundaries. The position of the images of atom $n$ can be calculated using
+\begin{align}
+    \rvec_n^{ijk} = \rvec_l + (iL_x, jL_y, kL_z),
+    \label{eq:pbc_positions}
+\end{align}
+where $(L_x, L_y, L_z)$ is the dimensions of the simulation box, and $(i, j, k)$ is the index of the neighbor box. We usually choose box $(0,0,0)$ as our ``origin'' box, with the corner of the box in the point $(0,0,0)$. In reality we still have the same number of atoms, but the atoms on near the boundaries of the simulation box will now feel forces from the atoms on the opposite side of the box, from the images of the atoms on the opposite side of the box.
+
+The first thing we have to do to implement periodic boundary conditions is to check if any atoms have moved outside the boundaries of the system after each timestep, after updating the positions of the atoms. If they have moved outside the boundaries of the system we see from \cref{eq:pbc_positions} that we can translate them back into the system by adding or subtracting an appropriate number of system sizes $L_i$ from the coordinates that are outside the box. If the boundaries of our system are $x_i \in [0, L_i]$, with $\rvec = (x_1, x_2, x_3)$, we can translate atomic positions \emph{outside} the boundaries to the correct positions \emph{inside} the boundaries by using the modulo operator. By finding the remainder of dividing the coordinates of an atom with the system size, we get back the position of the atom translated back inside the boundaries, as follows
+\begin{align*}
+    x_i^{000} = x_i^{ijk} \bmod L_i.
+\end{align*}
+When implementing this we have to be wary of what happens if we have negative coordinates, as the modulo with negative number has different implementations in different programming languages. To avoid this problem we usually just add one system size to each coordinate before using the modulo operator, to ensure that the coordinates are positive. In doing this we assume that no atoms have moved more than one system size in negative direction, but if the timestep in the simulations is set correctly, atoms should never move as far as one system size in any direction in just one timestep.
+%
+% this shouldn't happen if we use an appropriate timestep and our integrator is working like it should\footnote{If we want to ensure that atoms that have moved further than one system size in any direction gets translated back into the box we can add $n$ system sizes to each coordinate before performing the modulo operation.}. 
+
+% An example of how to ensure that all atomic positions are inside the boundaries of the system using the modulo operator can be seen in \cref{list:pbc}.
+% \begin{listing}[!htb]%
+% % \begin{cppcode*}{gobble=4}
+% %     void checkBoundaryConditions(System &system, const vec3 &systemSize)
+% %     {
+% %         for (Atom *atom : system.atoms())
+% %         {
+% %             for (int dim = 0; dim < 3; dim++)
+% %             {
+% %                 if (atom->position()[dim] < 0.0) 
+% %                     atom->position()[dim] += systemSize[dim];
+% %                 else if (atom->position()[dim] >= systemSize[dim]) 
+% %                     atom->position()[dim] -= systemSize[dim];
+% %             }
+% %         }
+% %     }
+% % \end{cppcode*}%
+% \begin{cppcode*}{gobble=4}
+%     void checkBoundaryConditions(System &system) {
+%         for (Atom *atom : system.atoms()) {
+%             for (int dim = 0; dim < 3; dim++) {
+%                 if (atom->position()[dim] < 0.0) 
+%                     atom->position()[dim] += system.size()[dim];
+%                 else if (atom->position()[dim] >= system.size()[dim]) 
+%                     atom->position()[dim] -= system.size()[dim];
+%             }
+%         }
+%     }
+% \end{cppcode*}
+% \caption{%
+%     A function for checking if any atoms have moved outside their boundaries, called \mono{checkBoundaryConditions}. This method assumes that no atoms have moved more than one system size outside the boundaries, in any direction.%
+%     \label{list:pbc}%
+% }%
+% \end{listing}%
+
+\subsection{Minimum image convention}
+A consequence of using periodic boundary conditions is that each atom now feels the force from an infinite number of atoms. To avoid having to do an infinite number of evaluations of the potential we implement something called the \emph{minimum image convention}. This implies that we only calculate the force between atom $n$ and the \emph{nearest} image of each atom $m$, effectively limiting the potential to half the size of the system in each direction. When doing this truncation and simulating ``bulk'' or ``infinte'' systems, we do an approximation that might have some consequences in some cases, but this is rarely a problem. See \cite[Section 1.5]{allen1989computer} for a discussion on this matter.
+%\todo{really $L\sqrt{3}$, diagonally} 
+%\hl{In doing this we do an approximation, but this is ok??.}
+
+To find the distance between atom $n$ and the closest image of atom $m$ we can calculate the distance between $n$ and any image of $m$, $\rvec_{nm}$, and then check if any of the components of this vector is larger than half the system size in that direction\todobo{explain why?}. If a component is larger than half the system size, we subtract (a whole) system size to get the correct distance. See \cref{list:minimum_image_convention} for an example of a function that finds the distance between a point $u$ and the closest image of a point $v$ using the minimum image convention.%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    double calculateDistanceSquaredUsingMinimumImageConvention(
+        const vec3 &u, const vec3 &v, 
+        const vec3 &systemSize, const vec3 &halfSystemSize) {
+        
+        vec3 dr = u - v;
+        for (int dim = 0; dim < 3; dim++) {
+            if (dr[dim] >= halfSystemSize[dim]) dr -= systemSize[dim];
+            else if (dr[dim] < -halfSystemSize[dim]) dr += systemSize[dim];
+        }
+        return dr.lengthSquared(); // Avoid calculating $\sqrt{dr^2}$, return $dr^2$ instead
+    }
+\end{cppcode*}
+\caption{%
+    An example of how to find the distance between two points \mono{u} and \mono{v} in a periodic system of size \mono{systemSize} using the \emph{minimum image convention}. We calculate the distance squared to avoid taking the square root, since this is a slow operation.%
+    \label{list:minimum_image_convention}%
+}%
+\end{listing}%
+
+% The use of periodic boundary conditions has some other consequences for our program. The first thing we need to consider is how to calculate the forces. In theory each atom is now affected by a force from an infinite number of numbers, since we have the image of particle $j$ in an infinte number of repeating periodic boxes. Calculating an infinite number of forces for all atoms in \hl{the periodic box} is unfeasible in a numerical experiment (in nature this infinite sum is incredibly evaluated every timestep $dt = 5.39106(32)\times 10^{-44} \text{s}$ (Planck time)), so we make an approximation where we only consider the force from atoms within the size of the box.
+
+% \hl{force calculation unnecessary} Using the Lennard-Jones potential we see that the force from the potential decays as $1/r^{12}$, meaning that the force from most atoms will be neglible. \cref{fig:lennard-jones_potential}

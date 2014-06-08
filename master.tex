@@ -102,34 +102,72 @@
 
 \part{Molecular dynamics}
     \input{molecular_dynamics/introduction}
-%     \input{molecular_dynamics/statistical_mechanics}
     \input{molecular_dynamics/simple_md_program}
-%     \input{molecular_dynamics/optimizations} % Moved cell lists to md part, removed MD units stuff
-    \input{molecular_dynamics/observables}
+        \input{molecular_dynamics/the_main_program}
+        \input{molecular_dynamics/calculation_of_forces}
+        \input{molecular_dynamics/integration_scheme.tex}
+        \input{molecular_dynamics/boundary_conditions.tex}
+        \input{molecular_dynamics/force_truncation.tex}
+        \input{molecular_dynamics/observables}
     \input{molecular_dynamics/ensembles}
+        \input{molecular_dynamics/berendsen.tex}
+        \input{molecular_dynamics/andersen.tex}
+        \input{molecular_dynamics/nose_hoover.tex}
     \input{molecular_dynamics/usc_program}
+        \input{molecular_dynamics/usc_potential}
+        \input{molecular_dynamics/usc_integrator}
 
 \part{Fractures}
+    \input{fractures/introduction}
     \input{fractures/fractures}
-    \input{fractures/hurst_exponent}
-    \input{fractures/detrending_moving_average}
+        \input{fractures/hurst_exponent}
+        \input{fractures/detrending_moving_average}
     \input{fractures/generating_surfaces}
-    \input{fractures/generating_fractures}
+        \input{fractures/midpoint_displacement_methods}
+        \input{fractures/successive_random_additions}
+            \input{fractures/sra_infinite_grids}
+            \input{fractures/sra_finite_size_effects}
+            \input{fractures/sra_implementation}
+            \input{fractures/sra_validation}
+        \input{fractures/generating_fractures}
+            \input{fractures/fractures_point_in_tetrahedron}
 
 \part{Simulations}
-    \input{results/introduction}
-    \input{molecular_dynamics/experimental_procedure}
-    \input{molecular_dynamics/measurements}
+    \input{simulations/introduction}
+    \input{simulations/simulation_procedure}
+        \input{simulations/initialization}
+        \input{simulations/passivation}
+        \FloatBarrier
+        \input{simulations/injecting_water}
+    \input{simulations/measurements}
+        \input{simulations/distance_to_silica_matrix}
+        \input{simulations/voxelation}
+        \FloatBarrier
+        \input{simulations/density}
+        \input{simulations/diffusion}
+        \input{simulations/tetrahedral_order_parameter}
+        \FloatBarrier
+        \input{simulations/distance_to_atom}
+        \input{simulations/generation_matrix}
     \input{results/systems}
-    \FloatBarrier
-    \input{results/renderings}
+        \FloatBarrier
+        \input{results/renderings}
     \input{results/results}
+        \input{results/density}
+        \FloatBarrier
+        \input{results/diffusion}
+        \FloatBarrier
+        \input{results/tetrahedral_order_parameter}
+        \FloatBarrier
+        \input{results/distance_to_atom}
+        % \FloatBarrier
+        \input{results/generation_matrix}
+        \FloatBarrier
 
 % \part{Conclusion and future}
     \chapter{Discussion, conclusions and future}
-    \input{results/discussion}
-    \input{results/conclusion}
-%     \input{results/future}
+        \input{results/discussion}
+        \input{results/conclusion}
 
 \part{Appendices}
 \begin{appendix}

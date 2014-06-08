@@ -1,0 +1,43 @@
+\section{The main program}
+% Deducing how a molecular dynamics program does its simulations isn't always easy from looking at source code, but most programs will follow a flow similar to the following:
+%
+Using a molecular dynamic simulations we can start from any initial state $S_0$ and evolve this state in time. We can stop the simulations at any time, and continue the simulations from any saved state. This is a powerful tool that can for example be used to study different variations of a system, using the same initial conditions.
+
+Most molecular dynamics programs will follow a flow similar to the following procedure:
+%
+\begin{itemize}[midsep]
+    \renewcommand{\labelitemii}{$\bullet$} % Set list depth 2 bullet thing equal to first
+    \item Initialize the system by setting up the initial positions and velocities for all atoms. This is usually in one of two ways
+    \begin{itemize}[midsep]
+        \item Load a saved state from a previous simulation
+        \item Generate positions and velocities randomly, or following some rules to control the physical properties of the system. When generating random velocities we usually remove any net velocity, to avoid drift.
+    \end{itemize}
+    \item For each timestep
+    \begin{itemize}[midsep]
+        \item Calculate the forces between the atoms.
+        \item Integrate Newton's equations of motion, using an appropriate integration scheme.
+        \item Sample the values of the quantities we want to study, and add to the averages.
+    \end{itemize}
+    \item After all timesteps have been finished we print out the measured quantities, and we could also save the state of the system so we can continue from this state later.
+\end{itemize}
+%
+An example of a program that implements the above procedure can be seen in \cref{list:simple_md_program}.
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    System system = initializeSystem(parameters);
+    double time = 0.0;  // initial time
+    double dt = 0.01;   // timestep
+    for (double time = 0; time < tMax; time += dt) {
+        calculateForces(system);
+        integrateEquationsOfMotion(system, dt);
+        sample(system);
+    }
+\end{cppcode*}
+\caption{%
+    An example of a typical implementation of a molecular dynamics program using object-oriented programming. See \cref{list:calculate_forces,list:regular_verlet,list:sampling} for examples of implementations of the functions \mono{calculateForces}, \mono{integrateEquationsOfMotion}, and \mono{sample}.%
+    \label{list:simple_md_program}%
+}%
+\end{listing}%
+
+When starting a new simulation we usually initialize the positions of the atoms by putting them on a regular grid, like a face-centered cubic (fcc), a body-centered cubic (bcc), or a simple cubic grid. The purpose of this is to not have any atoms too close to each other, since we usually have a strong repulsive force when atoms get close together, which would give very big forces. We also want to start with the atoms in a state from which we are able to quickly get to the state we want to study. If we for example want to study a liquid argon system, it is wise to start in an unstable crystal state, by for example using a low density or high temperature, so that the system would melt spontaneously when we start the simulation.

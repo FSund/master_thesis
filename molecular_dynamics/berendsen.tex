@@ -1,0 +1,27 @@
+\section{Berendsen thermostat}
+Perhaps the simplest example of a thermostat is the Berendsen thermostat\cite{berendsen1984molecular}, which rescales all velocities by multiplying them with a factor $\gamma$
+\begin{align*}
+    \gamma = \sqrt{1 + \frac{\Delta t}{\tau}\left(\frac{T_\text{bath}}{T} - 1\right)},
+\end{align*}
+where $\Delta t$ is the timestep used in the simulations, $\tau$ controls the strength of the thermostat, $T$ is the temperature of the system and $T_\text{bath}$ is the temperature of the simulated heat bath. Setting $\tau = \Delta t$ makes the thermostat change the temperature of the system so it is exactly equal to $T_\text{bath}$. The velocities can either be multiplied by this factor every timestep, or every $n$-th timestep. An example of how to apply the Berendsen thermostat can be seen in \cref{list:applyBerendsenThermostat}.%
+%
+\begin{listing}[!htb]%
+\begin{cppcode*}{gobble=4}
+    void applyBerendsenThermostat(System &system, double T, double Tbath, 
+        double dt, double tau) {
+        
+        double gamma = sqrt(1 + dt/tau(Tbath/T - 1));
+        for (Atom *atom : system.atoms())
+            atom->velocity() *= gamma;
+        }
+    }
+\end{cppcode*}
+\caption{%
+    Example of how to implement the Berendsen thermostat. %
+    \label{list:applyBerendsenThermostat}%
+}%
+\end{listing}%
+
+The Berendsen thermostat is very good at controlling and changing the temperature of a system, but it does not sample the canonical ensemble very well. This is because we change the velocity of \emph{all} atoms at every $n$-th timestep, which is not physically realistic. This means that we should not use this thermostat when trying to sample the canonical ensemble, but we often use it to heat up or cool down a system, to reach a wanted temperature.
+
+Many thermostats similar to the Berendsen thermostat exist but they all suffer from the fact that they scale the velocity of all particles, giving unphysical behaviour.

@@ -1,0 +1,82 @@
+% \subsection{Successive random additions on a finite grid (in 2 dimensions)}
+\subsection{Finite size effects\label{sec:diamond_square_2d_finite}}
+Since we are using computers to generate our surfaces, which have limited memory, we can not use infinite grids. This means we get some special cases that needs to be taken care of when generating points near the edges of the grid.
+%\tododo{transition to below}%
+
+By applying the square step we generate one new point in the center of each square formed by the grid from the previous iteration, and in general we generate the $z$-values in the points
+\begin{align}
+%     &\left(i+1/2, j+1/2\right) &0\leq i,j < N_{n-1}, \label{eq:square_step_limits}
+    &z(i+1/2, j+1/2) & i,j \in [0, N_{n-1}), \label{eq:square_step_limits}
+\end{align}
+where $(i,j)$ are the indices of the points in the grid after the previous iteration, and $N_{n-1}$ is the number of points in each direction in this grid. In general the averages we calculate for the new points can be written as
+% \begin{align}
+%     (x_{i+1/2}, y_{j+1/2}) 
+%     &= \frac{1}{4}\big(
+%         (x_i, y_j) + (x_{i+1}, y_j)\nonumber\\
+%         &+ (x_i, y_{j+1}) + (x_{i+1}, y_{j+1})
+%     \big)
+%     &0\leq i,j < n.
+%     \label{eq:square_step}
+% \end{align}
+\begin{align}
+    z(i+1/2, j+1/2) 
+    = \frac{1}{4}\Big[
+        &z(i, j) + z(i+1, j) \nonumber\\
+        &+ z(i, j+1) + z(i+1, j+1)
+    \Big],
+    \label{eq:square_step}
+\end{align}
+using the limits in \cref{eq:square_step_limits}. We see that the square-step only uses points inside the grid when calculating the averages, which means that we do not have to modify this step when going to a finite grid.
+
+By applying the diamond-step we generate the values in the points
+\begin{align}
+    z(i+1/2, j) & &\text{for } & &i\in [0,N_{n-1}) & &\text{ and } & &j\in [0,N_{n-1}]& \label{eq:diamond_step_limits01} \\
+    z(i, j+1/2) & &\text{for } & &i\in [0,N_{n-1}] & &\text{ and } & &j\in [0,N_{n-1})&, \label{eq:diamond_step_limits02}
+\end{align}
+and in general the averages we calculate for the new points can be written as
+% \begin{align}
+%     (x_{i+1/2}, y_j) 
+%     &= 
+%     \frac{1}{4}\big(
+%         (x_i, y_j) + (x_{i+1}, y_j) + (x_{i+1/2}, y_{j-1/2}) + (x_{i+1/2}, y_{j+1/2})
+%     \big) \label{eq:diamond_step01}\\
+%     (x_i, y_{j+1/2}) 
+%     &= 
+%     \frac{1}{4}\big(
+%         (x_i, y_j) + (x_i, y_{j+1}) + (x_{i-1/2}, y_{j+1/2}) + (x_{i+1/2}, y_{j+1/2})
+%     \big). \label{eq:diamond_step02}
+% \end{align}
+\begin{align}
+    z(i+1/2, j) 
+    &= 
+    \frac{1}{4}\Big[
+        z(i, j) + z(i+1, j) \nonumber\\
+        &\phantom{=\Big[}~~~%
+            + z(i+1/2, j-1/2) + z(i+1/2, j+1/2)
+    \Big]
+    \label{eq:diamond_step01}\\
+    z(i, j+1/2) 
+    &= 
+    \frac{1}{4}\Big[
+        z(i,j) + z(i, j+1) \nonumber\\
+        &\phantom{=\Big[}~~~%
+            + z(i-1/2, j+1/2) + z(i+1/2, j+1/2)
+    \Big],
+    \label{eq:diamond_step02}
+\end{align}
+using the limits in \cref{eq:diamond_step_limits01,eq:diamond_step_limits02}. We find that when generating points near the edges of the surface using the diamond-step, specifically when generating the points along the top and bottom edge%
+%\todobo{make these equations clearer?}%
+%
+\begin{align*} % LaTeX assumes that each equation consists of two parts separated by a &; also that each equation is separated from the one before by an &.
+    &z(1/2, j) & &\text{and} & &z(n - 1/2, j) & &\text{for} & &j \in [0, N_{n-1}],
+\end{align*}
+and the points along the left and right edge
+\begin{align*}
+    &z(i, 1/2) & &\text{and} & &z(i, n - 1/2) & &\text{for} & &i \in [0, N_{n-1}],
+\end{align*}
+we need the values of points that lie outside the grid to calculate the averages. There are two possible solutions to this, that will generate different surfaces. If  we want to generate a periodic surface, the solution is to wrap around the edges using periodic boundary conditions, and find the point we need on the opposite side of the grid. For example (using $i = j = 0$)
+\begin{align*}
+    z(1/2, -1/2) &\rightarrow z(1/2, n-1/2). \\
+    z(1/2, -1/2) &\rightarrow z(1/2, n-1/2)
+\end{align*}
+If generating a non-periodic surface we simply ignore the points that lie outside the grid when calculating the averages, and just calculate the average of the three other points.

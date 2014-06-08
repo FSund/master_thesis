@@ -1,0 +1,52 @@
+\section{Tetrahedral order parameter}
+% \todoa{Do we measure TOP for molecules or atoms?}%
+% \todoa{Write about how we measure P(Q)?, since we measure probability/relative occurrence and not TOP as function of something}%
+The tetrahedral order parameter\cite{errington2001relationship} is effectively a measure of how tetrahedral a set of four points are. The tetrahedral order parameter $Q$ for a point $k$ is calculated as follows%
+\begin{align}
+    Q_k = 1 - \frac{3}{8}\sum_i^3\sum_{j=i+1}^4 \left[ \cos \theta_{ikj} + \frac{1}{3} \right]^2,\label{eq:top_definition}
+\end{align}%
+%
+% \begin{minipage}[c][4cm][c]{\textwidth}%
+%     \begin{minipage}[c]{0.7\textwidth}%
+%         \centering%
+%         $Q_k = 1 - \frac{3}{8} \displaystyle\sum_i^3 \displaystyle\sum_{j=i+1}^4 \left[ \cos \theta_{ikj} + \frac{1}{3} \right]^2$%
+%     \end{minipage}%
+% %
+%     \begin{minipage}[c]{0.25\textwidth}%
+%         \centering
+%         \includesvg[pretex=\normalsize, width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{tetrahedra02}%
+%         \captionof{figure}{\label{hei}}
+%     \end{minipage}%
+%     
+%     \begin{figure}[htpb]%
+%         \includesvg[pretex=\normalsize, width=\textwidth, svgpath=./images/tetrahedral_order_parameter/]{tetrahedra02}%
+%         \caption{a}%
+%     \end{figure}%
+%     
+%     \caption{%
+%         Illustration of the angles and molecules involved in the calculation of the tetrahedral order parameter. The \hl{blue} dots are molecules, in our case usually water molecules. We have the center molecule $k$, and \hl{its} four nearest neighbors. $\theta_{ikj}$ is the angle between molecule $i$, $k$ and $j$, as indicated by the \hl{orange} arc. \hl{FINISH CAPTION}. %
+%         \label{fig:top_tetrahedra}%
+%     }%
+% \end{figure}%
+% \end{minipage}%
+% \captionof{figure}{alfa}
+%
+where $\theta_{ikj}$ is the angle %
+%between two vectors from the main point, $k$, to point $i$ and point $j$, respectively, 
+$i-k-j$ (with $k$ in the vertex of the angle) %
+and the two sums go over the 6 possible angles $\theta$, between the main point and \hl{its} four nearest neighbors. See \cref{fig:top_tetrahedra} for an illustration of the angles and points involved in the calculation. If we have $Q = 1$ the four points are arranged in a perfect tetrahedron, with $\theta_{ijk} = 2\arctan(2\sqrt(2)) \approx 109.47$ for all 6 possible angles between the four points, and as the points move away from this arrangement $Q$ decreases following \cref{eq:top_definition} (negative $Q$-values are possible).
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[pretex=\normalsize, width=0.3\textwidth, svgpath=./images/tetrahedral_order_parameter/]{tetrahedra02}%
+    \caption{%
+        Illustration of the angles and points involved in the calculation of the tetrahedral order parameter. The \hl{blue} dots are points, in our case usually water molecules. We have the center point $k$, and \hl{its} four nearest neighbors. $\theta_{ikj}$ is the angle between point $i$, $k$ and $j$, as indicated by the orange arc. \hl{FINISH CAPTION}. %
+        \label{fig:top_tetrahedra}%
+    }%
+\end{figure}%
+
+We use the tetrahedral order parameter for investigating the coordination of water molecules relative to other water molecules. When we lower the temperature in water below freezing the average $Q$ will \hl{approach 1/increas}, since ice has very high coordination. Liquid water also has high coordination caused by the hydrogen bonds, but much lower coordination than ice, so the distribution of $Q$-values are more spread out, with the mean lower than the mean for ice.
+
+When we measure the tetrahedral order parameter we measure $Q$ for all water molecules, defining the position of the water molecules as the position of the oxygen atom in each molecule, and plot the \hl{relative occurrence}\todob{probability density?}, $P(Q)$, to investigate the distribution of $Q$-values. Since $Q$ is not dependent on several timesteps (like for example diffusion), averaging over several timesteps is trivial. \todobo{But we should be wary of correlations between states?}. Since silica is hydrophilic we expect $Q$ to be different for water molecules near the silica surface, so we will measure $P(Q)$ as function of distance to the silica matrix.
+
+% \todob{Write about time and atom average?}

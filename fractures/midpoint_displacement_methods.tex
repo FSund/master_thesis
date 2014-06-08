@@ -1,0 +1,31 @@
+\section{Midpoint displacement methods}
+% \todo[inline]{The most basic method we used is a very basic but widely used method, which has many variations and names. The most common names are ``the diamond-square algorithm''\hl{cite}, ``the midpoint displacement method''\hl{cite}, ``plasma fractal'' and ``cloud fractal''.}
+%
+The method we use to generate random surfaces is very similar to the standard midpoint displacement method (MDM), so we start with showing that method. In 1 dimension this method goes as follows
+%
+\begin{enumerate}
+    \item Give the values at the endpoints of the interval, $y_0$ and $y_n$, random values from a Gaussian random variable with mean $\mu = 0$ and variance $\sigma_0^2$. This initial standard deviation $\sigma_0$ can be chosen freely.
+    \item Generate the value in the center of the interval, $y_{n/2}$, by averaging over the two endpoints and adding a Gaussian random number with mean $\mu = 0$ and a \emph{reduced} variance
+    \begin{align}
+         \sigma_1^2 = \left(1/2\right)^{2H}\sigma_0^2, \label{eq:midpoint_sigma_first}
+    \end{align}
+    where $H$ is the wanted Hurst exponent.
+    \item Continue generating the values in the center of each sub-interval until you reach the desired number of points, while reducing the variance of the random number by a factor $\frac{1}{2}$ each iteration. %
+    %\todo{Why 1/2? (needed to create good approx. to fBm, see \cite{voss1985random})}. %
+    For iteration $i$ we have
+    \begin{align}
+        \sigma_i^2 = \left(1/2\right)^{i2H}\sigma_0^2. \label{eq:midpoint_sigma_general}
+    \end{align}
+\end{enumerate}
+%
+\begin{figure}[htpb]%
+    \centering%
+    \includesvg[pretex=\small, width=0.5\textwidth, svgpath=./images/diamond_square/]{random_midpoint_displacement_regular02}%
+    \caption{%
+        Illustration of the midpoint displacement method in 1 dimension. We increase the number of points from 2 to 9 using 3 iterations.%
+        \label{fig:midpoint01}%
+    }%
+\end{figure}%
+See \cref{fig:midpoint01} for a visual illustration of the method.
+
+This method generates a 1-dimensional line, with a Hurst exponent to the input $H$. But since we only add random numbers to the \emph{new} values we generate each iteration, the result is non-stationary for $H \neq 0.5$\cite{voss1985random}, and it is neither truly self-similar or isotropic, as noted by Mandelbrot\cite{mandelbrot1982comment}. To mitigate this we implement the addition suggested by Voss\cite{voss1985random}, which consists of adding a random number to \emph{all} points in each iteration, both the new and old. Voss called this modified method \emph{successive random additions}. %\todobo{Remove this last part, or make relevant?}

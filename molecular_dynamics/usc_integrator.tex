@@ -1,0 +1,26 @@
+\section{Integrator\label{sec:sio2_integrator}}
+% \todoa{Write about integrator in USC program here (already have something about it above), or remove section}
+% \todob{Plot of energy conservation here?}
+%
+The program implements the Nos\'e-Hoover thermostat described in \cref{sec:nose_hoover_chain} to sample the microcanonical ensemble, using a reversible multiple time-scale integrator derived using the Trotter factorization of the Liouville propagator\cite{tuckerman1992reversible}, in a similar way to the way we derive the velocity Verlet algorithm in \cref{sec:liou}. The program also has a reversible integrator for NVT (canonical) and NPT (isothermal–isobaric) ensembles\cite{martyna1996explicit} derived in a similar way. 
+
+See \cref{fig:energy_conservation_plot} for a plot of the energy over 100 000 timesteps. We see that the energy is very well conserved, with a relative increase in energy of just 2e-6 over 100 000 timesteps.
+%
+\begin{figure}[!htb]%
+    \centering%
+    \includesvg[width=0.6\textwidth, svgpath = ./images/energy_plots/]{system02_total_energy_thermalized_percentage}%
+    \caption{%
+        Plot of the relative energy change in a molecular dynamics simulation of water in nanoporous silica, with a total of approximately 400 000 atoms, 111k SiO$_2$ units and 19k H$_2$O-units. Simulations were done in the $NVE$-ensemble, and we have plotted 100 000 timesteps of 0.050 picoseconds.%
+        \label{fig:energy_conservation_plot}%
+    }%
+\end{figure}%
+
+The multiple time-scale integrator utilizes the fact that the vibrational frequencies in water is much higher than the frequencies of silica, which means that we can use larger timesteps to integrate the motions of the silica molecules than the water molecules. When using the program we use timesteps that are calculated from these vibrational frequencies, to make sure we have small enough timesteps. We used a main timestep of approximately 0.050 picoseconds in all simulations. \todoao{water vs silica timestep???} %\todobo{more about how timestep was chosen?}
+
+% %
+% \begin{figure}[htpb]%
+%     \centering%
+%     \includesvg[width=.7\textwidth, svgpath = ./images/energy_plots/]{total_energy01}%
+%     \caption{Plot of total energy as function of timesteps in a thermalized nanoporous system filled with water.}%
+% %     \label{fig:distance_to_atom_r20}%
+% \end{figure}%
