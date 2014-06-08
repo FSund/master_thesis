@@ -1,54 +1,18 @@
 \chapter{Verlet integrators\label{appendix:verlet_integrators}}
-
-\fcolorbox{black}{orange}{
-\begin{minipage}{\textwidth}
-{\bf TODO:}
-\begin{itemize}
-    \item Truncation error Verlet/velociy Verlet
-    \item Numerical stability?
-    \item Memory?
-    \item Self starting, symplectic, reversible
-\end{itemize}
-\end{minipage}
-}
-\todo{why do we use velocity Verlet}
-
-The Verlet algorithm\cite{verlet1967computer} is a simple method for \hl{numerically?} integrating second order differential equations of the form 
+The Verlet algorithm\cite{verlet1967computer} is a simple method for numerically integrating second order differential equations of the form 
 \begin{align*}
     \dod[2]{\rvec(t)}{t} = \Fvec\big[\rvec(t), t\big] = \Fvec(t).
 \end{align*}
-The algorithm has several \hl{(equivalent?)} forms, and the form \hl{used/developed?} by Verlet is
+The algorithm has several equivalent forms, and the form originally used by Verlet is
 \begin{align*}
     \rvec(t + \Delta t) \approx 2\rvec(t) - \rvec(t - \Delta t) + \avec(t)\Delta t^2,
 \end{align*}
-where $\Delta t$ is the timestep\todo{define timestep}, and $\avec(t)$ is the velocity at time $t$. An equivalent formulation, usually called the velocity Verlet algorithm, has the form
+where $\Delta t$ is the timestep, and $\avec(t)$ is the velocity at time $t$. An equivalent formulation, usually called the velocity Verlet algorithm, has the form
 \begin{align*}
     \rvec(t + \Delta t) &= \rvec(t) + \vvec(t)\Delta t + \frac{\Fvec(t)}{2m}\Delta t^2 \\
     \vvec(t + \Delta t) &= \vvec(t) + \frac{\Fvec(t + \Delta t) + \Fvec(t)}{2m}\Delta t.
 \end{align*}
-The velocity Verlet algorithm is the most used form \hl{why?}, and \hl{something about errors, references to below}.
+The velocity Verlet algorithm is the most used form of the algorithm, and it has a accumulated error of $\mathcal{O}(\Delta t^2)$, as we show in \cref{subsec:verlet_error_liouville}. %\hl{why?}, and \hl{something about errors, references to below}.
 
-This algorithm has a \hl{glocal/accumulated} error of $\mathcal{O}(\Delta t^2)$\todo{either \cite{thijssen1999computational} sec. 8.4.1-8.4.3 or \cite{frenkel2001understanding} sec. 4.3.3}.
-
-% \section{Verlet integrators}
-% \begin{align*}
-%     \rvec(t) = r_n \\
-%     \vvec(t) = v_n \\
-%     \bvec a(t) = a_n.
-% \end{align*}
-% \begin{align*}
-%     \vvec_{n+1/2} = \vvec_n + \frac{1}{2}\bvec a_n \delta t \\
-%     \rvec_{n+1} = \rvec_n + \vvec_{n+\frac{1}{2}}\delta t
-% \end{align*}
-
-% \begin{align*}
-%     \vvec(t + \Delta t/2) &= \vvec(t) + \frac{1}{2}\bvec a(t) \Delta t \\
-%     \rvec(t + \Delta t)   &= \rvec(t) + \vvec(t + \Delta t/2)\Delta t \\
-%     \bvec a(t + \Delta t)   &= \frac{1}{m}\Fvec(\rvec(t + \Delta t)) \\
-%     \vvec(t + \Delta t)   &= \vvec(t + \Delta t) + \frac{1}{2}\bvec a(t + \Delta t) \Delta t
-% \end{align*}
-
-We will now first derive the regular Verlet and the velocity Verlet algorithms using Taylor expansions, and then using the Liouville formulation of classical mechanics. \todo{why use two methods? what do we learn from them?} \todo{mention what errors we find?}
-
-\input{appendices/velocity_verlet_taylor.tex}
-\input{appendices/velocity_verlet_liouville.tex}
+We will now first derive the regular Verlet and the velocity Verlet algorithms using Taylor expansions, and then using the Liouville formulation of classical mechanics.
+% \todo{why use two methods? what do we learn from them?} \todo{mention what errors we find?}

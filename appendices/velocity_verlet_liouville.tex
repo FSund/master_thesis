@@ -1,41 +1,11 @@
 \section{Deriving velocity Verlet using Liouville operator\label{sec:liou}\label{appendix:liouville_verlet}}
 \newcommand{\Liou}{i\hat{\vec L}}
 \newcommand{\Lop}{\hat{\mathcal{U}}}
-\hl{This derivation closely follows }\cite[section 4.3.3]{frenkel2001understanding}
-\todo{Cite Tuckerman et al. ([71] in Frenkel) ?}
-
-% TODO: Upright \Liou?
-
-% % We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
-% % %(the derivative is denoted by a dot)
-% % (denoted by a dot)
-% % \begin{align}
-% %     \dot f(t) = \dot \rvec \dpd{f(t)}{\rvec} + \dot {\vec p} \dpd{f(t)}{\vec p} = \Liou f(t).\label{eq:liou_f}
-% % \end{align}
-% % where we have defined the \emph{Liouville operator}, $\Liou$, as
-% % \begin{align*}
-% %     \Liou = \dot \rvec \dpd{}{\rvec} + \dot {\vec p} \dpd{}{\vec p} = \Liou_r + \Liou_p
-% % \end{align*}
-% % where $\Liou_r$ and $\Liou_p$ denotes the left and right part if this operator, respectively. %
-% % To try and find $f(t)$ from $\dot f(t)$ we can formally integrate \cref{eq:liou_f} to obtain
-% % \begin{align*}
-% %     f(t) = e^{\Liou t} f(0),
-% % \end{align*}
-% % but this doesn't get us any closer to a solution, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. But if we replace $\Liou$ with $\Liou_r$ we and use a Taylor expansion of the exponential on the right-hand side, we get
-% % \begin{align*}
-% %     f(t)
-% %     &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
-% %     &= \exp\left( \dot\rvec (0) t \dpd{}{\rvec} \right) f(0) \\
-% %     &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
-% %     &= f\big[\rvec(0) + \dot\rvec(0), \vec p(0)\big]
-% % \end{align*}
-
-
-
+% \todo{Cite Tuckerman et al. ([71] in Frenkel) ?}
+%
+We will now derive the velocity Verlet algorithm in a more rigorous way, using the Liouville formulation of classical mechanics. This approach will give us better insight into why the algorithm is so powerful, and a good estimate of the global (or accumulated) error of this algorithm. The derivation closely follows section 4.3.3 in \cite{frenkel2001understanding}.
 
 \subsection{Liouville operator}
-
-
 We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
 %(the derivative is denoted by a dot)
 (denoted by a dot)
@@ -53,7 +23,8 @@ We can formally integrate \cref{eq:liou_f} to obtain
     f(t) = e^{\Liou t} f(0),
     \label{eq:liou_integrate}
 \end{align}
-which allows us to define the time evolution operator $\Lop = \exp(\Liou t)$. We see that this integration doesn't get us any closer to finding $f(t)$\todo{why do we want to find $f(t)$?}, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. To get around this we define the \hl{position} time evolution operator $\Lop_r(t) = \exp(\Liou_r t)$, and try applying just this operator. If we do a Taylor expansion of the exponential we get
+which allows us to define the time evolution operator $\Lop = \exp(\Liou t)$. We see that this integration doesn't get us any closer to finding $f(t)$%\todo{why do we want to find $f(t)$?}%
+, since evaluating the right-hand side is equivalent to the exact integration of the classical equations of motion. To get around this we define the time evolution operator for positions $\Lop_r(t) = \exp(\Liou_r t)$, and try applying just this operator. If we do a Taylor expansion of the exponential we get
 \begin{align*}
     \Lop_r(t)f(0)
     &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
@@ -61,9 +32,9 @@ which allows us to define the time evolution operator $\Lop = \exp(\Liou t)$. We
     &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
     &= f\left\{ \left[ \rvec(0) + \dot\rvec(0)t \right], \vec p(0) \right\},
 \end{align*}
-where $\rvec(0)$ and $\vec p(0)$ \hl{are} the positions and momenta at $t = 0$. We see that this has the effect of moving the positions $\rvec$ a step $t$ forward in time according to their derivative. It's easy to see that the equivalent \hl{momenta} time evolution operator $\Lop_p(t) = \exp(\Liou_p t)$ has a similar effect on the momenta. 
+where $\rvec(0)$ and $\vec p(0)$ are the positions and momenta at $t = 0$. We see that this has the effect of moving the positions $\rvec$ a step $t$ forward in time according to their derivative. It's easy to see that the equivalent momentum time evolution operator $\Lop_p(t) = \exp(\Liou_p t)$ has a similar effect on the momenta. 
 
-\subsection[Velocity Verlet]{\hl{Velocity Verlet}}
+\subsection{Velocity Verlet}
 In a molecular dynamics simulation we would like to be able to apply these operators independently, since
 \begin{align*}
     \Lop = e^{\Liou} = e^{\Liou_r + \Liou_p},
@@ -76,7 +47,7 @@ To solve this we can use the following \emph{Trotter identity}
 \begin{align*}
     e^{\hat {\vec A} + \hat {\vec B}} = \lim_{P\rightarrow \infty} \left( e^{\hat {\vec A}/2P} e^{\hat {\vec B}/P} e^{\hat {\vec A}/2P} \right)^P.
 \end{align*}
-Applying the operators an infinite number of times ($P\rightarrow \infty$) is \hl{unpractical}, but fortunately the expression can be truncated for \hl{large}\todo{how large?} but finite $P$ as
+Applying the operators an infinite number of times ($P\rightarrow \infty$) is unpractical, but fortunately the expression can be truncated for large but finite $P$ as
 \begin{align}
     e^{\hat {\vec A} + \hat {\vec B}} = \left( e^{\hat {\vec A}/2P} e^{\hat {\vec B}/P} e^{\hat {\vec A}/2P} \right)^P e^{\mathcal{O}(1/P^2)}.
     \label{eq:liou_time_exact}
@@ -87,7 +58,7 @@ To derive the velocity Verlet scheme using this truncation we first identify the
     \frac{\hat {\vec A}}{P} &\equiv \frac{\Liou_p t}{P} \equiv \Delta t \dot {\vec p}(0) \dpd{}{\vec p} \\
     \frac{\hat {\vec B}}{P} &\equiv \frac{\Liou_r t}{P} \equiv \Delta t \dot \rvec (0) \dpd{}{\rvec}
 \end{align*}
-where $\Delta t = t/P$. We can now identify the \hl{\emph{truncated/approximated}} time evolution operator $\Lop^*(t)$ as follows
+where $\Delta t = t/P$. We can now identify the \emph{truncated} time evolution operator $\Lop^*(t)$ as follows
 \begin{align}
     \Lop(t) 
     &= \left( e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} \right)^P e^{\mathcal{O}(1/P^2)} \nonumber\\
@@ -98,7 +69,7 @@ where $\Delta t = t/P$. We can now identify the \hl{\emph{truncated/approximated
 %     \Lop^*(t) &= \left( e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2} \right)^P,
 %     \label{eq:liou_time_trunc}
 % \end{align*}
-and the the \hl{\emph{truncated/approximate}} operator for moving one timestep forward as
+and the the truncated operator for moving \emph{one} timestep forward as
 \begin{align}
     \Lop^*(\Delta t) = e^{\Liou_p\Delta t/2} e^{\Liou_r \Delta t} e^{\Liou_p \Delta t/2}.
     \label{eq:liou_onetime_trunc}
@@ -108,7 +79,7 @@ To see the effect of the operator $\Lop^*(\Delta t)$ on the coordinates and mome
 \begin{align*}
     e^{\Liou_p \Delta t/2} f(0) = f \left\{ \rvec(0), \left[ \vec p(0) + \frac{\Delta t}{2} \dot{\vec p}(0) \right] \right\}.
 \end{align*}
-We then apply $\exp(\Liou_r\Delta t)$ \st{to the result of the previous step} and get
+We then apply $\exp(\Liou_r\Delta t)$ and get
 \begin{align*}
      e^{\Liou_r \Delta t} f \left\{ \rvec(0), \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) \right] \right\}
      &= f \left\{ \left[ \rvec(0) + \Delta t \dot\rvec\left(\frac{\Delta t}{2}\right) \right], \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) \right] \right\},
@@ -120,24 +91,6 @@ and finally we apply $\exp(\Liou_p\Delta t/2)$ once more, and get
         \left[ \vec p(0) + \frac{\Delta t}{2}\dot{\vec p}(0) + \frac{\Delta t}{2}\dot{\vec p}(\Delta t) \right] 
     \right\}.
 \end{align*}
-
-\todob{something about why algorithm is area preserving? see Frenkel p. 80/100}
-
-% If we look at the total effect of applying the operator we see that
-% \begin{align*}
-%     \vec p(0) 
-%     &\rightarrow \vec p(0) + \big[\dot{\vec p}(0) + \dot{\vec p}(\Delta t) \big] \frac{\Delta t}{2} \\
-%     &= \vec p(0) + \big[ \Fvec(0) + \Fvec(\Delta t) \big] \frac{\Delta t}{2} \\
-%     \rvec(0)
-%     &\rightarrow \rvec(0) + \Delta t \dot\rvec\left(\frac{\Delta t}{2}\right) \\
-%     &= \rvec(0) + \Delta t \dot \rvec(0) + \frac{\Delta t^2}{2m}\Fvec(0),
-% \end{align*}
-% where we have used $\dot {\vec p} = \vec F$ and $\dot \rvec(\Delta t/2) = \rvec(0) + \vec F(0) \Delta t/(2m)$ which can be rewritten using $\vec p = m\vvec$, $\dot {\vec p} = \Fvec/m$ and $\dot \rvec = \vvec$ to the form
-% \begin{align*}
-%     \rvec(\Delta t) &= \rvec(0) + \vvec(0)\Delta t + \frac{\Fvec(0)}{m}\frac{\Delta t^2}{2} \\
-%     \vvec(\Delta t) &= \vvec(0) + \left[\frac{\Fvec(0)}{m} + \frac{\Fvec(\Delta t)}{m}\right] \frac{\Delta t}{2},
-% \end{align*}
-% which is exactly the velocity Verlet algorithm, as we saw in \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity}.
 
 If we look at the total effect of applying the operator we see that
 \begin{align}
@@ -157,9 +110,9 @@ we can rewrite \cref{eq:liou_momentum_effect,eq:liou_pos_effect} to
 \end{align*}
 which is exactly the velocity Verlet algorithm, as we saw in \cref{eq:velocity_verlet_position,eq:velocity_verlet_velocity}.
 
-\subsection[Error in velocity Verlet]{\hl{Error in velocity Verlet}\label{subsec:verlet_error_liouville}}
-\newcommand{\errop}{\hat{\epsilon}}
-When we approximate the exact \hl{timestep} operator $\Lop (\Delta t)$ with $\Lop^*(\Delta t)$ going from \cref{eq:liou_time_exact} to \cref{eq:liou_time_trunc,eq:liou_onetime_trunc} we do a truncation 
+\subsection{Error in velocity Verlet\label{subsec:verlet_error_liouville}}
+\newcommand{\errop}{\hat{\epsilon}}%
+When we approximate the exact time evolution operator for one timestep $\Lop (\Delta t)$ with $\Lop^*(\Delta t)$, going from \cref{eq:liou_time_exact} to \cref{eq:liou_time_trunc,eq:liou_onetime_trunc}, we do a truncation 
 \begin{align*}
     \Lop(\Delta t) = \Lop^*(\Delta t) e^{\mathcal{O}(1/P^2)} \approx \Lop^*(\Delta t).
 \end{align*}
@@ -173,60 +126,8 @@ which, using Campbell-Baker-Hausdorff expansion, can be expressed in terms of th
     \errop = \sum_{n=1}^\infty (\Delta t)^{2n+1} c_{2n+1},\label{eq:campbell_expansion}
 \end{align}
 where $c_m$ denotes a combination of mth-order commutators. %
-% The leading term of this expression is
-% \begin{align*}
-%     -(\Delta t)^3 \left( \frac{1}{24} \left[ \Liou_r, \left[ \Liou_r, \Liou_p \right] \right] + \frac{1}{12} \left[ \Liou_p, \left[ \Liou_r, \Liou_p \right] \right] \right),
-% \end{align*}
-% from which we conclude that the \hl{global/accumulated} truncation error after $P$ timesteps goes as $\mathcal{O}(\Delta t^3)$.
-%meaning that the local truncation error \hl{(per timestep)} goes as $\mathcal{O}(\Delta t^4)$, which agrees with \hl{???}.
+
 From this it can be shown that, if the expansion in \cref{eq:campbell_expansion} converges, Verlet style integrators will rigorously conserve a \emph{pseudo}-Hamiltonian, and that the difference between this pseudo-Hamiltonian and the actual Hamiltonian is of the order $(\Delta t)^{2n}$, where $n$ depends on the order of the algorithm\cite[section 4.3.3]{frenkel2001understanding}.
-
-% \subsection{Error in regular Verlet?}
-% \todob{Maybe show that velocity and regular are equivalent, and thus the error is the same?}
-
-
-
-
-
-
-
-
-
-
-
-
-% We have a system consisting of $N$ particles, with positions $\rvec$ and momenta $\vec p$. We define a function of these variables $f(\rvec(t), \vec p(t)) = f(t)$, that has the time derivative %
-% %(the derivative is denoted by a dot)
-% (denoted by a dot)
-% \begin{align*}
-%     \dot f(t) = \dot \rvec \dpd{f(t)}{\rvec} + \dot {\vec p} \dpd{f(t)}{\vec p} = \Liou f(t).\label{eq:liou_f}
-% \end{align*}
-% where we have defined the \emph{Liouville operator}, $\Liou$, as
-% \begin{align*}
-%     \Liou = \dot \rvec \dpd{}{\rvec} + \dot {\vec p} \dpd{}{\vec p} = \Liou_r + \Liou_p
-% \end{align*}
-% where $\Liou_r$ and $\Liou_p$ denotes the left and right part if this operator, respectively. %
-% From this we can define the time evolution operator $\Lop(t)$
-% \begin{align*}
-%     f(t) = \hat U(t) f(0) = e^{\Liou t}f(0),
-% \end{align*}
-% which we can verify \hl{using???}
-% \begin{align*}
-%     \dot f(t) = \Liou \left[ e^{\Liou t}f(0) \right] = \Liou f(t)
-% \end{align*}
-% 
-% To try and find $f(t)$ from $\dot f(t)$ we can formally integrate \cref{eq:liou_f} to obtain
-% \begin{align*}
-%     f(t) = e^{\Liou t} f(0),
-% \end{align*}
-% but this doesn't get us any closer to a solution, since evaluating the right-hand side is \hl{still?} equivalent to the exact integration of the classical equations of motion. But if we replace $\Liou$ with $\Liou_r$ we and use a Taylor expansion of the exponential on the right-hand side, we get
-% \begin{align*}
-%     f(t)
-%     &= f(0) + \Liou_r t f(0) + \frac{(\Liou_r t)^2}{2!} f(0) + \dots \\
-%     &= \exp\left( \dot\rvec (0) t \dpd{}{\rvec} \right) f(0) \\
-%     &= \sum_{n=0}^\infty \frac{ \big(\dot\rvec(0) t\big)^n}{n!} \frac{\partial^n}{\partial \rvec^n} f(0) \\
-%     &= f\big[\rvec(0) + \dot\rvec(0), \vec p(0)\big]
-% \end{align*}
 
 
 
